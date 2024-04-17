@@ -1,0 +1,39 @@
+[tool.poetry]
+name = "github-pokemon-collection"
+version = "0.0.1"
+description = ""
+authors = ["2jun0 <soo28819@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.110.1"
+pydantic-settings = "^2.2.1"
+sqlmodel = "^0.0.16"
+pydantic-core = "^2.18.1"
+uvicorn = "^0.29.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 119
+experimental-string-processing = true
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
