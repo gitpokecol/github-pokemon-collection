@@ -9,8 +9,8 @@ class User(SQLModel, DatedAtMixin, table=True):
     __tablename__: str = "user"
 
     id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(unique=True, nullable=True)
-    commit_point: int = Field(nullable=False)
+    username: str = Field(unique=True)
+    commit_point: int
     pokemons: list[Pokemon] = Relationship(sa_relationship_kwargs={"lazy": "joined"})
 
     @property
