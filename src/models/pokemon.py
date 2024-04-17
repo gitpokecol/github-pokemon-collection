@@ -11,4 +11,4 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     type: PokemonType
-    owner_id: int = Field(foreign_key="user.id")
+    owner_id: int = Field(default=None, foreign_key="user.id")
