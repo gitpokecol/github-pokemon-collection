@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        #pokemon-{{num}} {
+            --pokemon-move-duration: {{duration}}s;
+            --pokemon-x-offsets: calc({{offset}}px+60px);
+            --pokemon-y-offsets: {{offset}}px;
+            --pokemon-move-delay: {{delay}}s;
+        }
+    </style>
+
+    <g class="pokemon" id="pokemon-{{num}}">
+        <g class="left">
+            <image class="frame-2" width="32" height="32" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{frame_1}}"/>
+            <image class="frame-1" width="32" height="32" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{frame_2}}"/>
+        </g>
+    </g>
+</svg>

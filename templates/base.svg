@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="250">
+    <style xmlns="http://www.w3.org/2000/svg">
+        @import url('https://fonts.cdnfonts.com/css/public-pixel');
+
+        :root {
+            --pokemon-x-offsets: 20px;
+            --pokemon-y-offsets: 20px;
+            --pokemon-move-duration: 10s;
+            --pokemon-move-delay: 0s;
+        }
+
+        text { font-family: 'Public Pixel', sans-serif; }
+        .header { font-weight: 0; font-size: 12px; }
+        .bottom { font-weight: 0; font-size: 10px; }
+
+        .frame-1 { animation: 0.5s linear infinite move-frame-1; }
+        .frame-2 { animation: 0.5s linear infinite move-frame-2; }
+        @keyframes move-frame-1 { 0% {opacity: 0;} 49% {opacity: 0;} 50% {opacity: 1;} 100% {opacity: 1;} }
+        @keyframes move-frame-2 { 0% {opacity: 1;} 49% {opacity: 1;} 50% {opacity: 0;} 100% {opacity: 0;} }
+
+        .pokemon {
+            opacity: 0;
+            animation-name: move-pokemon;
+            animation-duration: var(--pokemon-move-duration);
+            animation-delay: var(--pokemon-move-delay);
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+        @keyframes move-pokemon {
+            0% {opacity: 1; transform: translate(120%, calc(64px + var(--pokemon-y-offsets)));}
+            100% {opacity: 1; transform: translate(-120%, calc(64px + var(--pokemon-y-offsets)));}
+        }
+    </style>
+    <rect x="0.01%" y="0.01%" rx="4.5" width="99.99%" height="99.99%" stroke="#e4e2e2" fill="#ffffff" stroke-opacity="1"/>
+    <g transform="translate(20, 30)">
+        <text  x="0" y="0" class="header">{{username}}'s Pokemons</text>
+    </g>
+    <g transform="translate(20, 230)">
+        <text x="25" y="0" class="bottom">({{n_pokemons}}/151)</text>
+        <image x="-7" y="-22" xmlns="http://www.w3.org/2000/svg" width="30" height="30" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{poke_ball_url}}"/>
+    </g>
+    <g transform="translate(180, 230)">
+        <text x="25" y="0" class="bottom">CP {{commit_point}}</text>
+    </g>
+    <g id="pokemons" transform="translate(0,40)">
+        {{pokemons}}
+    </g>
+</svg>
