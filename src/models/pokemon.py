@@ -1,10 +1,11 @@
 from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, SQLModel
 
+from .base import DatedAtMixin
 from .pokemon_type import PokemonType
 
 
-class Pokemon(SQLModel, table=True):
+class Pokemon(SQLModel, DatedAtMixin, table=True):
     __tablename__: str = "pokemon"
     __table_args__ = (UniqueConstraint("owner_id", "type"),)
 

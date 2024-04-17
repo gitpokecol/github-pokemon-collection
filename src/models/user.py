@@ -1,10 +1,11 @@
 from sqlmodel import Field, Relationship, SQLModel
 
+from .base import DatedAtMixin
 from .pokemon import Pokemon
 from .pokemon_type import PokemonType
 
 
-class User(SQLModel, table=True):
+class User(SQLModel, DatedAtMixin, table=True):
     __tablename__: str = "user"
 
     id: int | None = Field(default=None, primary_key=True)
