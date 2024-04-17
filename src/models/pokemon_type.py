@@ -3,7 +3,7 @@ from enum import IntEnum
 
 class PokemonType(IntEnum):
     national_no: int
-    name: str
+    title: str
 
     Bulbasaur = (1, "Bulbasaur")
     Ivysaur = (2, "Ivysaur")
@@ -157,9 +157,10 @@ class PokemonType(IntEnum):
     Mewtwo = (150, "Mewtwo")
     Mew = (151, "Mew")
 
-    def __new__(cls, national_no: int, name: str) -> "PokemonType":
+    def __new__(cls, national_no: int, title: str) -> "PokemonType":
         instance = int.__new__(cls, national_no)
+        instance._value_ = national_no
         instance.national_no = national_no
-        instance.name = name
+        instance.title = title
 
         return instance
