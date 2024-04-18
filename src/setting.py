@@ -15,7 +15,10 @@ class Setting(BaseSettings):
 
     ENVIRONMENT: Envrionment = Envrionment.PRODUCTION
 
+    DATABASE_URL: str
+    POKEMON_PER_COMMIT_POINT: int = 500
+
     model_config = SettingsConfigDict(env_file=".env")
 
 
-settings = Setting()
+settings = Setting()  # type: ignore
