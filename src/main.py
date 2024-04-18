@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from .routers.pokemon import router as pokemon_router
+from .routes.pokemons import router as pokemon_router
 from .setting import Envrionment, settings
 
 if settings.ENVIRONMENT is Envrionment.PRODUCTION:
