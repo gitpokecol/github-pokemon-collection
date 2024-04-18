@@ -14,6 +14,7 @@ class UserService:
         user = User(username=username, commit_point=commit_point)
         session.add(user)
         await session.commit()
+        await session.refresh(user)
 
         return user
 
@@ -25,6 +26,7 @@ class UserService:
         user.commit_point = commit_point
         user.update_pokemons()
         await session.commit()
+        await session.refresh(user)
 
         return user
 
