@@ -1,5 +1,6 @@
 from datetime import datetime, timezone
 
+from fastapi import BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.exceptions.external import GithubAPIRequestFailedError, GithubAPIUnavailableError
@@ -9,22 +10,24 @@ from src.services.user import UserService
 
 
 class PokemonsFacade:
-    def __init__(self, *, user_service: UserService, github_api: GithubAPI, renderer: SVGRenderer) -> None:
+    def __init__(
+        self,
+        *,
+        user_service: UserService,
+        github_api: GithubAPI,
+        renderer: SVGRenderer,
+        background_tasks: BackgroundTasks
+    ) -> None:
         self._user_service = user_service
         self._github_api = github_api
         self._renderer = renderer
+        self._background_tasks = background_tasks
 
     async def render_pokemons(self, *, session: AsyncSession, username: str) -> str:
-        if await self._user_service.exists_by_username(session=session, username=username):
-            try:
-                # TODO: updating commit point should be in background
-                now_year = datetime.now(timezone.utc).year
-                commit_point = await self._get_commit_point(username, now_year)
-                user = await self._user_service.update_commit_point(
-                    session=session, username=username, year=now_year, commit_point=commit_point
-                )
-            except GithubAPIRequestFailedError:
-                pass  # ignore error
+        user = await self._user_service.get_user(session=session, username=username)
+
+        if user is not None:
+            self._background_tasks.add_task(self._update_commit_point_task, session=session, username=username)
         else:
             try:
                 commit_points = await self._get_commit_points(username)
@@ -43,3 +46,13 @@ class PokemonsFacade:
 
     async def _get_commit_point(self, username: str, year: int) -> int:
         return await self._github_api.get_user_contributions_by_year(username=username, year=year)
+
+    async def _update_commit_point_task(self, *, session: AsyncSession, username: str):
+        try:
+            now_year = datetime.now(timezone.utc).year
+            commit_point = await self._get_commit_point(username, now_year)
+            await self._user_service.update_commit_point(
+                session=session, username=username, year=now_year, commit_point=commit_point
+            )
+        except GithubAPIRequestFailedError:
+            pass  # ignore error
