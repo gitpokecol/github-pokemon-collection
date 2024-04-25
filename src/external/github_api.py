@@ -3,8 +3,8 @@ from typing import Any
 from httpx import AsyncClient, HTTPStatusError
 
 from src.exceptions.external import GithubAPIRequestFailedError
-from src.external import templates
 from src.setting import settings
+from src.template import github_api as github_api_templates
 
 
 class GithubAPI:
@@ -17,12 +17,12 @@ class GithubAPI:
         return {year: await self.get_user_contributions_by_year(username=username, year=year) for year in years}
 
     async def get_user_contributions_by_year(self, *, username: str, year: int) -> int:
-        query = templates.github_api_contributions.format(username=username, start_year=year, end_year=year)
+        query = github_api_templates.contribution.format(username=username, start_year=year, end_year=year)
         data = await self._query_graphql(query)
         return data["user"]["contributionsCollection"]["totalCommitContributions"]
 
     async def _get_user_contribution_years(self, *, username: str) -> list[int]:
-        query = templates.github_api_contribution_years.format(username=username)
+        query = github_api_templates.contribution_years.format(username=username)
         data = await self._query_graphql(query)
         return data["user"]["contributionsCollection"]["contributionYears"]
 

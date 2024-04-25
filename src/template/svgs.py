@@ -7,5 +7,6 @@ def load_svg_template(path: str) -> str:
     return svg.replace("}}", "]]").replace("}", "}}").replace("]]", "}")
 
 
-base_svg = load_svg_template("templates/base.svg")
-pokemon_svg = load_svg_template("templates/pokemon.svg")
+base = load_svg_template("templates/svgs/base.svg")
+pokemon = load_svg_template("templates/svgs/pokemon.svg")
+

@@ -2,7 +2,7 @@ import random
 from typing import Generator
 
 from src.models.pokemon_type import PokemonType
-from src.renders import templates
+from src.template import svgs as svgs_templates
 
 sprite_base_url = "https://www.pokencyclopedia.info/sprites/overworlds"
 poke_ball_url = "https://www.pokencyclopedia.info/sprites/items/items_old/i_old_poke-ball.png"
@@ -11,7 +11,7 @@ poke_ball_url = "https://www.pokencyclopedia.info/sprites/items/items_old/i_old_
 class SVGRenderer:
 
     def render_svg(self, *, pokemons: list[PokemonType], commit_point: int, username: str) -> str:
-        return templates.base_svg.format(
+        return svgs_templates.base.format(
             username=username,
             commit_point=commit_point,
             n_pokemons=len(pokemons),
@@ -41,6 +41,6 @@ class SVGRenderer:
 
             frame_1, frame_2 = self._create_left_sprite_urls(pokemon.national_no)
 
-            yield templates.pokemon_svg.format(
+            yield svgs_templates.pokemon.format(
                 num=num, duration=duration, offset=offset, delay=delay, frame_1=frame_1, frame_2=frame_2
             )
