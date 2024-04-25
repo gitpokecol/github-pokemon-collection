@@ -10,21 +10,22 @@ class UserService:
         user = await self._get_user(session, username)
         return user is not None
 
-    async def create_new_user(self, *, session: AsyncSession, username: str, commit_point: int) -> User:
-        user = User(username=username, commit_point=commit_point)
+    async def create_new_user(self, *, session: AsyncSession, username: str, commit_points: dict[int, int]) -> User:
+        user = User(username=username)
+        user.set_commit_points(commit_points)
+
         session.add(user)
         await session.commit()
         await session.refresh(user)
 
         return user
 
-    async def update_commit_point(self, *, session: AsyncSession, username: str, commit_point: int) -> User:
+    async def update_commit_point(self, *, session: AsyncSession, username: str, year: int, commit_point: int) -> User:
         user = await self._get_user(session, username)
         if user is None:
             raise UserNotFoundError
+        user.set_commit_point(year, commit_point)
 
-        user.commit_point = commit_point
-        user.update_pokemons()
         await session.commit()
         await session.refresh(user)
 

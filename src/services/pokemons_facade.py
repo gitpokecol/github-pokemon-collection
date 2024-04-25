@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -14,21 +14,24 @@ class PokemonsFacade:
         self._renderer = renderer
 
     async def render_pokemons(self, *, session: AsyncSession, username: str) -> str:
-        commit_point = await self._get_commit_point(username)
 
         if await self._user_service.exists_by_username(session=session, username=username):
             # TODO: updating commit point should be in background
+            now_year = datetime.now(timezone.utc).year
+            commit_point = await self._get_commit_point(username, now_year)
             user = await self._user_service.update_commit_point(
-                session=session, username=username, commit_point=commit_point
+                session=session, username=username, year=now_year, commit_point=commit_point
             )
         else:
+            commit_points = await self._get_commit_points(username)
             user = await self._user_service.create_new_user(
-                session=session, username=username, commit_point=commit_point
+                session=session, username=username, commit_points=commit_points
             )
 
         return self._renderer.render_svg(pokemons=user.pokemon_types, commit_point=commit_point, username=username)
 
-    async def _get_commit_point(self, username: str) -> int:
-        user_contribs = await self._github_api.get_user_total_contributions(username=username)
-        current_year = datetime.utcnow().year
-        return user_contribs.get(current_year, 0)
+    async def _get_commit_points(self, username: str) -> dict[int, int]:
+        return await self._github_api.get_user_total_contributions(username=username)
+
+    async def _get_commit_point(self, username: str, year: int) -> int:
+        return await self._github_api.get_user_contributions_by_year(username=username, year=year)
