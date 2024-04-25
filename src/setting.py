@@ -11,7 +11,7 @@ class Envrionment(Enum):
 
 class Setting(BaseSettings):
     TITLE: str = "Github pokemon collection api"
-    VERSION: str = "0.0.1"
+    VERSION: str = "1"
 
     ENVIRONMENT: Envrionment = Envrionment.PRODUCTION
 
