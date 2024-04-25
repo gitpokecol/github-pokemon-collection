@@ -1,8 +1,8 @@
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from ..exceptions.user import UserNotFoundError
-from ..models.user import User
+from src.exceptions.user import UserNotFoundError
+from src.models.user import User
 
 
 class UserService:
@@ -33,4 +33,4 @@ class UserService:
     async def _get_user(self, session: AsyncSession, username: str) -> User | None:
         stmt = select(User).where(User.username == username)
         rs = await session.exec(stmt)
-        return rs.one_or_none()
+        return rs.first()

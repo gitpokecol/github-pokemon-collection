@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from ..external.github_api import GithubAPI
+from src.external.github_api import GithubAPI
 
 
 async def get_github_api() -> GithubAPI:

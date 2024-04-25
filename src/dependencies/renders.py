@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from ..renders.svg import SVGRenderer
+from src.renders.svg import SVGRenderer
 
 
 async def get_svg_renderer() -> SVGRenderer:

@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exception_handlers import http_exception_handler
 
-from .base import BadRequestError, InternalError, NotFoundError
+from src.exceptions.base import BadRequestError, InternalError, NotFoundError
 
 
 def install_exception_handlers(app: FastAPI):

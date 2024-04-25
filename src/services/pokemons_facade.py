@@ -2,9 +2,9 @@ from datetime import datetime
 
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from ..external.github_api import GithubAPI
-from ..renders.svg import SVGRenderer
-from .user import UserService
+from src.external.github_api import GithubAPI
+from src.renders.svg import SVGRenderer
+from src.services.user import UserService
 
 
 class PokemonsFacade:

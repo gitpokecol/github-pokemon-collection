@@ -2,10 +2,10 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from ..services.pokemons_facade import PokemonsFacade
-from .externals import GITHUB_API_DEP
-from .renders import SVG_RENDERER_DEP
-from .services import USER_SERVICE_DEP
+from src.dependencies.external import GITHUB_API_DEP
+from src.dependencies.renders import SVG_RENDERER_DEP
+from src.dependencies.services import USER_SERVICE_DEP
+from src.services.pokemons_facade import PokemonsFacade
 
 
 async def get_pokemons_facade(

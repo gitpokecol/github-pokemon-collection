@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from .routes.pokemons import router as pokemon_router
-from .setting import Envrionment, settings
+from src.routes.pokemons import router as pokemon_router
+from src.setting import Envrionment, settings
 
 if settings.ENVIRONMENT is Envrionment.PRODUCTION:
     app = FastAPI(title=settings.TITLE, version=settings.VERSION)

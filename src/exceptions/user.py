@@ -1,4 +1,4 @@
-from .base import NotFoundError
+from src.exceptions.base import NotFoundError
 
 
 class UserNotFoundError(NotFoundError):

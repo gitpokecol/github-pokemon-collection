@@ -3,10 +3,10 @@ from math import ceil
 
 from sqlmodel import Field, Relationship, SQLModel
 
-from ..setting import settings
-from .base import DatedAtMixin
-from .pokemon import Pokemon
-from .pokemon_type import PokemonType
+from src.models.base import DatedAtMixin
+from src.models.pokemon import Pokemon
+from src.models.pokemon_type import PokemonType
+from src.setting import settings
 
 
 class User(SQLModel, DatedAtMixin, table=True):

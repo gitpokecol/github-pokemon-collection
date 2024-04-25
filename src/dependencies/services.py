@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from ..services.user import UserService
+from src.services.user import UserService
 
 
 async def get_user_service() -> UserService:

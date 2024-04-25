@@ -1,8 +1,8 @@
 import random
 from typing import Generator
 
-from ..models.pokemon_type import PokemonType
-from . import templates
+from src.models.pokemon_type import PokemonType
+from src.renders import templates
 
 sprite_base_url = "https://www.pokencyclopedia.info/sprites/overworlds"
 poke_ball_url = "https://www.pokencyclopedia.info/sprites/items/items_old/i_old_poke-ball.png"

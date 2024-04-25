@@ -1,8 +1,8 @@
 from fastapi import Response
 from fastapi.routing import APIRouter
 
-from ..dependencies.db import SESSION_DEP
-from ..dependencies.facades import POKEMONS_FACADE_DEP
+from src.dependencies.db import SESSION_DEP
+from src.dependencies.facades import POKEMONS_FACADE_DEP
 
 router = APIRouter()
 
