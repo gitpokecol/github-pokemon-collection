@@ -4,7 +4,7 @@ from httpx import AsyncClient, HTTPStatusError
 
 from src.exceptions.external import GithubAPIRequestFailedError
 from src.setting import settings
-from src.template import github_api as github_api_templates
+from src.template import github_apis as github_api_templates
 
 
 class GithubAPI:
@@ -17,7 +17,7 @@ class GithubAPI:
         return {year: await self.get_user_contributions_by_year(username=username, year=year) for year in years}
 
     async def get_user_contributions_by_year(self, *, username: str, year: int) -> int:
-        query = github_api_templates.contribution.format(username=username, start_year=year, end_year=year)
+        query = github_api_templates.contribution_by_year.format(username=username, year=year)
         data = await self._query_graphql(query)
         return data["user"]["contributionsCollection"]["totalCommitContributions"]
 
