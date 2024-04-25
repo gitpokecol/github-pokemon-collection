@@ -50,7 +50,7 @@ class User(SQLModel, DatedAtMixin, table=True):
             self.pokemons.append(Pokemon(type=pt))
 
     def _calc_proper_pokemon_cnt(self) -> int:
-        return min(len(PokemonType), ceil(self.commit_point / settings.POKEMON_PER_COMMIT_POINT))
+        return min(len(PokemonType), ceil(self.total_commit_point / settings.POKEMON_PER_COMMIT_POINT))
 
     def _set_commit_point(self, year: int, commit_point: int):
         model = self._get_commit_point(year)
