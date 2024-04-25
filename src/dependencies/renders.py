@@ -9,4 +9,4 @@ async def get_svg_renderer() -> SVGRenderer:
     return SVGRenderer()
 
 
-SVG_RENDERER_DEP = Annotated[SVGRenderer, Depends(get_svg_renderer)]
+SVGRendererDep = Annotated[SVGRenderer, Depends(get_svg_renderer)]

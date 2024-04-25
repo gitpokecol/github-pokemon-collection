@@ -9,4 +9,4 @@ async def get_github_api() -> GithubAPI:
     return GithubAPI()
 
 
-GITHUB_API_DEP = Annotated[GithubAPI, Depends(get_github_api)]
+GithubAPIDep = Annotated[GithubAPI, Depends(get_github_api)]
