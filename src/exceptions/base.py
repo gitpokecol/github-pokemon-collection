@@ -25,3 +25,8 @@ class BadRequestError(BaseException):
 class InternalError(BaseException):
     detail = "Internal Server Error"
     http_status = status.HTTP_500_INTERNAL_SERVER_ERROR
+
+
+class ServiceUnavailableError(BaseException):
+    detail = "Service Unavailable Error"
+    http_status = status.HTTP_503_SERVICE_UNAVAILABLE
