@@ -16,7 +16,9 @@ class Setting(BaseSettings):
     ENVIRONMENT: Envrionment = Envrionment.PRODUCTION
 
     DATABASE_URL: str
-    POKEMON_PER_COMMIT_POINT: int = 500
+    GITHUB_API_TOKEN: str
+
+    POKEMON_PER_COMMIT_POINT: int = 100
 
     model_config = SettingsConfigDict(env_file=".env")
 
