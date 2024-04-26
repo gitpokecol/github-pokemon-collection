@@ -31,7 +31,7 @@ class SVGRenderer:
         for idx, pokemon in enumerate(pokemons):
             num = idx + 1
             duration = random.uniform(10, 15)
-            offset = random.randint(-80, 80)
+            offset = random.randint(-75, 80)
             delay = random.uniform(0, 10)
 
             frame_1, frame_2 = self.pokemon_left_sprites[pokemon]
