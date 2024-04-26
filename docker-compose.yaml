@@ -9,6 +9,7 @@ services:
         environment:
             - DATABASE_URL=${APP_DATABASE_URL}
             - GITHUB_API_TOKEN=${APP_GITHUB_API_TOKEN}
+            - ENVIRONMENT=${APP_ENVIRONMENT}
         ports:
             - 80:80
 
