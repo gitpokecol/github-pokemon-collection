@@ -29,7 +29,7 @@ class PokemonsFacade:
 
         if user is not None:
             if (
-                datetime.now(timezone.utc) - user.updated_at.replace(tzinfo=timezone.utc)
+                datetime.now(timezone.utc) - user.latest_commit_points_updated_at.replace(tzinfo=timezone.utc)
                 >= settings.COMMIT_POINT_UPDATE_PERIOD
             ):
                 self._background_tasks.add_task(self._update_commit_point_task, session=session, username=username)

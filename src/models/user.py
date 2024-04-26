@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 from math import ceil
 
 from sqlmodel import Field, Relationship, SQLModel
@@ -27,6 +28,10 @@ class User(SQLModel, DatedAtMixin, table=True):
     @property
     def total_commit_point(self) -> int:
         return sum(cp.commit_point for cp in self.commit_points)
+
+    @property
+    def latest_commit_points_updated_at(self) -> datetime:
+        return max(cp.updated_at for cp in self.commit_points)
 
     def set_commit_points(self, commit_points: dict[int, int]):
         for year, cp in commit_points.items():
