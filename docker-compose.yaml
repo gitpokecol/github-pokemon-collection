@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+    backend-app:
+        image: backend-app:latest
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - DATABASE_URL=${APP_DATABASE_URL}
+            - GITHUB_API_TOKEN=${APP_GITHUB_API_TOKEN}
+        ports:
+            - 80:80
+
+
+    postgres:
+        image: postgres:13
+        environment:
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        ports:
+            - 25000:5432
+
+
+volumes:
+    postgres-data:
+        driver: local

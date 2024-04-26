@@ -20,7 +20,7 @@ class Setting(BaseSettings):
 
     POKEMON_PER_COMMIT_POINT: int = 100
 
-    model_config = SettingsConfigDict(env_file=".env")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 settings = Setting()  # type: ignore
