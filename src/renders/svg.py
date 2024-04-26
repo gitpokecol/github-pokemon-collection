@@ -1,14 +1,22 @@
+import logging
 import random
 from typing import Generator
 
 from src.models.pokemon_type import PokemonType
+from src.renders.images import ImageLoader
 from src.template import svgs as svgs_templates
-
-sprite_base_url = "https://www.pokencyclopedia.info/sprites/overworlds"
-poke_ball_url = "https://www.pokencyclopedia.info/sprites/items/items_old/i_old_poke-ball.png"
 
 
 class SVGRenderer:
+    pokeball: str
+    pokemon_left_sprites: dict[PokemonType, tuple[str, str]]
+
+    @classmethod
+    async def prepare(cls, *, image_loader: ImageLoader):
+        logging.info("Load images start")
+        cls.pokeball = await image_loader.get_pokeball()
+        cls.pokemon_left_sprites = await image_loader.get_pokemon_left_sprites()
+        logging.info("Load images end")
 
     def render_svg(self, *, pokemons: list[PokemonType], commit_point: int, username: str) -> str:
         return svgs_templates.base.format(
@@ -16,21 +24,8 @@ class SVGRenderer:
             commit_point=commit_point,
             n_pokemons=len(pokemons),
             pokemons="\n".join(self._render_pokemons(pokemons)),
-            poke_ball_url=poke_ball_url,
+            poke_ball_url=self.pokeball,
         )
-
-    def _create_left_sprite_urls(self, national_no: int) -> tuple[str, str]:
-        start_url = f"{sprite_base_url}/o-l_hgss"
-        poke_url = start_url + "/o-l_hs_" + str(national_no).zfill(3)
-
-        if national_no in [3, 25]:
-            frame_1 = poke_url + "_m-1.png"
-            frame_2 = poke_url + "_m-2.png"
-        else:
-            frame_1 = poke_url + "_1.png"
-            frame_2 = poke_url + "_2.png"
-
-        return frame_1, frame_2
 
     def _render_pokemons(self, pokemons: list[PokemonType]) -> Generator[str, None, None]:
         for idx, pokemon in enumerate(pokemons):
@@ -39,7 +34,7 @@ class SVGRenderer:
             offset = random.randint(-80, 80)
             delay = random.uniform(0, 10)
 
-            frame_1, frame_2 = self._create_left_sprite_urls(pokemon.national_no)
+            frame_1, frame_2 = self.pokemon_left_sprites[pokemon]
 
             yield svgs_templates.pokemon.format(
                 num=num, duration=duration, offset=offset, delay=delay, frame_1=frame_1, frame_2=frame_2

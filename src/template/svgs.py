@@ -9,4 +9,3 @@ def load_svg_template(path: str) -> str:
 
 base = load_svg_template("templates/svgs/base.svg")
 pokemon = load_svg_template("templates/svgs/pokemon.svg")
-
