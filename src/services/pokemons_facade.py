@@ -7,6 +7,7 @@ from src.exceptions.external import GithubAPIRequestFailedError, GithubAPIUnavai
 from src.external.github_api import GithubAPI
 from src.renders.svg import SVGRenderer
 from src.services.user import UserService
+from src.setting import settings
 
 
 class PokemonsFacade:
@@ -27,7 +28,8 @@ class PokemonsFacade:
         user = await self._user_service.get_user(session=session, username=username)
 
         if user is not None:
-            self._background_tasks.add_task(self._update_commit_point_task, session=session, username=username)
+            if datetime.now(timezone.utc) - user.updated_at >= settings.COMMIT_POINT_UPDATE_PERIOD:
+                self._background_tasks.add_task(self._update_commit_point_task, session=session, username=username)
         else:
             try:
                 commit_points = await self._get_commit_points(username)

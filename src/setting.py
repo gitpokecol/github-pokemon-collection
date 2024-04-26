@@ -1,3 +1,4 @@
+from datetime import timedelta
 from enum import Enum
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -19,6 +20,7 @@ class Setting(BaseSettings):
     GITHUB_API_TOKEN: str
 
     POKEMON_PER_COMMIT_POINT: int = 100
+    COMMIT_POINT_UPDATE_PERIOD: timedelta = timedelta(hours=1)
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
