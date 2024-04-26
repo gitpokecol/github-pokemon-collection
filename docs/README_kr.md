@@ -15,7 +15,7 @@
 
 ```
 <a href="https://github.com/2jun0/github-pokemon-collection">
-  <img src="https://gitpokecol.org/pokemons/{username}/>
+  <img src="https://gitpokecol.org/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
 </a>
 ```
 
