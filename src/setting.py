@@ -3,7 +3,7 @@ from enum import Enum
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Envrionment(Enum):
+class Envrionment(str, Enum):
     TEST = "TEST"
     PRODUCTION = "PRODUCTION"
     DEVELOPMENT = "DEVELOPMENT"
