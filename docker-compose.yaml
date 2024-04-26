@@ -10,6 +10,8 @@ services:
             - DATABASE_URL=${APP_DATABASE_URL}
             - GITHUB_API_TOKEN=${APP_GITHUB_API_TOKEN}
             - ENVIRONMENT=${APP_ENVIRONMENT}
+        volumes:
+            - backend-cache:/app/__cache__
         ports:
             - 80:80
 
@@ -28,4 +30,6 @@ services:
 
 volumes:
     postgres-data:
+        driver: local
+    backend-cache:
         driver: local
