@@ -8,20 +8,24 @@
 
 
 ## 포켓몬 컬렉션
-마크다운 혹은 html에 아래를 복사하여 붙여넣으세요.  
+아래의 원하는 컬렉션을 마크다운 혹은 html에 복사하여 붙여넣으세요.  
 `{username}`칸은 여러분의 GitHub 유저명으로 바꿔주세요.
 
-![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0)
+
+왼쪽 방향 | 오른쪽 방향
+-------|---------
+![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=left) | ![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=right)
+
 
 ```
+# 왼쪽 방향
 <a href="https://github.com/2jun0/github-pokemon-collection">
-  <img src="https://gitpokecol.org/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
+  <img src="https://gitpokecol.org/pokemons/{username}?face=left" alt="{username}'s GitHub Pokemon Collection"/>
 </a>
-```
-
-이 레포로 링크되는 것이 싫으신 분은 이렇게 해도 됩니다!
-```
-![{username}'s GitHub Pokemon Collection](https://gitpokecol.org/pokemons/{username})
+# 오른쪽 방향
+<a href="https://github.com/2jun0/github-pokemon-collection">
+  <img src="https://gitpokecol.org/pokemons/{username}?face=right" alt="{username}'s GitHub Pokemon Collection"/>
+</a>
 ```
 
 ## 커밋 포인트 (CP)

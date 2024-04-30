@@ -12,13 +12,22 @@
 Copy and paste this into your markdown or html.  
 Replace `{username}` with your GitHub username.
 
-![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0)
+Moving left | Moving right
+-------|---------
+![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=left) | ![2jun0's GitHub Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=right)
+
 
 ```
+# Moving left
 <a href="https://github.com/2jun0/github-pokemon-collection">
-  <img src="https://gitpokecol.org/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
+  <img src="https://gitpokecol.org/pokemons/{username}?face=left" alt="{username}'s GitHub Pokemon Collection"/>
+</a>
+# Moving right
+<a href="https://github.com/2jun0/github-pokemon-collection">
+  <img src="https://gitpokecol.org/pokemons/{username}?face=right" alt="{username}'s GitHub Pokemon Collection"/>
 </a>
 ```
+
 
 ## Commit Points (CP)
 Commit Points that display as "cp" represent your total GitHub contributions.  
