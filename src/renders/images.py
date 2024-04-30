@@ -20,6 +20,10 @@ class ImageLoader:
     async def get_pokemon_left_sprites(self) -> dict[PokemonType, tuple[str, str]]:
         return {pokemon: await self._create_left_sprite_urls(pokemon.national_no) for pokemon in PokemonType}
 
+    @file_cache("pokemon_right_sprites")
+    async def get_pokemon_right_sprites(self) -> dict[PokemonType, tuple[str, str]]:
+        return {pokemon: await self._create_right_sprite_urls(pokemon.national_no) for pokemon in PokemonType}
+
     @file_cache("pokeball")
     async def get_pokeball(self) -> str:
         return await self._get_as_base64(POKEBALL_URL)
@@ -32,6 +36,19 @@ class ImageLoader:
     async def _create_left_sprite_urls(self, national_no: int) -> tuple[str, str]:
         start_url = f"{SPRITE_BASE_URL}/o-l_hgss"
         poke_url = start_url + "/o-l_hs_" + str(national_no).zfill(3)
+
+        if national_no in [3, 25]:
+            frame_1 = poke_url + "_m-1.png"
+            frame_2 = poke_url + "_m-2.png"
+        else:
+            frame_1 = poke_url + "_1.png"
+            frame_2 = poke_url + "_2.png"
+
+        return (await self._get_as_base64(frame_1), await self._get_as_base64(frame_2))
+
+    async def _create_right_sprite_urls(self, national_no: int) -> tuple[str, str]:
+        start_url = f"{SPRITE_BASE_URL}/o-r_hgss"
+        poke_url = start_url + "/o-r_hs_" + str(national_no).zfill(3)
 
         if national_no in [3, 25]:
             frame_1 = poke_url + "_m-1.png"

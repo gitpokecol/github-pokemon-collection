@@ -25,16 +25,28 @@
 
         .pokemon {
             opacity: 0;
-            animation-name: move-pokemon;
+            animation-name: move-pokemon-left;
             animation-duration: var(--pokemon-move-duration);
             animation-delay: var(--pokemon-move-delay);
             animation-iteration-count: infinite;
             animation-timing-function: linear;
         }
-        @keyframes move-pokemon {
+
+        .pokemon.left-face {
+            animation-name: move-pokemon-left;
+        }
+        .pokemon.right-face {
+            animation-name: move-pokemon-right;
+        }
+
+        @keyframes move-pokemon-left {
             0% {opacity: 1; transform: translate(120%, calc(64px + var(--pokemon-y-offsets)));}
             100% {opacity: 1; transform: translate(-120%, calc(64px + var(--pokemon-y-offsets)));}
         }
+        @keyframes move-pokemon-right {
+            0% {opacity: 1; transform: translate(-120%, calc(64px + var(--pokemon-y-offsets)));}
+            100% {opacity: 1; transform: translate(120%, calc(64px + var(--pokemon-y-offsets)));}
+        }        
     </style>
     <rect x="0.01%" y="0.01%" rx="4.5" width="99.99%" height="99.99%" stroke="#e4e2e2" fill="#ffffff" stroke-opacity="1"/>
     <g transform="translate(20, 30)">

@@ -2,9 +2,13 @@ import logging
 import random
 from typing import Generator
 
+from src.exceptions.base import InternalError
 from src.models.pokemon_type import PokemonType
 from src.renders.images import ImageLoader
+from src.schemas.pokemons import PokemonFace
 from src.template import svgs as svgs_templates
+
+pokemon_templates = {PokemonFace.LEFT: svgs_templates.pokemon_left, PokemonFace.RIGHT: svgs_templates.pokemon_right}
 
 
 class SVGRenderer:
@@ -16,26 +20,32 @@ class SVGRenderer:
         logging.info("Load images start")
         cls.pokeball = await image_loader.get_pokeball()
         cls.pokemon_left_sprites = await image_loader.get_pokemon_left_sprites()
+        cls.pokemon_right_sprites = await image_loader.get_pokemon_right_sprites()
         logging.info("Load images end")
 
-    def render_svg(self, *, pokemons: list[PokemonType], commit_point: int, username: str) -> str:
+    def render_svg(self, *, pokemons: list[PokemonType], commit_point: int, username: str, face: PokemonFace) -> str:
         return svgs_templates.base.format(
             username=username,
             commit_point=commit_point,
             n_pokemons=len(pokemons),
-            pokemons="\n".join(self._render_pokemons(pokemons)),
+            pokemons="\n".join(self._render_pokemons(pokemons, face)),
             poke_ball_url=self.pokeball,
         )
 
-    def _render_pokemons(self, pokemons: list[PokemonType]) -> Generator[str, None, None]:
+    def _render_pokemons(self, pokemons: list[PokemonType], face: PokemonFace) -> Generator[str, None, None]:
         for idx, pokemon in enumerate(pokemons):
             num = idx + 1
             duration = random.uniform(10, 15)
             offset = random.randint(-75, 80)
             delay = random.uniform(0, 10)
 
-            frame_1, frame_2 = self.pokemon_left_sprites[pokemon]
+            if face is PokemonFace.LEFT:
+                frame_1, frame_2 = self.pokemon_left_sprites[pokemon]
+            elif face is PokemonFace.RIGHT:
+                frame_1, frame_2 = self.pokemon_right_sprites[pokemon]
+            else:
+                raise InternalError
 
-            yield svgs_templates.pokemon.format(
+            yield pokemon_templates[face].format(
                 num=num, duration=duration, offset=offset, delay=delay, frame_1=frame_1, frame_2=frame_2
             )

@@ -6,6 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.exceptions.external import GithubAPIRequestFailedError, GithubAPIUnavailableError
 from src.external.github_api import GithubAPI
 from src.renders.svg import SVGRenderer
+from src.schemas.pokemons import PokemonFace
 from src.services.user import UserService
 from src.setting import settings
 
@@ -24,7 +25,7 @@ class PokemonsFacade:
         self._renderer = renderer
         self._background_tasks = background_tasks
 
-    async def render_pokemons(self, *, session: AsyncSession, username: str) -> str:
+    async def render_pokemons(self, *, session: AsyncSession, username: str, face: PokemonFace) -> str:
         user = await self._user_service.get_user(session=session, username=username)
 
         if user is not None:
@@ -43,7 +44,7 @@ class PokemonsFacade:
                 raise GithubAPIUnavailableError from e
 
         return self._renderer.render_svg(
-            pokemons=user.pokemon_types, commit_point=user.total_commit_point, username=username
+            pokemons=user.pokemon_types, commit_point=user.total_commit_point, username=username, face=face
         )
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:
