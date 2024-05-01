@@ -1,7 +1,6 @@
 import base64
 
 from httpx import AsyncClient
-from pydantic import BaseModel
 
 from src.models.pokemon_type import PokemonType
 from src.utils import file_cache
@@ -59,9 +58,9 @@ class ImageLoader:
         return (await self._get_as_base64(frame_1), await self._get_as_base64(frame_2))
 
 
-class SpriteUrl(BaseModel):
+class SpriteUrl:
     def __init__(self, base: str) -> None:
-        """Will set `{base}/{face}/{type}{frame}.png`"""
+        """Will set `{base}/{face}{type}{frame}.png`"""
 
         self._base = base
         self._face = None
@@ -72,15 +71,15 @@ class SpriteUrl(BaseModel):
         return self
 
     def left(self):
-        self._face = "/o-l_hgss/o-l_hs_"
+        self._face = "o-l_hgss/o-l_hs_"
         return self
 
     def right_shiny(self):
-        self._face = "/o-r_hgss_shiny/o-r_hs-S_"
+        self._face = "o-r_hgss_shiny/o-r_hs-S_"
         return self
 
     def left_shiny(self):
-        self._face = "/o-l_hgss_shiny/o-l_hs-S_"
+        self._face = "o-l_hgss_shiny/o-l_hs-S_"
         return self
 
     def type(self, poke_type: PokemonType):
@@ -96,4 +95,4 @@ class SpriteUrl(BaseModel):
         return self._url("1"), self._url("2")
 
     def _url(self, frame: str) -> str:
-        return f"{self._base}/{self._face}/{self._type}.png"
+        return f"{self._base}/{self._face}{self._type}{frame}.png"
