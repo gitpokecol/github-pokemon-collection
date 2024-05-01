@@ -52,7 +52,7 @@ class User(SQLModel, DatedAtMixin, table=True):
         pokemon_types = random.sample(list(remain_types), new_cnt)
 
         for pt in pokemon_types:
-            is_shiny = settings.SHINY_POKEMON_RATE <= random.random()
+            is_shiny = settings.SHINY_POKEMON_RATE > random.random()
             self.pokemons.append(Pokemon(type=pt, is_shiny=is_shiny))
 
     def _calc_proper_pokemon_cnt(self) -> int:
