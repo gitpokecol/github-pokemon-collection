@@ -44,7 +44,7 @@ class PokemonsFacade:
                 raise GithubAPIUnavailableError from e
 
         return self._renderer.render_svg(
-            pokemons=user.pokemon_types, commit_point=user.total_commit_point, username=username, face=face
+            pokemons=user.pokemons, commit_point=user.total_commit_point, username=username, face=face
         )
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:
