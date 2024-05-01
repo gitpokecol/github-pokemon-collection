@@ -3,6 +3,7 @@ import random
 from typing import Generator
 
 from src.exceptions.base import InternalError
+from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.renders.images import ImageLoader
 from src.schemas.pokemons import PokemonFace
@@ -21,9 +22,11 @@ class SVGRenderer:
         cls.pokeball = await image_loader.get_pokeball()
         cls.pokemon_left_sprites = await image_loader.get_pokemon_left_sprites()
         cls.pokemon_right_sprites = await image_loader.get_pokemon_right_sprites()
+        cls.pokemon_shiny_left_sprites = await image_loader.get_pokemon_shiny_left_sprites()
+        cls.pokemon_shiny_right_sprites = await image_loader.get_pokemon_shiny_right_sprites()
         logging.info("Load images end")
 
-    def render_svg(self, *, pokemons: list[PokemonType], commit_point: int, username: str, face: PokemonFace) -> str:
+    def render_svg(self, *, pokemons: list[Pokemon], commit_point: int, username: str, face: PokemonFace) -> str:
         return svgs_templates.base.format(
             username=username,
             commit_point=commit_point,
@@ -32,7 +35,7 @@ class SVGRenderer:
             poke_ball_url=self.pokeball,
         )
 
-    def _render_pokemons(self, pokemons: list[PokemonType], face: PokemonFace) -> Generator[str, None, None]:
+    def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace) -> Generator[str, None, None]:
         for idx, pokemon in enumerate(pokemons):
             num = idx + 1
             duration = random.uniform(10, 15)
@@ -40,9 +43,15 @@ class SVGRenderer:
             delay = random.uniform(0, 10)
 
             if face is PokemonFace.LEFT:
-                frame_1, frame_2 = self.pokemon_left_sprites[pokemon]
+                if pokemon.is_shiny:
+                    frame_1, frame_2 = self.pokemon_shiny_left_sprites[pokemon.type]
+                else:
+                    frame_1, frame_2 = self.pokemon_left_sprites[pokemon.type]
             elif face is PokemonFace.RIGHT:
-                frame_1, frame_2 = self.pokemon_right_sprites[pokemon]
+                if pokemon.is_shiny:
+                    frame_1, frame_2 = self.pokemon_shiny_right_sprites[pokemon.type]
+                else:
+                    frame_1, frame_2 = self.pokemon_right_sprites[pokemon.type]
             else:
                 raise InternalError
 
