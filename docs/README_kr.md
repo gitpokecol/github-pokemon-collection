@@ -8,6 +8,8 @@
 
 
 ## 포켓몬 컬렉션
+[프리뷰](https://gitpokecol.org/static/preview.html)에서 체험해볼 수 있어요!
+
 아래의 원하는 컬렉션을 마크다운 혹은 html에 복사하여 붙여넣으세요.  
 `{username}`칸은 여러분의 GitHub 유저명으로 바꿔주세요.
 

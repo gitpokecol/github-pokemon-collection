@@ -8,6 +8,7 @@
 
 
 ## Your Pokémon Collection
+See [preivew](https://gitpokecol.org/static/preview.html)
 
 Copy and paste this into your markdown or html.  
 Replace `{username}` with your GitHub username.
