@@ -1,5 +1,5 @@
 <div align="center">
-    <h2 align="center">GitHub Pokémon Collection</h2>
+    <img alt="logo" src="/docs/logo.png"/>
     <p align="center">Collect all Pokémon through GitHub contributions!</p>
 </div>
 <div align="center">

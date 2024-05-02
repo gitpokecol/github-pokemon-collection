@@ -1,5 +1,5 @@
 <div align="center">
-    <h2 align="center">GitHub Pokémon Collection</h2>
+    <img alt="logo" src="/docs/logo.png"/>
     <p align="center">GitHub 기여를 통해 모든 포켓몬을 모아보세요!</p>
 </div>
 <div align="center">
