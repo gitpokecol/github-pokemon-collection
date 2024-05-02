@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
 
 from src.exceptions.handler import install_exception_handlers
 from src.renders.images import ImageLoader
@@ -22,3 +23,5 @@ else:
 
 app.include_router(pokemon_router)
 install_exception_handlers(app)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")

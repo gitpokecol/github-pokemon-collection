@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+    }
+  </style>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const button = document.querySelector("button");
+      const input = document.querySelector("input");
+      const previewImg = document.getElementById("preview");
+
+      button.addEventListener("click", function () {
+        const username = input.value.trim();
+        if (username !== "") {
+          // Construct the URL for the SVG based on the username
+          const svgUrl = `https://gitpokecol.org/pokemons/${username}`;
+          // Set the src attribute of the image element to the SVG URL
+          previewImg.src = svgUrl;
+        } else {
+          alert("Please enter a GitHub username.");
+        }
+      });
+    });
+  </script>
+  <head>
+    <title>Github Pokemon Collection Preview</title>
+  </head>
+  <body>
+    <h2>Preivew Github Pokemon Collection</h2>
+    <div>
+      <input type="text" placeholder="github username" />
+      <button>View your collection</button>
+    </div>
+    <img id="preview" />
+  </body>
+</html>
