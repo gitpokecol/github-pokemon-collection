@@ -4,23 +4,47 @@
     body {
       font-family: "Roboto", sans-serif;
     }
+    pre code {
+      background-color: #eee;
+      border: 1px solid #999;
+      display: block;
+      padding: 20px;
+      height: auto;
+      overflow: auto;
+      word-break: normal !important;
+      word-wrap: normal !important;
+      white-space: pre !important;
+    }
+    .hidden {
+      display: none;
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const button = document.querySelector("button");
-      const input = document.querySelector("input");
-      const previewImg = document.getElementById("preview");
+      const preview = document.getElementById("preview");
+      const previewImg = document.getElementById("preview-img");
+      const previewUrl = document.getElementById("preview-url");
 
-      button.addEventListener("click", function () {
-        const username = input.value.trim();
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", (event) => {
+        const formData = new FormData(form);
+        const moving = formData.get("moving");
+        const username = formData.get("username");
+
         if (username !== "") {
-          // Construct the URL for the SVG based on the username
-          const svgUrl = `https://gitpokecol.org/pokemons/${username}`;
-          // Set the src attribute of the image element to the SVG URL
+          preview.classList.remove("hidden");
+
+          const svgUrl = `https://gitpokecol.org/pokemons/${username}?face=${moving}`;
           previewImg.src = svgUrl;
+          previewUrl.textContent = `<a href="https://github.com/2jun0/github-pokemon-collection">
+    <img src="${svgUrl}" alt="${username}'s GitHub Pokemon Collection"/>
+</a>`;
         } else {
           alert("Please enter a GitHub username.");
         }
+
+        event.preventDefault();
       });
     });
   </script>
@@ -28,11 +52,21 @@
     <title>Github Pokemon Collection Preview</title>
   </head>
   <body>
-    <h2>Preivew Github Pokemon Collection</h2>
-    <div>
-      <input type="text" placeholder="github username" />
-      <button>View your collection</button>
+    <h2>Github Pokemon Collection Preivew</h2>
+    <form>
+      <div>
+        Moving:
+        <input type="radio" id="left" name="moving" value="left" checked />
+        <label for="left">Left</label>
+        <input type="radio" id="right" name="moving" value="right" />
+        <label for="right">Right</label>
+      </div>
+      <input type="text" name="username" placeholder="github username" />
+      <button type="submit">Preview</button>
+    </form>
+    <div id="preview" class="hidden">
+      <img id="preview-img" />
+      <pre><code id="preview-url"></code></pre>
     </div>
-    <img id="preview" />
   </body>
 </html>
