@@ -14,7 +14,7 @@ services:
             - backend-cache:/app/__cache__
         ports:
             - 80:80
-
+        restart: "on-failure"
 
     postgres:
         image: postgres:13
