@@ -1,6 +1,6 @@
 import logging
 import random
-from typing import Generator
+from typing import Generator, NamedTuple
 
 from src.exceptions.base import InternalError
 from src.models.pokemon import Pokemon
@@ -36,13 +36,26 @@ class SVGRenderer:
         )
 
     def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace) -> Generator[str, None, None]:
-        offsets = [random.randint(-75, 80) for _ in range(len(pokemons))]
-        offsets.sort()
+        rendering_pokemons = list(self._rendering_pokmemons(pokemons, face))
+        rendering_pokemons.sort(key=lambda r: r.offset)
 
-        for idx, pokemon in enumerate(pokemons):
+        for idx, rendering_pokemon in enumerate(rendering_pokemons):
             num = idx + 1
+            yield pokemon_templates[face].format(
+                num=num,
+                duration=rendering_pokemon.duration,
+                offset=rendering_pokemon.offset,
+                delay=rendering_pokemon.delay,
+                frame_1=rendering_pokemon.frames[0],
+                frame_2=rendering_pokemon.frames[0],
+            )
+
+    def _rendering_pokmemons(
+        self, pokemons: list[Pokemon], face: PokemonFace
+    ) -> Generator["_RenderingPokemon", None, None]:
+        for pokemon in pokemons:
             duration = random.uniform(10, 15)
-            offset = offsets[idx]
+            offset = random.randint(-75, 80)
             delay = random.uniform(0, 10)
 
             if face is PokemonFace.LEFT:
@@ -58,6 +71,11 @@ class SVGRenderer:
             else:
                 raise InternalError
 
-            yield pokemon_templates[face].format(
-                num=num, duration=duration, offset=offset, delay=delay, frame_1=frame_1, frame_2=frame_2
-            )
+            yield _RenderingPokemon(duration=duration, offset=offset, delay=delay, frames=(frame_1, frame_2))
+
+
+class _RenderingPokemon(NamedTuple):
+    duration: float
+    offset: int
+    delay: float
+    frames: tuple[str, str]
