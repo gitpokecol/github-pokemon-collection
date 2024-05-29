@@ -36,10 +36,13 @@ class SVGRenderer:
         )
 
     def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace) -> Generator[str, None, None]:
+        offsets = [random.randint(-75, 80) for _ in range(len(pokemons))]
+        offsets.sort()
+
         for idx, pokemon in enumerate(pokemons):
             num = idx + 1
             duration = random.uniform(10, 15)
-            offset = random.randint(-75, 80)
+            offset = offsets[idx]
             delay = random.uniform(0, 10)
 
             if face is PokemonFace.LEFT:
