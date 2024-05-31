@@ -59,7 +59,7 @@ class SVGRenderer:
     ) -> Generator["_RenderingPokemon", None, None]:
         for pokemon in pokemons:
             duration = random.uniform(10, 15)
-            offset = random.randint(0, height - 170)
+            offset = random.randint(0, height - 95)
             delay = random.uniform(0, 10)
 
             if face is PokemonFace.LEFT:
