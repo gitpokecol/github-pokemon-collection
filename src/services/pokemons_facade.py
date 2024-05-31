@@ -25,7 +25,9 @@ class PokemonsFacade:
         self._renderer = renderer
         self._background_tasks = background_tasks
 
-    async def render_pokemons(self, *, session: AsyncSession, username: str, face: PokemonFace) -> str:
+    async def render_pokemons(
+        self, *, session: AsyncSession, username: str, face: PokemonFace, width: int, height: int
+    ) -> str:
         user = await self._user_service.get_user(session=session, username=username)
 
         if user is not None:
@@ -44,7 +46,12 @@ class PokemonsFacade:
                 raise GithubAPIUnavailableError from e
 
         return self._renderer.render_svg(
-            pokemons=user.pokemons, commit_point=user.total_commit_point, username=username, face=face
+            pokemons=user.pokemons,
+            commit_point=user.total_commit_point,
+            username=username,
+            face=face,
+            width=width,
+            height=height,
         )
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:

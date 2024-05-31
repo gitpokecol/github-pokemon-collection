@@ -26,17 +26,21 @@ class SVGRenderer:
         cls.pokemon_shiny_right_sprites = await image_loader.get_pokemon_shiny_right_sprites()
         logging.info("Load images end")
 
-    def render_svg(self, *, pokemons: list[Pokemon], commit_point: int, username: str, face: PokemonFace) -> str:
+    def render_svg(
+        self, *, pokemons: list[Pokemon], commit_point: int, username: str, face: PokemonFace, width: int, height: int
+    ) -> str:
         return svgs_templates.base.format(
+            width=width,
+            height=height,
             username=username,
             commit_point=commit_point,
             n_pokemons=len(pokemons),
-            pokemons="\n".join(self._render_pokemons(pokemons, face)),
+            pokemons="\n".join(self._render_pokemons(pokemons, face, height)),
             poke_ball_url=self.pokeball,
         )
 
-    def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace) -> Generator[str, None, None]:
-        rendering_pokemons = list(self._rendering_pokmemons(pokemons, face))
+    def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace, height: int) -> Generator[str, None, None]:
+        rendering_pokemons = list(self._rendering_pokmemons(pokemons, face, height))
         rendering_pokemons.sort(key=lambda r: r.offset)
 
         for idx, rendering_pokemon in enumerate(rendering_pokemons):
@@ -51,11 +55,11 @@ class SVGRenderer:
             )
 
     def _rendering_pokmemons(
-        self, pokemons: list[Pokemon], face: PokemonFace
+        self, pokemons: list[Pokemon], face: PokemonFace, height: int
     ) -> Generator["_RenderingPokemon", None, None]:
         for pokemon in pokemons:
             duration = random.uniform(10, 15)
-            offset = random.randint(-75, 80)
+            offset = random.randint(0, height - 170)
             delay = random.uniform(0, 10)
 
             if face is PokemonFace.LEFT:

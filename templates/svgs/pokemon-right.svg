@@ -2,7 +2,7 @@
     <style>
         #pokemon-{{num}} {
             --pokemon-move-duration: {{duration}}s;
-            --pokemon-x-offsets: calc({{offset}}px+60px);
+            --pokemon-x-offsets: {{offset}}px;
             --pokemon-y-offsets: {{offset}}px;
             --pokemon-move-delay: {{delay}}s;
         }
