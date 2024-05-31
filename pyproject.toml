@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "github-pokemon-collection"
-version = "2"
+version = "3"
 description = ""
 authors = ["2jun0 <soo28819@gmail.com>"]
 license = "MIT"
