@@ -31,11 +31,13 @@
         const formData = new FormData(form);
         const moving = formData.get("moving");
         const username = formData.get("username");
+        const width = formData.get("width");
+        const height = formData.get("height");
 
         if (username !== "") {
           preview.classList.remove("hidden");
 
-          const svgUrl = `https://gitpokecol.org/pokemons/${username}?face=${moving}`;
+          const svgUrl = `https://gitpokecol.org/pokemons/${username}?face=${moving}&width=${width}&height=${height}`;
           previewImg.src = svgUrl;
           previewUrl.textContent = `<a href="https://github.com/2jun0/github-pokemon-collection">
     <img src="${svgUrl}" alt="${username}'s GitHub Pokemon Collection"/>
@@ -61,7 +63,30 @@
         <input type="radio" id="right" name="moving" value="right" />
         <label for="right">Right</label>
       </div>
-      <input type="text" name="username" placeholder="github username" />
+      <div>
+        Width:
+        <input
+          type="number"
+          name="width"
+          placeholder="svg width"
+          value="300"
+          min="250"
+        />
+      </div>
+      <div>
+        Height:
+        <input
+          type="number"
+          name="height"
+          placeholder="svg height"
+          value="250"
+          min="200"
+        />
+      </div>
+      <div>
+        Username:
+        <input type="text" name="username" placeholder="github username" />
+      </div>
       <button type="submit">Preview</button>
     </form>
     <div id="preview" class="hidden">
