@@ -51,7 +51,7 @@ class SVGRenderer:
                 offset=rendering_pokemon.offset,
                 delay=rendering_pokemon.delay,
                 frame_1=rendering_pokemon.frames[0],
-                frame_2=rendering_pokemon.frames[0],
+                frame_2=rendering_pokemon.frames[1],
             )
 
     def _rendering_pokmemons(
