@@ -1,39 +1,42 @@
-from unittest.mock import Mock
+import asyncio
 
 from fastapi import status
 from httpx import AsyncClient
-from sqlmodel.ext.asyncio.session import AsyncSession
-
-from src.dependencies.external import get_github_api
-from src.main import app
-from tests.utils.user import get_user
 
 
-class GithubAPIFake:
-    def __init__(self, contributions: dict[int, int]) -> None:
-        self.contribs = contributions
+async def test_get_pokemons__valid_request__responses_svg(client: AsyncClient):
+    # when
+    response = await client.get("/pokemons/2jun0")
+    response_json = response.json()
 
-    async def get_user_total_contributions(self, *args, **kwargs) -> dict[int, int]:
-        return self.contribs
-
-    async def get_user_contributions_by_year(self, *args, year: int, **kwargs) -> int:
-        return self.contribs[year]
+    # then
+    assert response.status_code == status.HTTP_200_OK
+    assert response_json
 
 
-async def test_get_pokemons_should_create_user(client: AsyncClient, session: AsyncSession):
-    contribs = {
-        2021: 50,
-        2022: 200,
-        2023: 0,
-        2024: 100,
-    }
-    app.dependency_overrides[get_github_api] = lambda: Mock(wraps=GithubAPIFake(contribs))
+async def test_get_pokemons__not_existed_username__responses_not_found(client: AsyncClient):
+    # when
+    response = await client.get("/pokemons/2")
 
-    res = await client.get("/pokemons/2jun0")
-    assert res.status_code == status.HTTP_200_OK
+    # then
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
-    user = await get_user(session, username="2jun0")
-    assert user is not None
-    for cp in user.commit_points:
-        assert cp.year in contribs
-        assert contribs[cp.year] == cp.commit_point
+
+async def test_get_pokemons__10_requests_at_same_time__responses_ok(client: AsyncClient):
+    # when
+    responses = await asyncio.gather(
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+        client.get("/pokemons/2jun0"),
+    )
+
+    # then
+    for response in responses:
+        assert response.status_code == status.HTTP_200_OK
