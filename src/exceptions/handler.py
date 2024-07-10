@@ -45,7 +45,7 @@ def _log_warn(e: Exception, request: Request):
 
 
 def _log_error(e: Exception, request: Request):
-    logger.error(LOG_FORMAT_WARN, request.method, request.url, e)
+    logger.error(LOG_FORMAT_ERROR, request.method, request.url, e)
 
 
 def install_exception_handlers(app: FastAPI):
