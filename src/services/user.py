@@ -30,4 +30,6 @@ class UserService:
     async def get_user(self, session: AsyncSession, username: str) -> User | None:
         stmt = select(User).where(User.username == username)
         rs = await session.exec(stmt)
+
+        await session.close()
         return rs.first()
