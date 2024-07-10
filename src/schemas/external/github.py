@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class UserContributionsByYear(BaseModel):
-    user: "User"
+    user: "User | None"
 
     class User(BaseModel):
         contributionsCollection: "ContributionsCollection"
@@ -12,7 +12,7 @@ class UserContributionsByYear(BaseModel):
 
 
 class UserContributionYears(BaseModel):
-    user: "User"
+    user: "User | None"
 
     class User(BaseModel):
         contributionsCollection: "ContributionsCollection"

@@ -1,7 +1,8 @@
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from src.exceptions.user import UserNotFoundError
+from src.exceptions.common import NotFoundError
+from src.exceptions.error_codes import ErrorCode
 from src.models.user import User
 
 
@@ -19,7 +20,8 @@ class UserService:
     async def update_commit_point(self, *, session: AsyncSession, username: str, year: int, commit_point: int) -> User:
         user = await self.get_user(session, username)
         if user is None:
-            raise UserNotFoundError
+            raise NotFoundError(ErrorCode.USER_NOT_FOUND)
+
         user.set_commit_point(year, commit_point)
 
         await session.commit()

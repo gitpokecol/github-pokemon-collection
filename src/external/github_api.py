@@ -1,12 +1,16 @@
-from typing import Any
+from typing import Any, TypedDict
 
 from httpx import AsyncClient, HTTPStatusError
-from pydantic import ValidationError
 
-from src.exceptions.external import GithubAPIRequestFailedError
+from src.exceptions.common import NotFoundError, ServiceUnavailableError
+from src.exceptions.error_codes import ErrorCode
 from src.schemas.external.github import UserContributionsByYear, UserContributionYears
 from src.setting import settings
 from src.template import github_apis as github_api_templates
+
+
+class GraphQLResponseJson(TypedDict):
+    data: dict[str, Any]
 
 
 class GithubAPI:
@@ -20,35 +24,33 @@ class GithubAPI:
 
     async def get_user_contributions_by_year(self, *, username: str, year: int) -> int:
         query = github_api_templates.contribution_by_year.format(username=username, year=year)
+        res = await self._query_graphql(query)
 
-        try:
-            data = UserContributionsByYear.model_validate(await self._query_graphql(query))
-        except ValidationError as e:
-            raise GithubAPIRequestFailedError from e
+        data = UserContributionsByYear.model_validate(res["data"])
+
+        if data.user is None:
+            raise NotFoundError(ErrorCode.USER_NOT_FOUND)
 
         return data.user.contributionsCollection.totalCommitContributions
 
     async def _get_user_contribution_years(self, *, username: str) -> list[int]:
         query = github_api_templates.contribution_years.format(username=username)
+        res = await self._query_graphql(query)
 
-        try:
-            data = UserContributionYears.model_validate(await self._query_graphql(query))
-        except ValidationError as e:
-            raise GithubAPIRequestFailedError from e
+        data = UserContributionYears.model_validate(res["data"])
+
+        if data.user is None:
+            raise NotFoundError(ErrorCode.USER_NOT_FOUND)
 
         return data.user.contributionsCollection.contributionYears
 
-    async def _query_graphql(self, *queries: str) -> dict[str, Any]:
+    async def _query_graphql(self, *queries: str) -> GraphQLResponseJson:
         query = "{" + "\n".join(queries) + "}"
         res = await self.client.post("https://api.github.com/graphql", json={"query": query})
 
         try:
             res.raise_for_status()
         except HTTPStatusError as e:
-            raise GithubAPIRequestFailedError from e
+            raise ServiceUnavailableError(ErrorCode.GITHUB_API_SERVICE_UNAVAILABLE) from e
 
-        res_json = res.json()
-        if "data" not in res_json:
-            raise GithubAPIRequestFailedError
-
-        return res_json["data"]
+        return res.json()

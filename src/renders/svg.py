@@ -2,7 +2,6 @@ import logging
 import random
 from typing import Generator, NamedTuple
 
-from src.exceptions.base import InternalError
 from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.renders.images import ImageLoader
@@ -72,8 +71,6 @@ class SVGRenderer:
                     frame_1, frame_2 = self.pokemon_shiny_right_sprites[pokemon.type]
                 else:
                     frame_1, frame_2 = self.pokemon_right_sprites[pokemon.type]
-            else:
-                raise InternalError
 
             yield _RenderingPokemon(duration=duration, offset=offset, delay=delay, frames=(frame_1, frame_2))
 
