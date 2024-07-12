@@ -6,3 +6,5 @@ __pycache__
 .env
 requirements.txt
 __cache__
+imgs/pokemons/*
+imgs/ui/pokeball.png
