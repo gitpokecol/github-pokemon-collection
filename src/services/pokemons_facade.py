@@ -41,7 +41,7 @@ class PokemonsFacade:
                 session=session, username=username, commit_points=commit_points
             )
 
-        return self._renderer.render_svg(
+        return await self._renderer.render_svg(
             pokemons=user.pokemons,
             commit_point=user.total_commit_point,
             username=username,

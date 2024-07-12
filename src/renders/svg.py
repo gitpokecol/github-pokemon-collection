@@ -1,9 +1,7 @@
-import logging
 import random
-from typing import Generator, NamedTuple
+from typing import AsyncGenerator, NamedTuple
 
 from src.models.pokemon import Pokemon
-from src.models.pokemon_type import PokemonType
 from src.renders.images import ImageLoader
 from src.schemas.pokemons import PokemonFace
 from src.template import svgs as svgs_templates
@@ -12,20 +10,11 @@ pokemon_templates = {PokemonFace.LEFT: svgs_templates.pokemon_left, PokemonFace.
 
 
 class SVGRenderer:
-    pokeball: str
-    pokemon_left_sprites: dict[PokemonType, tuple[str, str]]
 
-    @classmethod
-    async def prepare(cls, *, image_loader: ImageLoader):
-        logging.info("Load images start")
-        cls.pokeball = await image_loader.get_pokeball()
-        cls.pokemon_left_sprites = await image_loader.get_pokemon_left_sprites()
-        cls.pokemon_right_sprites = await image_loader.get_pokemon_right_sprites()
-        cls.pokemon_shiny_left_sprites = await image_loader.get_pokemon_shiny_left_sprites()
-        cls.pokemon_shiny_right_sprites = await image_loader.get_pokemon_shiny_right_sprites()
-        logging.info("Load images end")
+    def __init__(self, image_loader: ImageLoader):
+        self._image_loader = image_loader
 
-    def render_svg(
+    async def render_svg(
         self, *, pokemons: list[Pokemon], commit_point: int, username: str, face: PokemonFace, width: int, height: int
     ) -> str:
         return svgs_templates.base.format(
@@ -34,12 +23,17 @@ class SVGRenderer:
             username=username,
             commit_point=commit_point,
             n_pokemons=len(pokemons),
-            pokemons="\n".join(self._render_pokemons(pokemons, face, height)),
-            poke_ball_url=self.pokeball,
+            pokemons="\n".join([pokemon async for pokemon in self._render_pokemons(pokemons, face, height)]),
+            poke_ball_url=await self._image_loader.get_pokeball(),
         )
 
-    def _render_pokemons(self, pokemons: list[Pokemon], face: PokemonFace, height: int) -> Generator[str, None, None]:
-        rendering_pokemons = list(self._rendering_pokmemons(pokemons, face, height))
+    async def _render_pokemons(
+        self, pokemons: list[Pokemon], face: PokemonFace, height: int
+    ) -> AsyncGenerator[str, None]:
+
+        rendering_pokemons = [
+            rendering_pokemon async for rendering_pokemon in self._rendering_pokmemons(pokemons, face, height)
+        ]
         rendering_pokemons.sort(key=lambda r: r.offset)
 
         for idx, rendering_pokemon in enumerate(rendering_pokemons):
@@ -53,26 +47,20 @@ class SVGRenderer:
                 frame_2=rendering_pokemon.frames[1],
             )
 
-    def _rendering_pokmemons(
+    async def _rendering_pokmemons(
         self, pokemons: list[Pokemon], face: PokemonFace, height: int
-    ) -> Generator["_RenderingPokemon", None, None]:
+    ) -> AsyncGenerator["_RenderingPokemon", None]:
         for pokemon in pokemons:
             duration = random.uniform(10, 15)
             offset = random.randint(0, height - 95)
             delay = random.uniform(0, 10)
 
-            if face is PokemonFace.LEFT:
-                if pokemon.is_shiny:
-                    frame_1, frame_2 = self.pokemon_shiny_left_sprites[pokemon.type]
-                else:
-                    frame_1, frame_2 = self.pokemon_left_sprites[pokemon.type]
-            elif face is PokemonFace.RIGHT:
-                if pokemon.is_shiny:
-                    frame_1, frame_2 = self.pokemon_shiny_right_sprites[pokemon.type]
-                else:
-                    frame_1, frame_2 = self.pokemon_right_sprites[pokemon.type]
+            sprite_frame_1 = await self._image_loader.get_pokemon_sprite(pokemon.type, face, pokemon.is_shiny, 1)
+            sprite_frame_2 = await self._image_loader.get_pokemon_sprite(pokemon.type, face, pokemon.is_shiny, 1)
 
-            yield _RenderingPokemon(duration=duration, offset=offset, delay=delay, frames=(frame_1, frame_2))
+            yield _RenderingPokemon(
+                duration=duration, offset=offset, delay=delay, frames=(sprite_frame_1, sprite_frame_2)
+            )
 
 
 class _RenderingPokemon(NamedTuple):
