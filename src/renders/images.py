@@ -6,6 +6,7 @@ import aiofiles
 from httpx import AsyncClient
 
 from src.models.pokemon_type import PokemonType
+from src.schemas.backgrounds import Background
 from src.schemas.pokemons import PokemonFace
 
 POKEBALL_IMAGE_PATH = "imgs/ui/pokeball.png"
@@ -16,6 +17,7 @@ class ImageLoader:
         self._client = AsyncClient(http2=True)
         self._cache_get_pokemon_sprite = {}
         self._cache_get_pokeball = None
+        self._cache_background = {}
 
     async def prepare(self):
         coros: list[Coroutine] = []
@@ -46,6 +48,12 @@ class ImageLoader:
 
         return self._cache_get_pokeball
 
+    async def get_background(self, background: Background) -> str:
+        if background not in self._cache_background:
+            self._cache_background[background] = await self._load_as_base64(self._get_background_path(background))
+
+        return self._cache_background[background]
+
     async def _load_as_base64(self, path: str) -> str:
         async with aiofiles.open(path, "rb") as f:
             content = await f.read()
@@ -62,3 +70,6 @@ class ImageLoader:
             return f"imgs/pokemons/{pokemon_type.national_no}_{face.value}_{frame}.png"
         else:
             return f"imgs/pokemons/{pokemon_type.national_no}_{face.value}_shiny_{frame}.png"
+
+    def _get_background_path(self, background: Background):
+        return f"imgs/backgrounds/{background.value}.png"

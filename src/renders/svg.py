@@ -76,7 +76,8 @@ class SVGRenderer:
         if background is Background.NONE:
             return ""
         else:
-            return svgs_templates.background.format(background=background.value)
+            background_image = self._image_loader.get_background(background)
+            return svgs_templates.background.format(background=background_image)
 
 
 class _RenderingPokemon(NamedTuple):
