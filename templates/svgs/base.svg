@@ -48,8 +48,8 @@
             100% {opacity: 1; transform: translate(-120%, var(--pokemon-y-offsets));}
         }
         @keyframes move-pokemon-right {
-            0% {opacity: 1; transform: translate(-120%, var(--pokemon-y-offsets));}
-            100% {opacity: 1; transform: translate(120%, var(--pokemon-y-offsets));}
+            0% {opacity: 1; transform: translate(-20%, var(--pokemon-y-offsets));}
+            100% {opacity: 1; transform: translate(220%, var(--pokemon-y-offsets));}
         }        
     </style>
     <defs>
