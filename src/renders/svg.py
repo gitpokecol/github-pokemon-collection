@@ -26,6 +26,11 @@ class SVGRenderer:
         height: int,
         background: Background
     ) -> str:
+        if background is Background.ABYSS:
+            text_color = "white"
+        else:
+            text_color = "black"
+
         return svgs_templates.base.format(
             width=width,
             height=height,
@@ -35,6 +40,7 @@ class SVGRenderer:
             pokemons="\n".join([pokemon async for pokemon in self._render_pokemons(pokemons, face, height)]),
             poke_ball_url=await self._image_loader.get_pokeball(),
             background=await self._render_background(background),
+            text_color=text_color,
         )
 
     async def _render_pokemons(

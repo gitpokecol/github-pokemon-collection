@@ -14,7 +14,7 @@
             --pokemon-move-delay: 0s;
         }
 
-        text { font-family: 'Public Pixel', sans-serif; }
+        text { font-family: 'Public Pixel', sans-serif; fill: {{text_color}}; }
 
         .header text { font-weight: 0; font-size: 12px; }
 
