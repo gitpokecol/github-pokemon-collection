@@ -58,7 +58,6 @@
             <use xlink:href="#bg"/>
         </clipPath>
     </defs>
-    <use xlink:href="#bg"/>
     {{background}}
     <g class="header" transform="translate(20, 30)">
         <text x="0" y="0">{{username}}'s Pokemons</text>

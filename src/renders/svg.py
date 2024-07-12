@@ -80,7 +80,7 @@ class SVGRenderer:
 
     async def _render_background(self, background: Background) -> str:
         if background is Background.NONE:
-            return ""
+            return svgs_templates.background_none
         else:
             background_image = await self._image_loader.get_background(background)
             return svgs_templates.background.format(background=background_image)
