@@ -33,11 +33,12 @@
         const username = formData.get("username");
         const width = formData.get("width");
         const height = formData.get("height");
+        const background = formData.get("background");
 
         if (username !== "") {
           preview.classList.remove("hidden");
 
-          const svgUrl = `https://gitpokecol.org/pokemons/${username}?face=${moving}&width=${width}&height=${height}`;
+          const svgUrl = `https://gitpokecol.org/pokemons/${username}?face=${moving}&width=${width}&height=${height}&background=${background}`;
           previewImg.src = svgUrl;
           previewUrl.textContent = `<a href="https://github.com/2jun0/github-pokemon-collection">
     <img src="${svgUrl}" alt="${username}'s GitHub Pokemon Collection"/>
@@ -86,6 +87,19 @@
       <div>
         Username:
         <input type="text" name="username" placeholder="github username" />
+      </div>
+      <div>
+        Background:
+        <select name="background">
+          <option value="none">None</option>
+          <option value="abyss">Abyss</option>
+          <option value="badlands">Badlands</option>
+          <option value="beach">Beach</option>
+          <option value="cave">Cave</option>
+          <option value="desert">Desert</option>
+          <option value="normal">Normal</option>
+          <option value="plain">Plain</option>
+        </select>
       </div>
       <button type="submit">Preview</button>
     </form>
