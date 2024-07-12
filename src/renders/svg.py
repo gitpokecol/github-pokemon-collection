@@ -3,6 +3,7 @@ from typing import AsyncGenerator, NamedTuple
 
 from src.models.pokemon import Pokemon
 from src.renders.images import ImageLoader
+from src.schemas.backgrounds import Background
 from src.schemas.pokemons import PokemonFace
 from src.template import svgs as svgs_templates
 
@@ -15,7 +16,15 @@ class SVGRenderer:
         self._image_loader = image_loader
 
     async def render_svg(
-        self, *, pokemons: list[Pokemon], commit_point: int, username: str, face: PokemonFace, width: int, height: int
+        self,
+        *,
+        pokemons: list[Pokemon],
+        commit_point: int,
+        username: str,
+        face: PokemonFace,
+        width: int,
+        height: int,
+        background: Background
     ) -> str:
         return svgs_templates.base.format(
             width=width,
@@ -25,6 +34,7 @@ class SVGRenderer:
             n_pokemons=len(pokemons),
             pokemons="\n".join([pokemon async for pokemon in self._render_pokemons(pokemons, face, height)]),
             poke_ball_url=await self._image_loader.get_pokeball(),
+            background=self._render_background(background),
         )
 
     async def _render_pokemons(
@@ -61,6 +71,12 @@ class SVGRenderer:
             yield _RenderingPokemon(
                 duration=duration, offset=offset, delay=delay, frames=(sprite_frame_1, sprite_frame_2)
             )
+
+    def _render_background(self, background: Background) -> str:
+        if background is Background.NONE:
+            return ""
+        else:
+            return svgs_templates.background.format(background=background.value)
 
 
 class _RenderingPokemon(NamedTuple):

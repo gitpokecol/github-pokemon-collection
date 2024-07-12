@@ -52,7 +52,14 @@
             100% {opacity: 1; transform: translate(120%, var(--pokemon-y-offsets));}
         }        
     </style>
-    <rect x="0.01%" y="0.01%" rx="4.5" width="99.99%" height="99.99%" stroke="#e4e2e2" fill="#ffffff" stroke-opacity="1"/>
+    <defs>
+        <rect id="bg" x="0.01%" y="0.01%" rx="4.5" width="99.99%" height="99.99%" stroke="#e4e2e2" fill="#ffffff" stroke-opacity="1"/>
+        <clipPath id="bg-clip">
+            <use xlink:href="#bg"/>
+        </clipPath>
+    </defs>
+    <use xlink:href="#bg"/>
+    {{background}}
     <g class="header" transform="translate(20, 30)">
         <text x="0" y="0">{{username}}'s Pokemons</text>
     </g>

@@ -5,6 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.external.github_api import GithubAPI
 from src.renders.svg import SVGRenderer
+from src.schemas.backgrounds import Background
 from src.schemas.pokemons import PokemonFace
 from src.services.user import UserService
 from src.setting import settings
@@ -25,7 +26,14 @@ class PokemonsFacade:
         self._background_tasks = background_tasks
 
     async def render_pokemons(
-        self, *, session: AsyncSession, username: str, face: PokemonFace, width: int, height: int
+        self,
+        *,
+        session: AsyncSession,
+        username: str,
+        face: PokemonFace,
+        width: int,
+        height: int,
+        background: Background
     ) -> str:
         user = await self._user_service.get_user(session=session, username=username)
 
@@ -48,6 +56,7 @@ class PokemonsFacade:
             face=face,
             width=width,
             height=height,
+            background=background,
         )
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:
