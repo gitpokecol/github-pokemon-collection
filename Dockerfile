@@ -4,6 +4,7 @@ WORKDIR /app
 # 소스 추가
 COPY src /app/src
 COPY templates /app/templates
+COPY imgs /app/imgs
 COPY requirements.txt /app/requirements.txt
 COPY static /app/static
 
