@@ -1,6 +1,10 @@
 <div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="/docs/logo-white.png">
+    <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
-    <p align="center">Collect all Pokémon through GitHub contributions!</p>
+  </picture>
+  <p align="center">Collect all Pokémon through GitHub contributions!</p>
 </div>
 <div align="center">
     <a href="/README.md">english</a> · <a href="/docs/README_kr.md">한국어</a>

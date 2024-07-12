@@ -1,5 +1,9 @@
 <div align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="/docs/logo-white.png">
+    <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
+  </picture>
     <p align="center">GitHub 기여를 통해 모든 포켓몬을 모아보세요!</p>
 </div>
 <div align="center">
