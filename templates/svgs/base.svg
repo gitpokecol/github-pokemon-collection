@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="{{width}}" height="{{height}}">
-    <style xmlns="http://www.w3.org/2000/svg">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{{width}}" height="{{height}}">
+    <style>
         @font-face{
             font-family:public pixel;
             font-style:normal;
@@ -59,7 +59,7 @@
     <g class="bottom">
         <g transform="translate(20, 0)">
             <text x="25" y="0">({{n_pokemons}}/151)</text>
-            <image x="-7" y="-22" xmlns="http://www.w3.org/2000/svg" width="30" height="30" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{poke_ball_url}}"/>
+            <image x="-7" y="-22" width="30" height="30" xlink:href="{{poke_ball_url}}"/>
         </g>
         <g id="cp">
             <text x="25" y="0">CP {{commit_point}}</text>
