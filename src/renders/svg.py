@@ -34,7 +34,7 @@ class SVGRenderer:
             n_pokemons=len(pokemons),
             pokemons="\n".join([pokemon async for pokemon in self._render_pokemons(pokemons, face, height)]),
             poke_ball_url=await self._image_loader.get_pokeball(),
-            background=self._render_background(background),
+            background=await self._render_background(background),
         )
 
     async def _render_pokemons(
@@ -72,11 +72,11 @@ class SVGRenderer:
                 duration=duration, offset=offset, delay=delay, frames=(sprite_frame_1, sprite_frame_2)
             )
 
-    def _render_background(self, background: Background) -> str:
+    async def _render_background(self, background: Background) -> str:
         if background is Background.NONE:
             return ""
         else:
-            background_image = self._image_loader.get_background(background)
+            background_image = await self._image_loader.get_background(background)
             return svgs_templates.background.format(background=background_image)
 
 

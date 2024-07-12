@@ -29,6 +29,12 @@ class ImageLoader:
                     coros.append(self.get_pokemon_sprite(pokemon_type, face, is_shiny, 2))
 
         coros.append(self.get_pokeball())
+
+        for background in Background:
+            if background is Background.NONE:
+                continue
+
+            coros.append(self.get_background(background))
         await asyncio.gather(*coros)
 
     async def get_pokemon_sprite(
@@ -71,5 +77,5 @@ class ImageLoader:
         else:
             return f"imgs/pokemons/{pokemon_type.national_no}_{face.value}_shiny_{frame}.png"
 
-    def _get_background_path(self, background: Background):
+    def _get_background_path(self, background: Background) -> str:
         return f"imgs/backgrounds/{background.value}.png"
