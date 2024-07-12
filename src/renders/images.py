@@ -33,7 +33,7 @@ class ImageLoader:
         self, pokemon_type: PokemonType, face: PokemonFace, is_shiny: bool, frame: Literal[1] | Literal[2]
     ):
         cache_key = (pokemon_type, face, is_shiny, frame)
-        if cache_key in self._cache_get_pokemon_sprite:
+        if cache_key not in self._cache_get_pokemon_sprite:
             self._cache_get_pokemon_sprite[cache_key] = await self._load_as_base64(
                 self._get_pokemon_sprite_path(pokemon_type, face, is_shiny, frame)
             )
