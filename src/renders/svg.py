@@ -72,7 +72,7 @@ class SVGRenderer:
             delay = random.uniform(0, 10)
 
             sprite_frame_1 = await self._image_loader.get_pokemon_sprite(pokemon.type, face, pokemon.is_shiny, 1)
-            sprite_frame_2 = await self._image_loader.get_pokemon_sprite(pokemon.type, face, pokemon.is_shiny, 1)
+            sprite_frame_2 = await self._image_loader.get_pokemon_sprite(pokemon.type, face, pokemon.is_shiny, 2)
 
             yield _RenderingPokemon(
                 duration=duration, offset=offset, delay=delay, frames=(sprite_frame_1, sprite_frame_2)
