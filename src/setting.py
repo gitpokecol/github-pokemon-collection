@@ -12,7 +12,7 @@ class Envrionment(str, Enum):
 
 class Setting(BaseSettings):
     TITLE: str = "Github pokemon collection api"
-    VERSION: str = "3.2"
+    VERSION: str = "4"
 
     ENVIRONMENT: Envrionment = Envrionment.PRODUCTION
 
