@@ -2,6 +2,7 @@ import random
 from datetime import datetime
 from math import ceil
 
+from pydantic import field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 from src.models.base import DatedAtMixin
@@ -11,11 +12,14 @@ from src.models.pokemon_type import PokemonType
 from src.setting import settings
 
 
-class User(SQLModel, DatedAtMixin, table=True):
+class UserBase(SQLModel, DatedAtMixin):
+    username: str = Field(unique=True)
+
+
+class User(UserBase, table=True):
     __tablename__: str = "user"
 
     id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(unique=True)
     commit_points: list[CommitPoint] = Relationship(
         sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
     )

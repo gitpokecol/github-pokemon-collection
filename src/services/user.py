@@ -3,13 +3,13 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.exceptions.common import NotFoundError
 from src.exceptions.error_codes import ErrorCode
-from src.models.user import User
+from src.models.user import User, UserBase
 
 
 class UserService:
 
     async def create_new_user(self, *, session: AsyncSession, username: str, commit_points: dict[int, int]) -> User:
-        user = User(username=username)
+        user = User.model_validate(UserBase(username=username))
         user.set_commit_points(commit_points)
 
         session.add(user)
