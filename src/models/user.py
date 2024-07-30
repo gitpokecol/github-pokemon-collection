@@ -15,6 +15,11 @@ from src.setting import settings
 class UserBase(SQLModel, DatedAtMixin):
     username: str = Field(unique=True)
 
+    @field_validator("username", mode="before")
+    @classmethod
+    def username_to_lowercase(cls, username: str) -> str:
+        return username.lower()
+
 
 class User(UserBase, table=True):
     __tablename__: str = "user"
