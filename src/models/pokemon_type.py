@@ -1,7 +1,15 @@
 from enum import IntEnum
 
-from src.pokemons.form import (ArceusForm, BurmyWormadamForm, Form, RotomForm,
-                               ShayminFrom, ShellosGastrodonForm, UnownForm)
+from src.pokemons.form import (
+    ArceusForm,
+    BurmyWormadamForm,
+    Form,
+    GiratinaForm,
+    RotomForm,
+    ShayminFrom,
+    ShellosGastrodonForm,
+    UnownForm,
+)
 from src.pokemons.gender import Gender
 
 
@@ -497,7 +505,7 @@ class PokemonType(IntEnum):
     Palkia = (484, "Palkia", (Gender.FEMALE, Gender.MALE))
     Heatran = (485, "Heatran", (Gender.FEMALE, Gender.MALE))
     Regigigas = (486, "Regigigas", (Gender.FEMALE, Gender.MALE))
-    Giratina = (487, "Giratina", (Gender.GENDERLESS,))
+    Giratina = (487, "Giratina", (Gender.GENDERLESS,), tuple(GiratinaForm))
     Cresselia = (488, "Cresselia", (Gender.FEMALE, Gender.MALE))
     Phione = (489, "Phione", (Gender.FEMALE, Gender.MALE))
     Manaphy = (490, "Manaphy", (Gender.GENDERLESS,))
