@@ -1,8 +1,9 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class Form(StrEnum):
-    pass
+class Form(str, Enum):
+    def __str__(self) -> str:
+        return self.value
 
 
 class UnownForm(Form):
