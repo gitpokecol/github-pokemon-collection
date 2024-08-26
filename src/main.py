@@ -2,15 +2,18 @@ from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.staticfiles import StaticFiles
 
-from src.dependencies.renders import image_loader
+from src.dependencies.renders import background_images, item_sprites, pokemon_sprites
 from src.exceptions.handler import install_exception_handlers
+from src.routes.auths import router as auth_router
 from src.routes.pokemons import router as pokemon_router
 from src.setting import Envrionment, settings
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await image_loader.prepare()
+    await pokemon_sprites.prepare()
+    await item_sprites.prepare()
+    await background_images.prepare()
     yield
 
 
