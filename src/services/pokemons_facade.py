@@ -4,9 +4,9 @@ from fastapi import BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.external.github_api import GithubAPI
-from src.renders.svg import SVGRenderer
+from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
-from src.schemas.pokemons import PokemonFace
+from src.schemas.pokemons import Facing
 from src.services.user import UserService
 from src.setting import settings
 
@@ -17,7 +17,7 @@ class PokemonsFacade:
         *,
         user_service: UserService,
         github_api: GithubAPI,
-        renderer: SVGRenderer,
+        renderer: ProfileRenderer,
         background_tasks: BackgroundTasks
     ) -> None:
         self._user_service = user_service
@@ -26,14 +26,7 @@ class PokemonsFacade:
         self._background_tasks = background_tasks
 
     async def render_pokemons(
-        self,
-        *,
-        session: AsyncSession,
-        username: str,
-        face: PokemonFace,
-        width: int,
-        height: int,
-        background: Background
+        self, *, session: AsyncSession, username: str, facing: Facing, width: int, height: int, background: Background
     ) -> str:
         user = await self._user_service.get_user(session=session, username=username)
 
@@ -49,11 +42,11 @@ class PokemonsFacade:
                 session=session, username=username, commit_points=commit_points
             )
 
-        return await self._renderer.render_svg(
+        return await self._renderer.render(
             pokemons=user.pokemons,
             commit_point=user.total_commit_point,
             username=username,
-            face=face,
+            facing=facing,
             width=width,
             height=height,
             background=background,
