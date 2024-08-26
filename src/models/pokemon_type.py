@@ -1,15 +1,8 @@
 from enum import IntEnum
 
-from src.pokemons.form import (
-    ArceusForm,
-    BurmyWormadamForm,
-    Form,
-    GiratinaForm,
-    RotomForm,
-    ShayminFrom,
-    ShellosGastrodonForm,
-    UnownForm,
-)
+from src.pokemons.form import (ArceusForm, BurmyWormadamForm, Form,
+                               GiratinaForm, RotomForm, ShayminFrom,
+                               ShellosGastrodonForm, UnownForm)
 from src.pokemons.gender import Gender
 
 
@@ -101,7 +94,7 @@ class PokemonType(IntEnum):
     Slowbro = (80, "Slowbro", (Gender.FEMALE, Gender.MALE))
     Magnemite = (81, "Magnemite", (Gender.GENDERLESS,))
     Magneton = (82, "Magneton", (Gender.GENDERLESS,))
-    d = (83, "Farfetch'd", (Gender.FEMALE, Gender.MALE))
+    Farfetchd = (83, "Farfetch'd", (Gender.FEMALE, Gender.MALE))
     Doduo = (84, "Doduo", (Gender.FEMALE, Gender.MALE))
     Dodrio = (85, "Dodrio", (Gender.FEMALE, Gender.MALE))
     Seel = (86, "Seel", (Gender.FEMALE, Gender.MALE))
@@ -140,7 +133,7 @@ class PokemonType(IntEnum):
     Seaking = (119, "Seaking", (Gender.FEMALE, Gender.MALE))
     Staryu = (120, "Staryu", (Gender.FEMALE, Gender.MALE))
     Starmie = (121, "Starmie", (Gender.FEMALE, Gender.MALE))
-    Mime = (122, "Mr. Mime", (Gender.FEMALE, Gender.MALE))
+    MrMime = (122, "Mr. Mime", (Gender.FEMALE, Gender.MALE))
     Scyther = (123, "Scyther", (Gender.FEMALE, Gender.MALE))
     Jynx = (124, "Jynx", (Gender.FEMALE, Gender.MALE))
     Electabuzz = (125, "Electabuzz", (Gender.FEMALE, Gender.MALE))
@@ -431,10 +424,10 @@ class PokemonType(IntEnum):
     Shieldon = (410, "Shieldon", (Gender.FEMALE, Gender.MALE))
     Bastiodon = (411, "Bastiodon", (Gender.FEMALE, Gender.MALE))
     Burmy = (412, "Burmy", (Gender.FEMALE, Gender.MALE), tuple(BurmyWormadamForm))
-    Wormadam = (413, "Wormadam", (Gender.FEMALE, Gender.MALE), tuple(BurmyWormadamForm))
-    Mothim = (414, "Mothim", (Gender.FEMALE, Gender.MALE))
+    Wormadam = (413, "Wormadam", (Gender.FEMALE, ), tuple(BurmyWormadamForm))
+    Mothim = (414, "Mothim", (Gender.MALE, ))
     Combee = (415, "Combee", (Gender.FEMALE, Gender.MALE))
-    Vespiquen = (416, "Vespiquen", (Gender.FEMALE, Gender.MALE))
+    Vespiquen = (416, "Vespiquen", (Gender.FEMALE, ))
     Pachirisu = (417, "Pachirisu", (Gender.FEMALE, Gender.MALE))
     Buizel = (418, "Buizel", (Gender.FEMALE, Gender.MALE))
     Floatzel = (419, "Floatzel", (Gender.FEMALE, Gender.MALE))
@@ -493,10 +486,10 @@ class PokemonType(IntEnum):
     Gliscor = (472, "Gliscor", (Gender.FEMALE, Gender.MALE))
     Mamoswine = (473, "Mamoswine", (Gender.FEMALE, Gender.MALE))
     PorygonZ = (474, "Porygon-Z", (Gender.FEMALE, Gender.MALE))
-    Gallade = (475, "Gallade", (Gender.FEMALE, Gender.MALE))
+    Gallade = (475, "Gallade", (Gender.MALE, ))
     Probopass = (476, "Probopass", (Gender.FEMALE, Gender.MALE))
     Dusknoir = (477, "Dusknoir", (Gender.FEMALE, Gender.MALE))
-    Froslass = (478, "Froslass", (Gender.FEMALE, Gender.MALE))
+    Froslass = (478, "Froslass", (Gender.FEMALE, ))
     Rotom = (479, "Rotom", (Gender.FEMALE, Gender.MALE), tuple(RotomForm))
     Uxie = (480, "Uxie", (Gender.FEMALE, Gender.MALE))
     Mesprit = (481, "Mesprit", (Gender.GENDERLESS,))
