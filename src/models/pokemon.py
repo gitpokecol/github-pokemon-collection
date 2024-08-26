@@ -14,6 +14,8 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     id: int | None = Field(default=None, primary_key=True)
     type: PokemonType
     is_shiny: bool = Field(default=False)
+    level: int = Field(default=1, ge=1, le=100)
+    friendship: int = Field(default=0, ge=0, le=255)
     gender: Gender
     form: Form | None
     owner_id: int = Field(default=None, foreign_key="user.id")
