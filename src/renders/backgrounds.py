@@ -8,6 +8,9 @@ class BackgroundImages:
 
     async def prepare(self):
         for background in Background:
+            if background is Background.NONE:
+                continue
+
             self._cache_background[background] = await self.get_image(background)
 
     async def get_image(self, background: Background) -> str:
