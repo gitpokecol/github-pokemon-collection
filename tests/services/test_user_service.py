@@ -2,7 +2,7 @@ from unittest.mock import Mock
 
 import pytest
 
-from src.services.user import UserService
+from src.services.user_service import UserService
 
 
 @pytest.fixture()
@@ -18,7 +18,7 @@ async def test_create_new_user__inputs_upper_lower_mixed_username__returns_lower
     commit_points = dict()
 
     # when
-    created = await user_service.create_new_user(session=mock_session, username=username, commit_points=commit_points)
+    created = user_service.create_new_user(session=mock_session, username=username, commit_points=commit_points)
 
     # then
     assert created.username == "user name"
