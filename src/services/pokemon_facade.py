@@ -8,7 +8,7 @@ from src.models.user import User
 from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
 from src.schemas.pokemons import Facing
-from src.services.pokemon_service import PokemonSerivce
+from src.services.pokemon_service import PokemonService
 from src.services.user_service import UserService
 from src.setting import settings
 
@@ -18,7 +18,7 @@ class PokemonFacade:
         self,
         *,
         user_service: UserService,
-        pokemon_service: PokemonSerivce,
+        pokemon_service: PokemonService,
         github_api: GithubAPI,
         renderer: ProfileRenderer,
         background_tasks: BackgroundTasks

@@ -10,7 +10,7 @@ from src.setting import settings
 from src.utils import weighted_sample
 
 
-class PokemonSerivce:
+class PokemonService:
     def __init__(self) -> None:
         self._evolution_line_counts: dict[PokemonType, int] = {}
 
