@@ -48,11 +48,8 @@ class User(UserBase, table=True):
         for year, cp in commit_points.items():
             self._set_commit_point(year, cp)
 
-        self._update_pokemons()
-
     def set_commit_point(self, year: int, commit_point: int):
         self._set_commit_point(year, commit_point)
-        self._update_pokemons()
 
     def update_pokedex(self, pokemon_types: Sequence[PokemonType]):
         pokedex_items = {item.type: item for item in self.pokedex_items}
