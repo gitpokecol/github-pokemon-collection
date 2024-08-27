@@ -13,9 +13,6 @@ class UserService:
         session.add(user)
         return user
 
-    async def update_commit_point(self, *, user: User, year: int, commit_point: int) -> None:
-        user.set_commit_point(year, commit_point)
-
     async def get_user(self, session: AsyncSession, username: str) -> User | None:
         stmt = select(User).where(User.username == username)
         rs = await session.exec(stmt)
