@@ -14,8 +14,8 @@ class PokemonService:
     def __init__(self) -> None:
         self._evolution_line_counts: dict[PokemonType, int] = {}
 
-    def give_pokemons_for_user(self, user: User, current_commit_point: int):
-        new_count = self._calculate_new_pokemon_count(user.total_commit_point, current_commit_point)
+    def give_pokemons_for_user(self, user: User, previous_commit_point: int, current_commit_point: int):
+        new_count = self._calculate_new_pokemon_count(previous_commit_point, current_commit_point)
         canditates = list(self._get_new_pokemon_candidates(user.pokedex_items))
         new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, new_count)
         user.update_pokedex(new_pokemon_types)

@@ -45,7 +45,7 @@ class PokemonFacade:
         else:
             commit_points = await self._get_commit_points(username)
             user = self._user_service.create_new_user(session=session, username=username, commit_points=commit_points)
-            self._pokemon_service.give_pokemons_for_user(user, sum(commit_points.values()))
+            self._pokemon_service.give_pokemons_for_user(user, 0, sum(commit_points.values()))
             await session.commit()
 
         return await self._renderer.render(
@@ -67,6 +67,8 @@ class PokemonFacade:
     async def _update_commit_point_and_update_pokemons_task(self, *, session: AsyncSession, user: User):
         now_year = datetime.now(timezone.utc).year
         commit_point = await self._get_commit_point(user.username, now_year)
+
+        previous_commit_point = user.total_commit_point
         user.set_commit_point(now_year, commit_point)
-        self._pokemon_service.give_pokemons_for_user(user, user.total_commit_point)
+        self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
         await session.commit()
