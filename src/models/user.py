@@ -1,15 +1,14 @@
-import random
 from datetime import datetime
-from math import ceil
+from typing import Sequence
 
 from pydantic import field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
 from src.models.base import DatedAtMixin
 from src.models.commit_point import CommitPoint
+from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
-from src.setting import settings
 
 
 class UserBase(SQLModel, DatedAtMixin):
@@ -29,6 +28,9 @@ class User(UserBase, table=True):
         sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
     )
     pokemons: list[Pokemon] = Relationship(sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"})
+    pokedex_items: list[PokedexItem] = Relationship(
+        sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
+    )
 
     @property
     def pokemon_types(self) -> list[PokemonType]:
@@ -52,20 +54,15 @@ class User(UserBase, table=True):
         self._set_commit_point(year, commit_point)
         self._update_pokemons()
 
-    def _update_pokemons(self):
-        proper_n_pokemons = self._calc_proper_pokemon_cnt()
-        self._add_new_pokemons(proper_n_pokemons - len(self.pokemons))
+    def update_pokedex(self, pokemon_types: Sequence[PokemonType]):
+        pokedex_items = {item.type: item for item in self.pokedex_items}
 
-    def _add_new_pokemons(self, new_cnt: int):
-        remain_types = set(PokemonType) - set(self.pokemon_types)
-        pokemon_types = random.sample(list(remain_types), new_cnt)
-
-        for pt in pokemon_types:
-            is_shiny = settings.SHINY_POKEMON_RATE > random.random()
-            self.pokemons.append(Pokemon(type=pt, is_shiny=is_shiny))
-
-    def _calc_proper_pokemon_cnt(self) -> int:
-        return min(len(PokemonType), ceil(self.total_commit_point / settings.POKEMON_PER_COMMIT_POINT))
+        for pokemon_type in pokemon_types:
+            if pokemon_type in pokedex_items:
+                pokedex_items[pokemon_type].obtain_count += 1
+            else:
+                pokedex_items[pokemon_type] = PokedexItem(type=pokemon_type, obtain_count=1)
+                self.pokedex_items.append(pokedex_items[pokemon_type])
 
     def _set_commit_point(self, year: int, commit_point: int):
         model = self._get_commit_point(year)
