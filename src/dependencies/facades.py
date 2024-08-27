@@ -4,19 +4,24 @@ from fastapi import BackgroundTasks, Depends
 
 from src.dependencies.external import GithubAPIDep
 from src.dependencies.renders import ProfileRendererDep
-from src.dependencies.services import UserServiceDep
-from src.services.pokemons_facade import PokemonsFacade
+from src.dependencies.services import PokemonSerivceDep, UserServiceDep
+from src.services.pokemon_facade import PokemonFacade
 
 
-async def get_pokemons_facade(
+async def get_pokemon_facade(
+    pokemon_service: PokemonSerivceDep,
     user_service: UserServiceDep,
     github_api: GithubAPIDep,
     renderer: ProfileRendererDep,
     background_tasks: BackgroundTasks,
-) -> PokemonsFacade:
-    return PokemonsFacade(
-        user_service=user_service, github_api=github_api, renderer=renderer, background_tasks=background_tasks
+) -> PokemonFacade:
+    return PokemonFacade(
+        user_service=user_service,
+        pokemon_service=pokemon_service,
+        github_api=github_api,
+        renderer=renderer,
+        background_tasks=background_tasks,
     )
 
 
-PokemonsFacadeDep = Annotated[PokemonsFacade, Depends(get_pokemons_facade)]
+PokemonFacadeDep = Annotated[PokemonFacade, Depends(get_pokemon_facade)]

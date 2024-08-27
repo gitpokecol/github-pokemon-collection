@@ -1,8 +1,24 @@
 import functools
 import inspect
 import pickle
+from bisect import bisect_left
+from itertools import accumulate
 from os import path
 from pathlib import Path
+from random import random
+from typing import Sequence, TypeVar
+
+T = TypeVar("T")
+
+
+def weighted_sample(population: Sequence[T], weights: Sequence[float], k: int = 1) -> list[T]:
+    accum = list(accumulate(weights))
+    total = accum[-1]
+    sampl = {}
+    while len(sampl) < k:
+        index = bisect_left(accum, total * random())
+        sampl[index] = population[index]
+    return list(sampl.values())
 
 
 def file_cache(filename: str):
