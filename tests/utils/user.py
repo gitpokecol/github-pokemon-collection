@@ -1,10 +1,9 @@
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
-
+from src.models.pokedex_item import PokedexItem
+from src.models.pokemon import Pokemon
 from src.models.user import User
 
 
-async def get_user(session: AsyncSession, *, username: str):
-    stmt = select(User).where(User.username == username)
-    rs = await session.exec(stmt)
-    return rs.first()
+def create_user(
+    *, username: str = "username", pokemons: list[Pokemon] = [], pokedex_items: list[PokedexItem] = []
+) -> User:
+    return User(username=username, pokemons=pokemons, pokedex_items=pokedex_items)
