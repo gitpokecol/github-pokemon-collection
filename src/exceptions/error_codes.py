@@ -6,6 +6,11 @@ class ErrorCode(Enum):
 
     # 400
 
+    # 402
+    INVALID_GITHUB_OAUTH_TOKEN = "Github oauth token is invalid"
+    INVALID_ACCESS_TOKEN = "Access token is invalid"
+    ACCESS_TOKEN_REQUIRED = "Access token is required"
+
     # 404
     USER_NOT_FOUND = "The user is not found."
 

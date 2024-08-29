@@ -14,11 +14,22 @@ class Setting(BaseSettings):
     TITLE: str = "Github pokemon collection api"
     VERSION: str = "4"
 
+    # env
     ENVIRONMENT: Envrionment = Envrionment.PRODUCTION
 
+    # database
     DATABASE_URL: str
-    GITHUB_API_TOKEN: str
 
+    # github
+    GITHUB_API_TOKEN: str
+    GITHUB_OAUTH_CLIENT_ID: str
+    GITHUB_OAUTH_CLIENT_SECRET: str
+    GITHUB_OAUTH_CALLBACK_URL: str
+
+    # auth
+    JWT_SECRET: str
+
+    # render
     SVG_WIDTH: int = 300
     SVG_MIN_WIDTH: int = 250
     SVG_HEIGHT: int = 250

@@ -24,6 +24,7 @@ else:
 
 
 app.include_router(pokemon_router)
+app.include_router(auth_router)
 install_exception_handlers(app)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

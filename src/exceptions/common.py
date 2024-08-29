@@ -31,3 +31,7 @@ class InternalServerError(CommonException):
 
 class ServiceUnavailableError(CommonException):
     pass
+
+
+class UnauthorizedError(CommonException):
+    pass

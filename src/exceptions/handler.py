@@ -9,6 +9,7 @@ from src.exceptions.common import (
     InternalServerError,
     NotFoundError,
     ServiceUnavailableError,
+    UnauthorizedError,
 )
 from src.exceptions.error_codes import ErrorCode
 
@@ -54,6 +55,12 @@ def install_exception_handlers(app: FastAPI):
     async def handle_bad_request_error(request: Request, error: BadRequestError):
         _log_info(error, request)
         http_exception = HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error.detail)
+        return await http_exception_handler(request, http_exception)
+
+    @app.exception_handler(UnauthorizedError)
+    async def handle_unauthorized_error(request: Request, error: UnauthorizedError):
+        _log_info(error, request)
+        http_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=error.detail)
         return await http_exception_handler(request, http_exception)
 
     @app.exception_handler(NotFoundError)
