@@ -1,9 +1,11 @@
 from datetime import datetime, timezone
 
+import pytz
 from fastapi import BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.external.github_api import GithubAPI
+from src.external.ip_api import IpAPI
 from src.models.user import User
 from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
@@ -20,17 +22,27 @@ class PokemonFacade:
         user_service: UserService,
         pokemon_service: PokemonService,
         github_api: GithubAPI,
+        ip_api: IpAPI,
         renderer: ProfileRenderer,
         background_tasks: BackgroundTasks
     ) -> None:
         self._user_service = user_service
         self._pokemon_service = pokemon_service
         self._github_api = github_api
+        self._ip_api = ip_api
         self._renderer = renderer
         self._background_tasks = background_tasks
 
     async def render_pokemons(
-        self, *, session: AsyncSession, username: str, facing: Facing, width: int, height: int, background: Background
+        self,
+        *,
+        session: AsyncSession,
+        username: str,
+        facing: Facing,
+        width: int,
+        height: int,
+        background: Background,
+        viewer_ip_address: str | None
     ) -> str:
         user = await self._user_service.get_user(session=session, username=username)
 
@@ -40,7 +52,10 @@ class PokemonFacade:
                 >= settings.COMMIT_POINT_UPDATE_PERIOD
             ):
                 self._background_tasks.add_task(
-                    self._update_commit_point_and_update_pokemons_task, session=session, user=user
+                    self._update_commit_point_and_update_pokemons_task,
+                    session=session,
+                    user=user,
+                    viewer_ip_address=viewer_ip_address,
                 )
         else:
             commit_points = await self._get_commit_points(username)
@@ -64,11 +79,25 @@ class PokemonFacade:
     async def _get_commit_point(self, username: str, year: int) -> int:
         return await self._github_api.get_user_contributions_by_year(username=username, year=year)
 
-    async def _update_commit_point_and_update_pokemons_task(self, *, session: AsyncSession, user: User):
+    async def _update_commit_point_and_update_pokemons_task(
+        self, *, session: AsyncSession, user: User, viewer_ip_address: str | None
+    ):
         now_year = datetime.now(timezone.utc).year
         commit_point = await self._get_commit_point(user.username, now_year)
 
         previous_commit_point = user.total_commit_point
         user.set_commit_point(now_year, commit_point)
         self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
+        await self._try_evolve_pokemons(user, viewer_ip_address)
         await session.commit()
+
+    async def _try_evolve_pokemons(self, user: User, viewer_ip_address: str | None):
+        current_timezone = timezone.utc
+
+        if viewer_ip_address:
+            ip_api_res = await self._ip_api.get_timezone_by_ip_address(viewer_ip_address)
+
+            if ip_api_res and ip_api_res.status == "success" and ip_api_res.timezone:
+                current_timezone = pytz.timezone(ip_api_res.timezone)
+
+        self._pokemon_service.try_evolve_pokemons_for_user(user, current_timezone)

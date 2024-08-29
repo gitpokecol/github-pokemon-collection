@@ -8,7 +8,7 @@ from src.setting import settings
 
 
 @pytest.fixture()
-def pokemon_serivce() -> PokemonService:
+def pokemon_service() -> PokemonService:
     return PokemonService()
 
 
@@ -21,13 +21,13 @@ def pokemon_serivce() -> PokemonService:
     ],
 )
 async def test_give_pokemons_for_user__inputs_commit_point__add_new_pokemons(
-    pokemon_serivce: PokemonService, mock_session: Mock, current_commit_point: int, expected: int
+    pokemon_service: PokemonService, mock_session: Mock, current_commit_point: int, expected: int
 ):
     # given
     user = User(username="username")
 
     # when
-    pokemon_serivce.give_pokemons_for_user(user, 0, current_commit_point)
+    pokemon_service.give_pokemons_for_user(user, 0, current_commit_point)
 
     # then
     assert len(user.pokemons) == expected
@@ -43,13 +43,13 @@ async def test_give_pokemons_for_user__inputs_commit_point__add_new_pokemons(
     ],
 )
 async def test_give_pokemons_for_user__inputs_commit_point__update_pokedex_items(
-    pokemon_serivce: PokemonService, mock_session: Mock, current_commit_point: int
+    pokemon_service: PokemonService, mock_session: Mock, current_commit_point: int
 ):
     # given
     user = User(username="username")
 
     # when
-    pokemon_serivce.give_pokemons_for_user(user, 0, current_commit_point)
+    pokemon_service.give_pokemons_for_user(user, 0, current_commit_point)
 
     # then
     assert set(pokemon.type for pokemon in user.pokemons) == set(item.type for item in user.pokedex_items)

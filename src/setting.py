@@ -34,7 +34,9 @@ class Setting(BaseSettings):
     SVG_MIN_WIDTH: int = 250
     SVG_HEIGHT: int = 250
     SVG_MIN_HEIGHT: int = 200
-    POKEMON_PER_COMMIT_POINT: int = 100
+
+    # pokemon strategy
+    POKEMON_PER_COMMIT_POINT: int = 50
     SHINY_POKEMON_RATE: float = 0.1
     COMMIT_POINT_UPDATE_PERIOD: timedelta = timedelta(hours=1)
 

@@ -1,4 +1,6 @@
-from fastapi import Cookie
+from typing import Annotated
+
+from fastapi import Cookie, Depends
 
 from src.auths.jwt import JwtPayload, verify_token
 from src.exceptions.common import UnauthorizedError
@@ -10,3 +12,6 @@ async def get_token(token: str = Cookie("Access-Token")) -> JwtPayload:
         return verify_token(token)
     else:
         raise UnauthorizedError(ErrorCode.ACCESS_TOKEN_REQUIRED)
+
+
+TokenDep = Annotated[str, Depends(get_token)]

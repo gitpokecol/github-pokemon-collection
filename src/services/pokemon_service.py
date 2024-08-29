@@ -1,13 +1,14 @@
 import random
+from datetime import _TzInfo
 from typing import Sequence
 
 from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.models.user import User
-from src.pokemons.evolution import evolution_line_cnts
+from src.pokemons.evolution import EvolutionRule, evolution_line_cnts, evolution_rules
 from src.setting import settings
-from src.utils import weighted_sample
+from src.utils import get_time_by_timezone, weighted_sample
 
 
 class PokemonService:
@@ -52,3 +53,24 @@ class PokemonService:
             form = random.choice(pokemon_type.available_forms)
 
         return Pokemon(type=pokemon_type, is_shiny=is_shiny, gender=gender, form=form)
+
+    def try_evolve_pokemons_for_user(self, user: User, timezone: _TzInfo):
+        time = get_time_by_timezone(timezone)
+
+        for pokemon in user.pokemons:
+            rules = evolution_rules[pokemon.type]
+
+            if pokemon.type in (PokemonType.Wurmple, PokemonType.Tyrogue):
+                rules = list(rules)
+                random.shuffle(rules)
+
+            for rule in rules:
+                if rule.can_evolve(pokemon, user, None, time):
+                    self._evolve_pokemon(pokemon, user, rule)
+
+    def _evolve_pokemon(self, pokemon: Pokemon, owner: User, rule: EvolutionRule):
+        if pokemon.type == Pokemon.Nincada:
+            shedinja = self._create_pokemon(PokemonType.Shedinja)
+            owner.pokemons.append(shedinja)
+
+        pokemon.type = rule.to
