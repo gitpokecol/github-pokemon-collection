@@ -8,7 +8,7 @@ from src.models.base import DatedAtMixin
 from src.models.commit_point import CommitPoint
 from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
-from src.models.pokemon_type import PokemonType
+from src.pokemons.pokemon_type import PokemonType
 
 
 class UserBase(SQLModel, DatedAtMixin):

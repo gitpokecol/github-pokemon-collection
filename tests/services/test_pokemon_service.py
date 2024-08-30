@@ -1,7 +1,7 @@
 import pytest
 
-from src.models.pokemon_type import PokemonType
 from src.models.user import User
+from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 from src.services.pokemon_service import PokemonService
 from src.setting import settings

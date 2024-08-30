@@ -1,9 +1,9 @@
 import pytest
 
-from src.models.pokemon_type import PokemonType
 from src.pokemons.evolution import EvolutionRule, evolution_rules
 from src.pokemons.gender import Gender
 from src.pokemons.item_type import ItemType
+from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 from tests.utils.pokemon import create_pokemon
 from tests.utils.user import create_user

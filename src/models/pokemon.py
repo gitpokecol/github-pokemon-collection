@@ -2,9 +2,9 @@ from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, SQLModel
 
 from src.models.base import DatedAtMixin
-from src.models.pokemon_type import PokemonType
 from src.pokemons.form import Form
 from src.pokemons.gender import Gender
+from src.pokemons.pokemon_type import PokemonType
 
 
 class Pokemon(SQLModel, DatedAtMixin, table=True):

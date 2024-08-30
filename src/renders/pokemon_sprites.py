@@ -1,9 +1,9 @@
 import asyncio
 from typing import Coroutine, Literal
 
-from src.models.pokemon_type import PokemonType
 from src.pokemons.form import Form
 from src.pokemons.gender import Gender
+from src.pokemons.pokemon_type import PokemonType
 from src.renders.utils import load_as_base64
 from src.schemas.pokemons import Facing
 

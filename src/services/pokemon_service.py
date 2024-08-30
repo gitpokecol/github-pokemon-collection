@@ -3,10 +3,10 @@ from typing import Sequence
 
 from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
-from src.models.pokemon_type import PokemonType
 from src.models.user import User
 from src.pokemons.evolution import EvolutionRule, evolution_line_cnts, evolution_rules
 from src.pokemons.item_type import ItemType
+from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 from src.setting import settings
 from src.utils import weighted_sample

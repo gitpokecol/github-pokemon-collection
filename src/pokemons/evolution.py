@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
 
 from src.models.pokemon import Pokemon
-from src.models.pokemon_type import PokemonType
 from src.models.user import User
 from src.pokemons.item_type import ItemType
+from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 
 
