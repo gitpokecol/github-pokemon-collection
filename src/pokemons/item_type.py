@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Item(str, Enum):
+class ItemType(str, Enum):
     FIRE_STONE = "Fire Stone"
     WATER_STONE = "Water Stone"
     THUNDER_STONE = "Thunder Stone"

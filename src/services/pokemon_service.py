@@ -6,7 +6,7 @@ from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.models.user import User
 from src.pokemons.evolution import EvolutionRule, evolution_line_cnts, evolution_rules
-from src.pokemons.item import Item
+from src.pokemons.item_type import ItemType
 from src.pokemons.time import Time
 from src.setting import settings
 from src.utils import weighted_sample
@@ -85,7 +85,7 @@ class PokemonService:
         pokemon.type = rule.to
 
     def _get_evolution_rule_for_pokemon(
-        self, pokemon: Pokemon, owner: User, time: Time, item: Item | None
+        self, pokemon: Pokemon, owner: User, time: Time, item: ItemType | None
     ) -> EvolutionRule | None:
         if pokemon.type not in evolution_rules:
             return None
