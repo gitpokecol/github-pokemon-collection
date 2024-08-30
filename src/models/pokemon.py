@@ -19,3 +19,6 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     gender: Gender
     form: Form | None
     owner_id: int = Field(default=None, foreign_key="user.id")
+
+    def level_up(self):
+        self.level = min(self.level + 1, 100)

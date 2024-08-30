@@ -7,6 +7,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.external.github_api import GithubAPI
 from src.external.ip_api import IpAPI
 from src.models.user import User
+from src.pokemons.time import get_time_by_timezone
 from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
 from src.schemas.pokemons import Facing
@@ -60,7 +61,8 @@ class PokemonFacade:
         else:
             commit_points = await self._get_commit_points(username)
             user = self._user_service.create_new_user(session=session, username=username, commit_points=commit_points)
-            self._pokemon_service.give_pokemons_for_user(user, 0, sum(commit_points.values()))
+
+            await self._update_pokemons(user, viewer_ip_address, 0, user.total_commit_point)
             await session.commit()
 
         return await self._renderer.render(
@@ -87,17 +89,25 @@ class PokemonFacade:
 
         previous_commit_point = user.total_commit_point
         user.set_commit_point(now_year, commit_point)
-        self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
-        await self._try_evolve_pokemons(user, viewer_ip_address)
+        await self._update_pokemons(user, viewer_ip_address, previous_commit_point, user.total_commit_point)
         await session.commit()
 
-    async def _try_evolve_pokemons(self, user: User, viewer_ip_address: str | None):
-        current_timezone = timezone.utc
+    async def _update_pokemons(
+        self, user: User, viewer_ip_address: str | None, previous_commit_point: int, current_commit_point: int
+    ):
+        current_timezone = await self._get_timezone_by_ip_address(viewer_ip_address)
+        time = get_time_by_timezone(current_timezone)
 
-        if viewer_ip_address:
-            ip_api_res = await self._ip_api.get_timezone_by_ip_address(viewer_ip_address)
+        self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
+        self._pokemon_service.level_up_pokemons_for_user(user, previous_commit_point, user.total_commit_point, time)
 
-            if ip_api_res and ip_api_res.status == "success" and ip_api_res.timezone:
-                current_timezone = pytz.timezone(ip_api_res.timezone)
+    async def _get_timezone_by_ip_address(self, ip_address: str | None):
+        if not ip_address:
+            return timezone.utc
 
-        self._pokemon_service.try_evolve_pokemons_for_user(user, current_timezone)
+        ip_api_res = await self._ip_api.get_timezone_by_ip_address(ip_address)
+
+        if ip_api_res and ip_api_res.status == "success" and ip_api_res.timezone:
+            return pytz.timezone(ip_api_res.timezone)
+
+        return timezone.utc

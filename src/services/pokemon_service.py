@@ -1,5 +1,4 @@
 import random
-from datetime import _TzInfo
 from typing import Sequence
 
 from src.models.pokedex_item import PokedexItem
@@ -7,8 +6,10 @@ from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.models.user import User
 from src.pokemons.evolution import EvolutionRule, evolution_line_cnts, evolution_rules
+from src.pokemons.item import Item
+from src.pokemons.time import Time
 from src.setting import settings
-from src.utils import get_time_by_timezone, weighted_sample
+from src.utils import weighted_sample
 
 
 class PokemonService:
@@ -54,23 +55,48 @@ class PokemonService:
 
         return Pokemon(type=pokemon_type, is_shiny=is_shiny, gender=gender, form=form)
 
-    def try_evolve_pokemons_for_user(self, user: User, timezone: _TzInfo):
-        time = get_time_by_timezone(timezone)
+    def level_up_pokemons_for_user(
+        self, user: User, previous_commit_point: int, current_commit_point: int, time: Time
+    ):
+        add_level = self._calculate_add_level(previous_commit_point, current_commit_point)
+        for pokemon in random.choices(user.pokemons, k=add_level):
+            pokemon.level_up()
 
-        for pokemon in user.pokemons:
-            rules = evolution_rules[pokemon.type]
+            rule = self._get_evolution_rule_for_pokemon(
+                pokemon,
+                user,
+                time,
+                None,
+            )
 
-            if pokemon.type in (PokemonType.Wurmple, PokemonType.Tyrogue):
-                rules = list(rules)
-                random.shuffle(rules)
+            if rule:
+                self._evolve_pokemon(pokemon, user, rule)
 
-            for rule in rules:
-                if rule.can_evolve(pokemon, user, None, time):
-                    self._evolve_pokemon(pokemon, user, rule)
+    def _calculate_add_level(self, updated_commit_point: int, current_commit_point: int) -> int:
+        given_pokemon_count = updated_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
+        target_pokemon_count = current_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
+        return target_pokemon_count - given_pokemon_count
 
     def _evolve_pokemon(self, pokemon: Pokemon, owner: User, rule: EvolutionRule):
-        if pokemon.type == Pokemon.Nincada:
+        if pokemon.type == PokemonType.Nincada:
             shedinja = self._create_pokemon(PokemonType.Shedinja)
             owner.pokemons.append(shedinja)
 
         pokemon.type = rule.to
+
+    def _get_evolution_rule_for_pokemon(
+        self, pokemon: Pokemon, owner: User, time: Time, item: Item | None
+    ) -> EvolutionRule | None:
+        if pokemon.type not in evolution_rules:
+            return None
+
+        rules = evolution_rules[pokemon.type]
+
+        if pokemon.type in (PokemonType.Wurmple, PokemonType.Tyrogue):
+            return random.choice(rules)
+
+        for rule in rules:
+            if rule.can_evolve(pokemon, owner, item, time):
+                return rule
+
+        return None

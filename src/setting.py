@@ -37,6 +37,7 @@ class Setting(BaseSettings):
 
     # pokemon strategy
     POKEMON_PER_COMMIT_POINT: int = 50
+    LEVEL_UP_PER_COMMIT_POINT: int = 2
     SHINY_POKEMON_RATE: float = 0.1
     COMMIT_POINT_UPDATE_PERIOD: timedelta = timedelta(hours=1)
 

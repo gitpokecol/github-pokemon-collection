@@ -1,21 +1,20 @@
-from typing import Literal
-
 from pydantic import BaseModel, Field
 
 from src.models.pokemon import Pokemon
 from src.models.pokemon_type import PokemonType
 from src.models.user import User
 from src.pokemons.item import Item
+from src.pokemons.time import Time
 
 
 class EvolutionRule(BaseModel):
     to: PokemonType
     required_level: int = Field(default=0)
     required_item: None | str = Field(default=None)
-    required_time: None | Literal["day", "night"] = Field(default=None)
+    required_time: None | Time = Field(default=None)
     required_friendship: int = Field(default=0)
 
-    def can_evolve(self, pokemon: Pokemon, owner: User, item: None | Item, time: Literal["day", "night"]) -> bool:
+    def can_evolve(self, pokemon: Pokemon, owner: User, item: None | Item, time: Time) -> bool:
         if self.required_level > pokemon.level:
             return False
 
@@ -129,8 +128,8 @@ evolution_rules: dict[PokemonType, tuple[EvolutionRule, ...]] = {
         EvolutionRule(to=PokemonType.Vaporeon, required_item=Item.WATER_STONE),
         EvolutionRule(to=PokemonType.Jolteon, required_item=Item.THUNDER_STONE),
         EvolutionRule(to=PokemonType.Flareon, required_item=Item.FIRE_STONE),
-        EvolutionRule(to=PokemonType.Espeon, required_friendship=160, required_time="day"),
-        EvolutionRule(to=PokemonType.Umbreon, required_friendship=160, required_time="night"),
+        EvolutionRule(to=PokemonType.Espeon, required_friendship=160, required_time=Time.DAY),
+        EvolutionRule(to=PokemonType.Umbreon, required_friendship=160, required_time=Time.NIGHT),
         EvolutionRule(to=PokemonType.Leafeon, required_item=Item.LEAF_STONE),
         EvolutionRule(to=PokemonType.Glaceon, required_item=Item.ICE_STONE),
     ),
@@ -167,10 +166,12 @@ evolution_rules: dict[PokemonType, tuple[EvolutionRule, ...]] = {
     PokemonType.Murkrow: (EvolutionRule(to=PokemonType.Honchkrow, required_item=Item.DUSK_STONE),),
     PokemonType.Misdreavus: (EvolutionRule(to=PokemonType.Mismagius, required_item=Item.DUSK_STONE),),
     PokemonType.Pineco: (EvolutionRule(to=PokemonType.Forretress, required_level=31),),
-    PokemonType.Gligar: (EvolutionRule(to=PokemonType.Gliscor, required_item=Item.RAZOR_FANG, required_time="night"),),
+    PokemonType.Gligar: (
+        EvolutionRule(to=PokemonType.Gliscor, required_item=Item.RAZOR_FANG, required_time=Time.NIGHT),
+    ),
     PokemonType.Snubbull: (EvolutionRule(to=PokemonType.Granbull, required_level=23),),
     PokemonType.Sneasel: (
-        EvolutionRule(to=PokemonType.Weavile, required_item=Item.RAZOR_CLAW, required_time="night"),
+        EvolutionRule(to=PokemonType.Weavile, required_item=Item.RAZOR_CLAW, required_time=Time.NIGHT),
     ),
     PokemonType.Teddiursa: (EvolutionRule(to=PokemonType.Ursaring, required_level=30),),
     PokemonType.Slugma: (EvolutionRule(to=PokemonType.Magcargo, required_level=38),),
@@ -276,7 +277,7 @@ evolution_rules: dict[PokemonType, tuple[EvolutionRule, ...]] = {
     PokemonType.Kricketot: (EvolutionRule(to=PokemonType.Kricketune, required_level=10),),
     PokemonType.Shinx: (EvolutionRule(to=PokemonType.Luxio, required_level=15),),
     PokemonType.Luxio: (EvolutionRule(to=PokemonType.Luxray, required_level=30),),
-    PokemonType.Budew: (EvolutionRule(to=PokemonType.Roselia, required_friendship=160, required_time="day"),),
+    PokemonType.Budew: (EvolutionRule(to=PokemonType.Roselia, required_friendship=160, required_time=Time.DAY),),
     PokemonType.Cranidos: (EvolutionRule(to=PokemonType.Rampardos, required_level=30),),
     PokemonType.Shieldon: (EvolutionRule(to=PokemonType.Bastiodon, required_level=30),),
     PokemonType.Burmy: (
@@ -290,7 +291,9 @@ evolution_rules: dict[PokemonType, tuple[EvolutionRule, ...]] = {
     PokemonType.Drifloon: (EvolutionRule(to=PokemonType.Drifblim, required_level=28),),
     PokemonType.Buneary: (EvolutionRule(to=PokemonType.Lopunny, required_friendship=220),),
     PokemonType.Glameow: (EvolutionRule(to=PokemonType.Purugly, required_level=38),),
-    PokemonType.Chingling: (EvolutionRule(to=PokemonType.Chimecho, required_friendship=220, required_time="night"),),
+    PokemonType.Chingling: (
+        EvolutionRule(to=PokemonType.Chimecho, required_friendship=220, required_time=Time.NIGHT),
+    ),
     PokemonType.Stunky: (EvolutionRule(to=PokemonType.Skuntank, required_level=34),),
     PokemonType.Bronzor: (EvolutionRule(to=PokemonType.Bronzong, required_level=33),),
     PokemonType.Bonsly: (EvolutionRule(to=PokemonType.Sudowoodo, required_level=15),),
@@ -299,7 +302,7 @@ evolution_rules: dict[PokemonType, tuple[EvolutionRule, ...]] = {
     PokemonType.Gible: (EvolutionRule(to=PokemonType.Gabite, required_level=24),),
     PokemonType.Gabite: (EvolutionRule(to=PokemonType.Garchomp, required_level=48),),
     PokemonType.Munchlax: (EvolutionRule(to=PokemonType.Snorlax, required_friendship=220),),
-    PokemonType.Riolu: (EvolutionRule(to=PokemonType.Lucario, required_friendship=220, required_time="day"),),
+    PokemonType.Riolu: (EvolutionRule(to=PokemonType.Lucario, required_friendship=220, required_time=Time.DAY),),
     PokemonType.Hippopotas: (EvolutionRule(to=PokemonType.Hippowdon, required_level=34),),
     PokemonType.Skorupi: (EvolutionRule(to=PokemonType.Drapion, required_level=40),),
     PokemonType.Croagunk: (EvolutionRule(to=PokemonType.Toxicroak, required_level=37),),
