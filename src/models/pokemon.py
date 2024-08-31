@@ -12,7 +12,7 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     __table_args__ = (UniqueConstraint("owner_id", "type"),)
 
     id: int | None = Field(default=None, primary_key=True)
-    type: PokemonType
+    type: PokemonType = Field(sa_type=int)
     is_shiny: bool = Field(default=False)
     level: int = Field(default=1, ge=1, le=100)
     friendship: int = Field(default=0, ge=0, le=255)

@@ -1,19 +1,12 @@
-from enum import IntEnum
+from enum import Enum
 
-from src.pokemons.form import (
-    ArceusForm,
-    BurmyWormadamForm,
-    Form,
-    GiratinaForm,
-    RotomForm,
-    ShayminFrom,
-    ShellosGastrodonForm,
-    UnownForm,
-)
+from src.pokemons.form import (ArceusForm, BurmyWormadamForm, Form,
+                               GiratinaForm, RotomForm, ShayminFrom,
+                               ShellosGastrodonForm, UnownForm)
 from src.pokemons.gender import Gender
 
 
-class PokemonType(IntEnum):
+class PokemonType(int, Enum):
     national_no: int
     title: str
     available_genders: tuple[Gender, ...]
