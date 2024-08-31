@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from src.dependencies.renders import background_images, item_sprites, pokemon_sprites
 from src.exceptions.handler import install_exception_handlers
 from src.routes.auths import router as auth_router
+from src.routes.items import router as item_router
 from src.routes.pokemons import router as pokemon_router
 from src.setting import Envrionment, settings
 
@@ -25,6 +26,7 @@ else:
 
 app.include_router(pokemon_router)
 app.include_router(auth_router)
+app.include_router(item_router)
 install_exception_handlers(app)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

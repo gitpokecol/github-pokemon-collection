@@ -10,7 +10,7 @@ from src.pokemons.time import Time
 class EvolutionRule(BaseModel):
     to: PokemonType
     required_level: int = Field(default=0)
-    required_item: None | str = Field(default=None)
+    required_item: None | ItemType = Field(default=None)
     required_time: None | Time = Field(default=None)
     required_friendship: int = Field(default=0)
 

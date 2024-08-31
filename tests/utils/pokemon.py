@@ -1,7 +1,7 @@
 from src.models.pokemon import Pokemon
-from src.models.pokemon_type import PokemonType
 from src.pokemons.form import Form
 from src.pokemons.gender import Gender
+from src.pokemons.pokemon_type import PokemonType
 
 
 def create_pokemon(

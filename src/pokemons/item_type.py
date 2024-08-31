@@ -1,7 +1,9 @@
 from enum import Enum
 
 
-class ItemType(str, Enum):
+class ItemType(int, Enum):
+    title: str
+
     FIRE_STONE = "Fire Stone"
     WATER_STONE = "Water Stone"
     THUNDER_STONE = "Thunder Stone"
@@ -56,5 +58,13 @@ class ItemType(str, Enum):
     POKEBALL = "Pokeball"
     RARE_CANDY = "Rare Candy"
 
-    def __str__(self) -> str:
-        return self.value
+    def __new__(
+        cls,
+        title: str,
+    ) -> "ItemType":
+        value = len(cls.__members__) + 1
+        instance = int.__new__(cls, value)
+        instance._value_ = value
+        instance.title = title
+
+        return instance
