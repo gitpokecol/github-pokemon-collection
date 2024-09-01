@@ -1,10 +1,13 @@
 import asyncio
+from datetime import datetime
 from typing import AsyncGenerator
 
 import pytest
 from httpx import AsyncClient
 from sqlmodel.ext.asyncio.session import AsyncSession
 
+from src.auths.jwt import JwtPayload
+from src.dependencies.auths import get_token
 from src.main import app, lifespan
 from src.models.user import User
 from tests.db import engine
@@ -49,5 +52,12 @@ async def user(session: AsyncSession):
 
     session.add(user)
     await session.commit()
-    await session.refresh(user)
     return user
+
+
+@pytest.fixture
+async def use_token(user: User):
+    async def override():
+        return JwtPayload(username=user.username, exp=datetime.now())
+
+    app.dependency_overrides[get_token] = override

@@ -1,37 +1,43 @@
 import random
 
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
-
 from src.models.daily_item import DailyItem
+from src.models.daily_item_abtain import DailyItemAbtain
+from src.models.user import User
 from src.pokemons.item_type import ItemType
-from src.utils import utc_now_date
+from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
+from src.repositories.daily_item_repository import DailyItemRepository
+from src.schemas.responses.items import DailyItemResponse
 
 
 class ItemService:
-    def __init__(self):
-        pass
 
-    async def get_daily_item(self, session: AsyncSession):
-        daily_item = await self._find_daily_item(session)
+    def __init__(
+        self, *, daily_item_repository: DailyItemRepository, daily_item_abtain_repository: DailyItemAbtainRepository
+    ) -> None:
+        self._daily_item_repo = daily_item_repository
+        self._daily_item_abtain_repo = daily_item_abtain_repository
 
-        if daily_item:
-            return daily_item
+    async def get_daily_item(self) -> DailyItemResponse:
+        daily_item = await self._get_daily_item()
+        return DailyItemResponse.of(type=daily_item.type)
 
-        daily_item = self._create_daily_item(session)
-        await session.commit()
+    async def give_daily_item_to_user(self, user: User) -> None:
+        daily_item = await self._get_daily_item()
+
+        daily_item_abtain = DailyItemAbtain(user=user, daily_item=daily_item)
+        self._daily_item_abtain_repo.save(daily_item_abtain)
+
+    async def _get_daily_item(self) -> DailyItem:
+        daily_item = await self._daily_item_repo.find_daily_item_for_today()
+
+        if daily_item is None:
+            daily_item = self._create_daily_item()
+            self._daily_item_repo.save(daily_item)
+
         return daily_item
 
-    async def _find_daily_item(self, session: AsyncSession):
-        current_date = utc_now_date()
-        stmt = select(DailyItem).where(DailyItem.created_date == current_date)
-        result = await session.exec(stmt)
-
-        return result.first()
-
-    def _create_daily_item(self, session: AsyncSession):
+    def _create_daily_item(self) -> DailyItem:
         item_type = random.choice(tuple(ItemType))
         daily_item = DailyItem(type=item_type)
-        session.add(daily_item)
 
         return daily_item
