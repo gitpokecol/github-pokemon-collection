@@ -5,6 +5,7 @@ class ErrorCode(Enum):
     detail: str
 
     # 400
+    ALREADY_ABTAINED_DAILY_ITEM = "You already abtained the daily item."
 
     # 402
     INVALID_GITHUB_OAUTH_TOKEN = "Github oauth token is invalid"

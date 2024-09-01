@@ -2,6 +2,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
+from src.exceptions.common import BadRequestError
 from src.models.daily_item import DailyItem
 from src.models.daily_item_abtain import DailyItemAbtain
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
@@ -61,10 +62,12 @@ async def test_get_daily_item__non_existed__create_DailyItem(
 async def test_give_daily_item_to_user__non_existed_DailyItem__create_DailyItem(
     item_service: ItemService,
     mock_daily_item_repository: DailyItemRepository | AsyncMock,
+    mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
 ):
     # given
     user = create_user()
     mock_daily_item_repository.find_for_today.return_value = None
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = False
 
     # when
     await item_service.give_daily_item_to_user(user)
@@ -82,6 +85,7 @@ async def test_give_daily_item_to_user__existed_DailyItem__create_DailyItemAbtai
     user = create_user()
     daily_item = create_daily_item()
     mock_daily_item_repository.find_for_today.return_value = daily_item
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = False
 
     # when
     await item_service.give_daily_item_to_user(user)
@@ -93,17 +97,17 @@ async def test_give_daily_item_to_user__existed_DailyItem__create_DailyItemAbtai
     assert created.user == user
 
 
-# async def test_give_daily_item_to_user__existed_DailyItemAbtain__raise_BadRequestError(
-#     item_service: ItemService,
-#     mock_daily_item_repository: DailyItemRepository | AsyncMock,
-#     mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
-# ):
-#     # given
-#     user = create_user()
-#     daily_item = create_daily_item()
-#     mock_daily_item_repository.find_for_today.return_value = daily_item
+async def test_give_daily_item_to_user__existed_DailyItemAbtain__raise_BadRequestError(
+    item_service: ItemService,
+    mock_daily_item_repository: DailyItemRepository | AsyncMock,
+    mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
+):
+    # given
+    user = create_user()
+    daily_item = create_daily_item()
+    mock_daily_item_repository.find_for_today.return_value = daily_item
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = True
 
-#     # when
-#     await item_service.give_daily_item_to_user(user)
-
-#     # then
+    # when & then
+    with pytest.raises(BadRequestError):
+        await item_service.give_daily_item_to_user(user)

@@ -1,5 +1,7 @@
 import random
 
+from src.exceptions.common import BadRequestError
+from src.exceptions.error_codes import ErrorCode
 from src.models.daily_item import DailyItem
 from src.models.daily_item_abtain import DailyItemAbtain
 from src.models.user import User
@@ -23,9 +25,16 @@ class ItemService:
 
     async def give_daily_item_to_user(self, user: User) -> None:
         daily_item = await self._get_daily_item()
+        await self._validate_not_to_give_daily_item_to_user(user, daily_item)
 
         daily_item_abtain = DailyItemAbtain(user=user, daily_item=daily_item)
         self._daily_item_abtain_repo.save(daily_item_abtain)
+
+    async def _validate_not_to_give_daily_item_to_user(self, user: User, daily_item: DailyItem):
+        is_given = await self._daily_item_abtain_repo.exist_by_user_and_daily_item(user, daily_item)
+
+        if is_given:
+            raise BadRequestError(ErrorCode.ALREADY_ABTAINED_DAILY_ITEM)
 
     async def _get_daily_item(self) -> DailyItem:
         daily_item = await self._daily_item_repo.find_for_today()
