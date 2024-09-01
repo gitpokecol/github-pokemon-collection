@@ -1,6 +1,6 @@
 from datetime import date
 
-from sqlalchemy import UniqueConstraint
+from sqlalchemy import Integer, UniqueConstraint
 from sqlmodel import Field, SQLModel
 
 from src.models.base import DatedAtMixin
@@ -14,4 +14,4 @@ class DailyItem(SQLModel, DatedAtMixin, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     created_date: date = Field(default_factory=utc_now_date)
-    type: ItemType
+    type: ItemType = Field(sa_type=Integer)
