@@ -7,7 +7,7 @@ from src.utils import utc_now_date
 
 class DailyItemRepository(BaseRepository):
 
-    async def find_daily_item_for_today(self) -> DailyItem | None:
+    async def find_for_today(self) -> DailyItem | None:
         current_date = utc_now_date()
         stmt = select(DailyItem).where(DailyItem.created_date == current_date)
         result = await self._session.exec(stmt)

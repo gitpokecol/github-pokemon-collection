@@ -28,7 +28,7 @@ class ItemService:
         self._daily_item_abtain_repo.save(daily_item_abtain)
 
     async def _get_daily_item(self) -> DailyItem:
-        daily_item = await self._daily_item_repo.find_daily_item_for_today()
+        daily_item = await self._daily_item_repo.find_for_today()
 
         if daily_item is None:
             daily_item = self._create_daily_item()

@@ -34,7 +34,7 @@ async def test_get_daily_item__existed__return_DailyItemResponse(
 ):
     # given
     daily_item = create_daily_item()
-    mock_daily_item_repository.find_daily_item_for_today.return_value = daily_item
+    mock_daily_item_repository.find_for_today.return_value = daily_item
 
     # when
     result = await item_service.get_daily_item()
@@ -47,7 +47,7 @@ async def test_get_daily_item__non_existed__create_DailyItem(
     item_service: ItemService, mock_daily_item_repository: DailyItemRepository | AsyncMock
 ):
     # given
-    mock_daily_item_repository.find_daily_item_for_today.return_value = None
+    mock_daily_item_repository.find_for_today.return_value = None
 
     # when
     result = await item_service.get_daily_item()
@@ -64,7 +64,7 @@ async def test_give_daily_item_to_user__non_existed_DailyItem__create_DailyItem(
 ):
     # given
     user = create_user()
-    mock_daily_item_repository.find_daily_item_for_today.return_value = None
+    mock_daily_item_repository.find_for_today.return_value = None
 
     # when
     await item_service.give_daily_item_to_user(user)
@@ -81,7 +81,7 @@ async def test_give_daily_item_to_user__existed_DailyItem__create_DailyItemAbtai
     # given
     user = create_user()
     daily_item = create_daily_item()
-    mock_daily_item_repository.find_daily_item_for_today.return_value = daily_item
+    mock_daily_item_repository.find_for_today.return_value = daily_item
 
     # when
     await item_service.give_daily_item_to_user(user)
@@ -101,7 +101,7 @@ async def test_give_daily_item_to_user__existed_DailyItem__create_DailyItemAbtai
 #     # given
 #     user = create_user()
 #     daily_item = create_daily_item()
-#     mock_daily_item_repository.find_daily_item_for_today.return_value = daily_item
+#     mock_daily_item_repository.find_for_today.return_value = daily_item
 
 #     # when
 #     await item_service.give_daily_item_to_user(user)
