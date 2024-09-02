@@ -6,7 +6,6 @@ from src.pokemons.evolution import EvolutionRule, evolution_rules
 from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
-from src.setting import settings
 
 
 class EvolutionService:
@@ -30,17 +29,10 @@ class EvolutionService:
 
     def evolve_pokemon(self, pokemon: Pokemon, owner: User, rule: EvolutionRule):
         if pokemon.type == PokemonType.Nincada:
-            shedinja = self._create_pokemon(PokemonType.Shedinja)
+            shedinja = Pokemon.create_random(PokemonType.Shedinja)
             owner.pokemons.append(shedinja)
 
         pokemon.type = rule.to
 
-    def _create_pokemon(self, pokemon_type: PokemonType):
-        is_shiny = settings.SHINY_POKEMON_RATE > random.random()
-        gender = random.choice(pokemon_type.available_genders)
-
-        form = None
-        if pokemon_type.available_forms:
-            form = random.choice(pokemon_type.available_forms)
-
-        return Pokemon(type=pokemon_type, is_shiny=is_shiny, gender=gender, form=form)
+        if pokemon.form not in rule.to.available_forms:
+            pokemon.form = None

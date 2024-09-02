@@ -1,10 +1,13 @@
+import random
+
 from sqlalchemy import Integer, String, UniqueConstraint
 from sqlmodel import Field, SQLModel
 
 from src.models.base import DatedAtMixin
-from src.pokemons.form import Form
+from src.pokemons.form import ArceusForm, Form
 from src.pokemons.gender import Gender
 from src.pokemons.pokemon_type import PokemonType
+from src.setting import settings
 
 
 class Pokemon(SQLModel, DatedAtMixin, table=True):
@@ -22,3 +25,16 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
 
     def level_up(self):
         self.level = min(self.level + 1, 100)
+
+    @classmethod
+    def create_random(cls, pokemon_type: PokemonType):
+        is_shiny = settings.SHINY_POKEMON_RATE > random.random()
+        gender = random.choice(pokemon_type.available_genders)
+
+        form = None
+        if pokemon_type == PokemonType.Arceus:
+            form = ArceusForm.DEFAULT
+        elif pokemon_type.available_forms:
+            form = random.choice(pokemon_type.available_forms)
+
+        return Pokemon(type=pokemon_type, is_shiny=is_shiny, gender=gender, form=form)

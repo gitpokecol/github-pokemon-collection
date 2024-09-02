@@ -26,7 +26,7 @@ class PokemonService:
         new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, new_count)
         user.update_pokedex(new_pokemon_types)
 
-        new_pokemons = [self._create_pokemon(pokemon_type) for pokemon_type in new_pokemon_types]
+        new_pokemons = [Pokemon.create_random(pokemon_type) for pokemon_type in new_pokemon_types]
         user.pokemons.extend(new_pokemons)
 
     def _calculate_new_pokemon_count(self, updated_commit_point: int, current_commit_point: int) -> int:
@@ -48,16 +48,6 @@ class PokemonService:
     def _pick_pokemon_types_by_base_stat(self, candidates: Sequence[PokemonType], count: int):
         weights = [1 / type.base_stat for type in candidates]
         return weighted_sample(candidates, weights, count)
-
-    def _create_pokemon(self, pokemon_type: PokemonType):
-        is_shiny = settings.SHINY_POKEMON_RATE > random.random()
-        gender = random.choice(pokemon_type.available_genders)
-
-        form = None
-        if pokemon_type.available_forms:
-            form = random.choice(pokemon_type.available_forms)
-
-        return Pokemon(type=pokemon_type, is_shiny=is_shiny, gender=gender, form=form)
 
     def level_up_pokemons_for_user(
         self, user: User, previous_commit_point: int, current_commit_point: int, time: Time
