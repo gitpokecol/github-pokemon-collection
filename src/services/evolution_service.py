@@ -31,8 +31,11 @@ class EvolutionService:
         if pokemon.type == PokemonType.Nincada:
             shedinja = Pokemon.create_random(PokemonType.Shedinja)
             owner.pokemons.append(shedinja)
+            owner.update_pokedex([PokemonType.Shedinja])
 
         pokemon.type = rule.to
 
         if pokemon.form not in rule.to.available_forms:
             pokemon.form = None
+
+        owner.update_pokedex([rule.to])
