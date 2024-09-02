@@ -1,12 +1,15 @@
 from fastapi import Depends, Query, Response
 from fastapi.routing import APIRouter
 
+from src.dependencies.auths import CurrentUserDep
 from src.dependencies.commons import ClientIpAddressDep
 from src.dependencies.db import SessionDep
 from src.dependencies.facades import PokemonFacadeDep
+from src.dependencies.services import PokemonServiceDep
 from src.dependencies.users import get_username
 from src.schemas.backgrounds import Background
 from src.schemas.pokemons import Facing
+from src.schemas.responses.pokemons import PokemonsResponse
 from src.setting import settings
 
 router = APIRouter()
@@ -35,3 +38,8 @@ async def get_pokemons_svg(
         ),
         headers={"content-type": "image/svg+xml", "Cache-Control": "max-age=3600"},
     )
+
+
+@router.get("/api/pokemons")
+async def get_pokemons(pokemon_service: PokemonServiceDep, current_user: CurrentUserDep) -> PokemonsResponse:
+    return pokemon_service.get_pokemons_by_user(current_user)

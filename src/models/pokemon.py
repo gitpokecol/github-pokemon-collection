@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, UniqueConstraint
+from sqlalchemy import Integer, String, UniqueConstraint
 from sqlmodel import Field, SQLModel
 
 from src.models.base import DatedAtMixin
@@ -17,7 +17,7 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     level: int = Field(default=1, ge=1, le=100)
     friendship: int = Field(default=0, ge=0, le=255)
     gender: Gender
-    form: Form | None
+    form: Form | None = Field(sa_type=String)
     owner_id: int = Field(default=None, foreign_key="user.id")
 
     def level_up(self):

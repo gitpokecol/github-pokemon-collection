@@ -8,6 +8,7 @@ from src.pokemons.evolution import EvolutionRule, evolution_line_cnts, evolution
 from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
+from src.schemas.responses.pokemons import PokemonsResponse
 from src.setting import settings
 from src.utils import weighted_sample
 
@@ -100,3 +101,6 @@ class PokemonService:
                 return rule
 
         return None
+
+    def get_pokemons_by_user(self, user: User) -> PokemonsResponse:
+        return PokemonsResponse.of(user.pokemons)
