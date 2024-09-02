@@ -84,7 +84,7 @@ class User(UserBase, table=True):
         if bag_item is not None:
             bag_item.count += 1
         else:
-            new_bag_item = BagItem(item_type=item_type, owner=self, count=1)
+            new_bag_item = BagItem(item_type=item_type, count=1)
             self.bag_items.append(new_bag_item)
 
     def remove_item(self, item_type: ItemType):

@@ -52,6 +52,7 @@ async def user(session: AsyncSession):
 
     session.add(user)
     await session.commit()
+    await session.refresh(user)
     return user
 
 

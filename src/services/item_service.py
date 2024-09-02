@@ -8,7 +8,7 @@ from src.models.user import User
 from src.pokemons.item_type import ItemType
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
-from src.schemas.responses.items import DailyItemResponse
+from src.schemas.responses.items import BagItemsResponse, DailyItemResponse
 
 SUBSTITUTE_ITEM_TYPE = ItemType.RARE_CANDY
 
@@ -57,3 +57,7 @@ class ItemService:
         daily_item = DailyItem(type=item_type)
 
         return daily_item
+
+    def get_bag_items(self, user: User) -> BagItemsResponse:
+        existed_bag_items = [bag_item for bag_item in user.bag_items if bag_item.count > 0]
+        return BagItemsResponse.of(existed_bag_items)
