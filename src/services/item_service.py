@@ -1,14 +1,18 @@
 import random
 
-from src.exceptions.common import BadRequestError
+from src.exceptions.common import BadRequestError, ForbiddenError
 from src.exceptions.error_codes import ErrorCode
 from src.models.daily_item import DailyItem
 from src.models.daily_item_abtain import DailyItemAbtain
+from src.models.pokemon import Pokemon
 from src.models.user import User
+from src.pokemons.item_effect import EvolutionItemEffect, RareCandyEffect
 from src.pokemons.item_type import ItemType
+from src.pokemons.time import Time
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
-from src.schemas.responses.items import BagItemsResponse, DailyItemResponse
+from src.schemas.responses.items import BagItemsResponse, DailyItemResponse, UseItemResponse
+from src.services.evolution_service import EvolutionService
 
 SUBSTITUTE_ITEM_TYPE = ItemType.RARE_CANDY
 
@@ -16,8 +20,13 @@ SUBSTITUTE_ITEM_TYPE = ItemType.RARE_CANDY
 class ItemService:
 
     def __init__(
-        self, *, daily_item_repository: DailyItemRepository, daily_item_abtain_repository: DailyItemAbtainRepository
+        self,
+        *,
+        evolution_service: EvolutionService,
+        daily_item_repository: DailyItemRepository,
+        daily_item_abtain_repository: DailyItemAbtainRepository
     ) -> None:
+        self._evolution_service = evolution_service
         self._daily_item_repo = daily_item_repository
         self._daily_item_abtain_repo = daily_item_abtain_repository
 
@@ -59,5 +68,32 @@ class ItemService:
         return daily_item
 
     def get_bag_items(self, user: User) -> BagItemsResponse:
-        existed_bag_items = [bag_item for bag_item in user.bag_items if bag_item.count > 0]
-        return BagItemsResponse.of(existed_bag_items)
+        return BagItemsResponse.of(user.existed_bag_items)
+
+    def use_item_to_pokemon(self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time) -> UseItemResponse:
+        self._validate_user_has_item(item_type, user)
+
+        if item_type.effect is None:
+            return UseItemResponse(is_used=False)
+
+        item_type.effect.apply(pokemon)
+
+        if isinstance(item_type.effect, (EvolutionItemEffect, RareCandyEffect)):
+            is_used = self._use_evolution_item_to_pokemon(pokemon, item_type, user, time)
+            if not is_used:
+                return UseItemResponse(is_used=False)
+
+        user.remove_item(item_type)
+        return UseItemResponse(is_used=True)
+
+    def _use_evolution_item_to_pokemon(self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time) -> bool:
+        rule = self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, item_type)
+        if rule is None:
+            return False
+
+        self._evolution_service.evolve_pokemon(pokemon, user, rule)
+        return True
+
+    def _validate_user_has_item(self, item_type: ItemType, user: User):
+        if not any([bag_item.item_type == item_type for bag_item in user.existed_bag_items]):
+            raise ForbiddenError(ErrorCode.NOT_ENOUGH_ITEM)

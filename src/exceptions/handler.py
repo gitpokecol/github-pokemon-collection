@@ -6,6 +6,7 @@ from fastapi.exception_handlers import http_exception_handler
 from src.exceptions.common import (
     BadRequestError,
     CommonException,
+    ForbiddenError,
     InternalServerError,
     NotFoundError,
     ServiceUnavailableError,
@@ -61,6 +62,12 @@ def install_exception_handlers(app: FastAPI):
     async def handle_unauthorized_error(request: Request, error: UnauthorizedError):
         _log_info(error, request)
         http_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=error.detail)
+        return await http_exception_handler(request, http_exception)
+
+    @app.exception_handler(ForbiddenError)
+    async def handle_forbidden_error(request: Request, error: ForbiddenError):
+        _log_info(error, request)
+        http_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=error.detail)
         return await http_exception_handler(request, http_exception)
 
     @app.exception_handler(NotFoundError)

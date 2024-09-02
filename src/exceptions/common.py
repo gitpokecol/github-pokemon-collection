@@ -35,3 +35,7 @@ class ServiceUnavailableError(CommonException):
 
 class UnauthorizedError(CommonException):
     pass
+
+
+class ForbiddenError(CommonException):
+    pass

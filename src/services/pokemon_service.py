@@ -1,6 +1,8 @@
 import random
 from typing import Sequence
 
+from src.exceptions.common import NotFoundError
+from src.exceptions.error_codes import ErrorCode
 from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
 from src.models.user import User
@@ -74,3 +76,10 @@ class PokemonService:
 
     def get_pokemons_by_user(self, user: User) -> PokemonsResponse:
         return PokemonsResponse.of(user.pokemons)
+
+    def find_pokemon_in_owner(self, pokemon_id: int, owner: User) -> Pokemon:
+        for pokemon in owner.pokemons:
+            if pokemon.id == pokemon_id:
+                return pokemon
+
+        raise NotFoundError(ErrorCode.POKEMON_NOT_FOUND)

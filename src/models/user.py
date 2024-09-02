@@ -47,6 +47,10 @@ class User(UserBase, table=True):
     def latest_commit_points_updated_at(self) -> datetime:
         return max(cp.updated_at for cp in self.commit_points)
 
+    @property
+    def existed_bag_items(self) -> list[BagItem]:
+        return [bag_item for bag_item in self.bag_items if bag_item.count > 0]
+
     def set_commit_points(self, commit_points: dict[int, int]):
         for year, cp in commit_points.items():
             self._set_commit_point(year, cp)

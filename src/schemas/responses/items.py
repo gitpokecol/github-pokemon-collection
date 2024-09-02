@@ -24,3 +24,7 @@ class BagItemsResponse(BaseModel):
     def of(cls, bag_items: list[BagItem]) -> "BagItemsResponse":
         items = [Item(item_type=bag_item.item_type, count=bag_item.count) for bag_item in bag_items]
         return BagItemsResponse(items=items)
+
+
+class UseItemResponse(BaseModel):
+    is_used: bool

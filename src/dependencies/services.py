@@ -22,11 +22,16 @@ async def get_pokemon_service(
 
 
 async def get_item_service(
-    daily_item_repository: DailyItemRepositoryDep, daily_item_abtain_repository: DailyItemAbtainRepositoryDep
+    evolution_service: "EvolutionServiceDep",
+    daily_item_repository: DailyItemRepositoryDep,
+    daily_item_abtain_repository: DailyItemAbtainRepositoryDep,
 ) -> ItemService:
     return ItemService(
-        daily_item_repository=daily_item_repository, daily_item_abtain_repository=daily_item_abtain_repository
+        evolution_service=evolution_service,
+        daily_item_repository=daily_item_repository,
+        daily_item_abtain_repository=daily_item_abtain_repository,
     )
+
 
 async def get_time_service(ip_api: IpAPIDep) -> TimeService:
     return TimeService(ip_api=ip_api)
