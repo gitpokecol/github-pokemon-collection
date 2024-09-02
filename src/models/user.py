@@ -4,10 +4,12 @@ from typing import Sequence
 from pydantic import field_validator
 from sqlmodel import Field, Relationship, SQLModel
 
+from src.models.bag_item import BagItem
 from src.models.base import DatedAtMixin
 from src.models.commit_point import CommitPoint
 from src.models.pokedex_item import PokedexItem
 from src.models.pokemon import Pokemon
+from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 
 
@@ -31,6 +33,7 @@ class User(UserBase, table=True):
     pokedex_items: list[PokedexItem] = Relationship(
         sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
     )
+    bag_items: list[BagItem] = Relationship(sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"})
 
     @property
     def pokemon_types(self) -> list[PokemonType]:
@@ -72,5 +75,30 @@ class User(UserBase, table=True):
         for model in self.commit_points:
             if model.year == year:
                 return model
+
+        return None
+
+    def add_item(self, item_type: ItemType):
+        bag_item = self._get_item_bag_by_item_type(item_type)
+
+        if bag_item is not None:
+            bag_item.count += 1
+        else:
+            new_bag_item = BagItem(item_type=item_type, owner=self, count=1)
+            self.bag_items.append(new_bag_item)
+
+    def remove_item(self, item_type: ItemType):
+        bag_item = self._get_item_bag_by_item_type(item_type)
+        assert bag_item is not None
+
+        bag_item.count -= 1
+
+        if bag_item.count == 0:
+            self.bag_items.remove(bag_item)
+
+    def _get_item_bag_by_item_type(self, item_type: ItemType) -> BagItem | None:
+        for bag_item in self.bag_items:
+            if bag_item.item_type == item_type:
+                return bag_item
 
         return None

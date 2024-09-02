@@ -7,5 +7,5 @@ class DailyItemResponse(BaseModel):
     type: int
 
     @classmethod
-    def of(cls, type: ItemType):
+    def of(cls, type: ItemType) -> "DailyItemResponse":
         return DailyItemResponse(type=type)

@@ -10,6 +10,8 @@ from src.repositories.daily_item_abtain_repository import DailyItemAbtainReposit
 from src.repositories.daily_item_repository import DailyItemRepository
 from src.schemas.responses.items import DailyItemResponse
 
+SUBSTITUTE_ITEM_TYPE = ItemType.RARE_CANDY
+
 
 class ItemService:
 
@@ -23,12 +25,17 @@ class ItemService:
         daily_item = await self._get_daily_item()
         return DailyItemResponse.of(type=daily_item.type)
 
-    async def give_daily_item_to_user(self, user: User) -> None:
+    async def give_daily_item_to_user(self, user: User, get_substitute: bool) -> None:
         daily_item = await self._get_daily_item()
         await self._validate_not_to_give_daily_item_to_user(user, daily_item)
 
         daily_item_abtain = DailyItemAbtain(user=user, daily_item=daily_item)
         self._daily_item_abtain_repo.save(daily_item_abtain)
+
+        if get_substitute:
+            user.add_item(SUBSTITUTE_ITEM_TYPE)
+        else:
+            user.add_item(daily_item.type)
 
     async def _validate_not_to_give_daily_item_to_user(self, user: User, daily_item: DailyItem):
         is_given = await self._daily_item_abtain_repo.exist_by_user_and_daily_item(user, daily_item)

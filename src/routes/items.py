@@ -1,3 +1,4 @@
+from fastapi import Query
 from fastapi.routing import APIRouter
 
 from src.dependencies.auths import CurrentUserDep
@@ -12,5 +13,5 @@ async def get_daily_item(item_service: ItemServiceDep):
 
 
 @router.post("/api/item/daily/abtain")
-async def user_item(item_service: ItemServiceDep, current_user: CurrentUserDep):
-    await item_service.give_daily_item_to_user(current_user)
+async def abtain_item(item_service: ItemServiceDep, current_user: CurrentUserDep, get_substitute: bool = Query(False)):
+    await item_service.give_daily_item_to_user(current_user, get_substitute)
