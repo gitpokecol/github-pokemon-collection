@@ -1,17 +1,15 @@
 from datetime import datetime, timezone
 
-import pytz
 from fastapi import BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.external.github_api import GithubAPI
-from src.external.ip_api import IpAPI
 from src.models.user import User
-from src.pokemons.time import get_time_by_timezone
 from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
 from src.schemas.pokemons import Facing
 from src.services.pokemon_service import PokemonService
+from src.services.time_service import TimeService
 from src.services.user_service import UserService
 from src.setting import settings
 
@@ -23,14 +21,14 @@ class PokemonFacade:
         user_service: UserService,
         pokemon_service: PokemonService,
         github_api: GithubAPI,
-        ip_api: IpAPI,
+        time_service: TimeService,
         renderer: ProfileRenderer,
         background_tasks: BackgroundTasks
     ) -> None:
         self._user_service = user_service
         self._pokemon_service = pokemon_service
         self._github_api = github_api
-        self._ip_api = ip_api
+        self._time_service = time_service
         self._renderer = renderer
         self._background_tasks = background_tasks
 
@@ -93,21 +91,8 @@ class PokemonFacade:
         await session.commit()
 
     async def _update_pokemons(
-        self, user: User, viewer_ip_address: str | None, previous_commit_point: int, current_commit_point: int
+        self, user: User, ip_address: str | None, previous_commit_point: int, current_commit_point: int
     ):
-        current_timezone = await self._get_timezone_by_ip_address(viewer_ip_address)
-        time = get_time_by_timezone(current_timezone)
-
+        time = await self._time_service.get_time_for_client(ip_address)
         self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
         self._pokemon_service.level_up_pokemons_for_user(user, previous_commit_point, user.total_commit_point, time)
-
-    async def _get_timezone_by_ip_address(self, ip_address: str | None):
-        if not ip_address:
-            return timezone.utc
-
-        ip_api_res = await self._ip_api.get_timezone_by_ip_address(ip_address)
-
-        if ip_api_res and ip_api_res.status == "success" and ip_api_res.timezone:
-            return pytz.timezone(ip_api_res.timezone)
-
-        return timezone.utc
