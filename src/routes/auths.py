@@ -7,6 +7,7 @@ from src.auths.jwt import encode_token
 from src.auths.oauth_client import GitHubOAuth2Client
 from src.exceptions.common import UnauthorizedError
 from src.exceptions.error_codes import ErrorCode
+from src.schemas.responses.auths import AuthCallbackResponse
 from src.setting import settings
 
 client = GitHubOAuth2Client(
@@ -32,7 +33,7 @@ async def callback_github_oauth(
     username = await client.get_username(github_token["access_token"])
 
     access_token = encode_token(username)
-    response.set_cookie("Access-Token", access_token)
+    return AuthCallbackResponse(access_token=access_token)
 
 
 @router.get("/api/oauth/authorize-github", name="oauth.github.authorize")

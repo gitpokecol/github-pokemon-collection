@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Cookie, Depends
+from fastapi import Depends, Header
 
 from src.auths.jwt import JwtPayload, verify_token
 from src.dependencies.db import SessionDep
@@ -10,9 +10,9 @@ from src.exceptions.error_codes import ErrorCode
 from src.models.user import User
 
 
-async def get_token(token: str | None = Cookie(None, alias="Access-Token")) -> JwtPayload:
-    if token:
-        return verify_token(token)
+async def get_token(authorization: str | None = Header(None, alias="Authorization")) -> JwtPayload:
+    if authorization:
+        return verify_token(authorization)
     else:
         raise UnauthorizedError(ErrorCode.ACCESS_TOKEN_REQUIRED)
 
