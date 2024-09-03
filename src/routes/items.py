@@ -14,7 +14,11 @@ async def get_daily_item(item_service: ItemServiceDep):
 
 
 @router.post("/api/item/daily/abtain")
-async def abtain_item(item_service: ItemServiceDep, current_user: CurrentUserDep, get_substitute: bool = Query(False)):
+async def abtain_item(
+    item_service: ItemServiceDep,
+    current_user: CurrentUserDep,
+    get_substitute: bool = Query(False, alias="get-substitute"),
+):
     await item_service.give_daily_item_to_user(current_user, get_substitute)
 
 
