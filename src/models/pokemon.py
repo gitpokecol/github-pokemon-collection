@@ -19,7 +19,7 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     is_shiny: bool = Field(default=False)
     level: int = Field(default=1, ge=1, le=100)
     friendship: int = Field(default=0, ge=0, le=255)
-    gender: Gender = Field(sa_column=String)
+    gender: Gender = Field(sa_type=String)
     form: Form | None = Field(sa_type=String)
     owner_id: int = Field(default=None, foreign_key="user.id")
 
