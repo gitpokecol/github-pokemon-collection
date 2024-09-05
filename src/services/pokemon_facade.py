@@ -47,7 +47,8 @@ class PokemonFacade:
 
         if user:
             if (
-                datetime.now(timezone.utc) - user.latest_commit_points_updated_at.replace(tzinfo=timezone.utc)
+                len(user.commit_points) == 0
+                or datetime.now(timezone.utc) - user.latest_commit_points_updated_at.replace(tzinfo=timezone.utc)
                 >= settings.COMMIT_POINT_UPDATE_PERIOD
             ):
                 self._background_tasks.add_task(
