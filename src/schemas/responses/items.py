@@ -6,10 +6,11 @@ from src.pokemons.item_type import ItemType
 
 class DailyItemResponse(BaseModel):
     type: int
+    can_abtain: bool
 
     @classmethod
-    def of(cls, type: ItemType) -> "DailyItemResponse":
-        return DailyItemResponse(type=type)
+    def of(cls, type: ItemType, can_abtain: bool) -> "DailyItemResponse":
+        return DailyItemResponse(type=type, can_abtain=can_abtain)
 
 
 class Item(BaseModel):

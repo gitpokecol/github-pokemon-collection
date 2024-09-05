@@ -43,32 +43,61 @@ def item_service(
 
 
 async def test_get_daily_item__existed__return_DailyItemResponse(
-    item_service: ItemService, mock_daily_item_repository: DailyItemRepository | AsyncMock
+    item_service: ItemService,
+    mock_daily_item_repository: DailyItemRepository | AsyncMock,
+    mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
 ):
     # given
+    user = create_user()
     daily_item = create_daily_item()
     mock_daily_item_repository.find_for_today.return_value = daily_item
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = False
 
     # when
-    result = await item_service.get_daily_item()
+    result = await item_service.get_daily_item(user)
 
     # then
     assert result.type == daily_item.type
+    assert result.can_abtain is True
 
 
 async def test_get_daily_item__non_existed__create_DailyItem(
-    item_service: ItemService, mock_daily_item_repository: DailyItemRepository | AsyncMock
+    item_service: ItemService,
+    mock_daily_item_repository: DailyItemRepository | AsyncMock,
+    mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
 ):
     # given
+    user = create_user()
     mock_daily_item_repository.find_for_today.return_value = None
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = False
 
     # when
-    result = await item_service.get_daily_item()
+    result = await item_service.get_daily_item(user)
 
     # then
     args, _ = mock_daily_item_repository.save.call_args
     created: DailyItem = args[0]
     assert created.type == result.type
+    assert result.can_abtain is True
+
+
+async def test_get_daily_item__existed_DailyItemAbtain(
+    item_service: ItemService,
+    mock_daily_item_repository: DailyItemRepository | AsyncMock,
+    mock_daily_item_abtain_repository: DailyItemAbtainRepository | AsyncMock,
+):
+    # given
+    user = create_user()
+    daily_item = create_daily_item()
+    mock_daily_item_repository.find_for_today.return_value = daily_item
+    mock_daily_item_abtain_repository.exist_by_user_and_daily_item.return_value = True
+
+    # when
+    result = await item_service.get_daily_item(user)
+
+    # then
+    assert result.type == daily_item.type
+    assert result.can_abtain is False
 
 
 async def test_give_daily_item_to_user__non_existed_DailyItem__create_DailyItem(
@@ -159,3 +188,19 @@ async def test_give_daily_item_to_user__get_substitute_is_True__give_substitute_
 
     # then
     assert user.bag_items[0].item_type == SUBSTITUTE_ITEM_TYPE
+
+
+# async def test_use_item_to_pokemon__input_rare_candy__level_up_and_try_evolve_pokemon(
+#     item_service: ItemService, mock_evolution_service: EvolutionService | AsyncMock
+# ):
+#     # given
+#     user = create_user()
+#     pokemon = create_pokemon(pokemon)
+#     user.pokemons.append(pokemon)
+#     mock_evolution_service.get_evolution_rule_for_pokemon.return_value = EvolutionRule(to=)
+
+#     # when
+#     is_used = item_service.use_item_to_pokemon(pokemon, ItemType.RARE_CANDY, user, Time.DAY)
+
+#     # then
+#     assert user.bag_items[0].item_type == SUBSTITUTE_ITEM_TYPE

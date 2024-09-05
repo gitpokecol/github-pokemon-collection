@@ -3,14 +3,14 @@ from fastapi.routing import APIRouter
 
 from src.dependencies.auths import CurrentUserDep
 from src.dependencies.services import ItemServiceDep
-from src.schemas.responses.items import BagItemsResponse
+from src.schemas.responses.items import BagItemsResponse, DailyItemResponse
 
 router = APIRouter()
 
 
 @router.get("/api/item/daily")
-async def get_daily_item(item_service: ItemServiceDep):
-    return await item_service.get_daily_item()
+async def get_daily_item(item_service: ItemServiceDep, current_user: CurrentUserDep) -> DailyItemResponse:
+    return await item_service.get_daily_item(current_user)
 
 
 @router.post("/api/item/daily/abtain")

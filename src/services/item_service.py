@@ -30,9 +30,11 @@ class ItemService:
         self._daily_item_repo = daily_item_repository
         self._daily_item_abtain_repo = daily_item_abtain_repository
 
-    async def get_daily_item(self) -> DailyItemResponse:
+    async def get_daily_item(self, user: User) -> DailyItemResponse:
         daily_item = await self._get_daily_item()
-        return DailyItemResponse.of(type=daily_item.type)
+        is_given = await self._daily_item_abtain_repo.exist_by_user_and_daily_item(user, daily_item)
+
+        return DailyItemResponse.of(type=daily_item.type, can_abtain=not is_given)
 
     async def give_daily_item_to_user(self, user: User, get_substitute: bool) -> None:
         daily_item = await self._get_daily_item()

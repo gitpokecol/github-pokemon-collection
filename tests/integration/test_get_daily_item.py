@@ -2,7 +2,7 @@ from fastapi import status
 from httpx import AsyncClient
 
 
-async def test_get_daily_item__valid_request__responses_daily_item(client: AsyncClient):
+async def test_get_daily_item__valid_request__responses_daily_item(client: AsyncClient, use_token):
     # when
     response = await client.get("/api/item/daily")
 
@@ -10,3 +10,4 @@ async def test_get_daily_item__valid_request__responses_daily_item(client: Async
     assert response.status_code == status.HTTP_200_OK
     res_json = response.json()
     assert "type" in res_json
+    assert "can_abtain" in res_json
