@@ -24,6 +24,6 @@ def verify_token(token: str) -> JwtPayload:
         raise UnauthorizedError(ErrorCode.INVALID_ACCESS_TOKEN)
 
     try:
-        return JwtPayload.model_validate(jwt.decode(token[:7], settings.JWT_SECRET))
-    except jwt.InvalidTokenError | ValidationError:
+        return JwtPayload.model_validate(jwt.decode(token[7:], settings.JWT_SECRET))
+    except (jwt.InvalidTokenError, ValidationError):
         raise UnauthorizedError(ErrorCode.INVALID_ACCESS_TOKEN)
