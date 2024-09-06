@@ -6,9 +6,13 @@ from src.pokemons.evolution import EvolutionRule, evolution_rules
 from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
+from src.services.pokedex_service import PokedexService
 
 
 class EvolutionService:
+
+    def __init__(self, *, pokedex_service: PokedexService) -> None:
+        self._pokedex_service = pokedex_service
 
     def get_evolution_rule_for_pokemon(
         self, pokemon: Pokemon, owner: User, time: Time, item: ItemType | None
@@ -31,11 +35,11 @@ class EvolutionService:
         if pokemon.type == PokemonType.Nincada:
             shedinja = Pokemon.create_random(PokemonType.Shedinja)
             owner.pokemons.append(shedinja)
-            owner.update_pokedex([PokemonType.Shedinja])
+            self._pokedex_service.update_pokedex_for_user(owner, [PokemonType.Shedinja])
 
         pokemon.type = rule.to
 
         if pokemon.form not in rule.to.available_forms:
             pokemon.form = None
 
-        owner.update_pokedex([rule.to])
+        self._pokedex_service.update_pokedex_for_user(owner, [rule.to])

@@ -3,7 +3,11 @@ from typing import Annotated
 from fastapi import Depends
 
 from src.dependencies.external import IpAPIDep
-from src.dependencies.repositories import DailyItemAbtainRepositoryDep, DailyItemRepositoryDep
+from src.dependencies.repositories import (
+    DailyItemAbtainRepositoryDep,
+    DailyItemRepositoryDep,
+    PokedexItemRepositoryDep,
+)
 from src.services.evolution_service import EvolutionService
 from src.services.item_service import ItemService
 from src.services.pokedex_service import PokedexService
@@ -17,9 +21,9 @@ async def get_user_service() -> UserService:
 
 
 async def get_pokemon_service(
-    evolution_service: "EvolutionServiceDep",
+    evolution_service: "EvolutionServiceDep", pokedex_service: "PokedexServiceDep"
 ) -> PokemonService:
-    return PokemonService(evolution_service=evolution_service)
+    return PokemonService(evolution_service=evolution_service, pokedex_service=pokedex_service)
 
 
 async def get_item_service(
@@ -38,12 +42,12 @@ async def get_time_service(ip_api: IpAPIDep) -> TimeService:
     return TimeService(ip_api=ip_api)
 
 
-async def get_evolution_service() -> EvolutionService:
-    return EvolutionService()
+async def get_evolution_service(pokedex_service: "PokedexServiceDep") -> EvolutionService:
+    return EvolutionService(pokedex_service=pokedex_service)
 
 
-async def get_pokedex_service() -> PokedexService:
-    return PokedexService()
+async def get_pokedex_service(pokdex_item_repository: PokedexItemRepositoryDep) -> PokedexService:
+    return PokedexService(pokedex_item_repository=pokdex_item_repository)
 
 
 UserServiceDep = Annotated[UserService, Depends(get_user_service)]

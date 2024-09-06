@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Sequence
 
 from pydantic import field_validator
 from sqlmodel import Field, Relationship, SQLModel
