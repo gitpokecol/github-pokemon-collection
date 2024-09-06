@@ -25,14 +25,10 @@ class User(UserBase, table=True):
     __tablename__: str = "user"
 
     id: int | None = Field(default=None, primary_key=True)
-    commit_points: list[CommitPoint] = Relationship(
-        sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
-    )
-    pokemons: list[Pokemon] = Relationship(sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"})
-    pokedex_items: list[PokedexItem] = Relationship(
-        sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"}
-    )
-    bag_items: list[BagItem] = Relationship(sa_relationship_kwargs={"lazy": "joined", "cascade": "all, delete"})
+    commit_points: list[CommitPoint] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
+    pokemons: list[Pokemon] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
+    pokedex_items: list[PokedexItem] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
+    bag_items: list[BagItem] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
 
     @property
     def pokemon_types(self) -> list[PokemonType]:

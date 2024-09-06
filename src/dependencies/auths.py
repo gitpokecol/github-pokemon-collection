@@ -3,7 +3,6 @@ from typing import Annotated
 from fastapi import Depends, Header
 
 from src.auths.jwt import JwtPayload, verify_token
-from src.dependencies.db import SessionDep
 from src.dependencies.services import UserServiceDep
 from src.exceptions.common import UnauthorizedError
 from src.exceptions.error_codes import ErrorCode
@@ -17,8 +16,8 @@ async def get_token(authorization: str | None = Header(None, alias="Authorizatio
         raise UnauthorizedError(ErrorCode.ACCESS_TOKEN_REQUIRED)
 
 
-async def get_current_user(session: SessionDep, user_service: UserServiceDep, token: "TokenDep") -> User:
-    user = await user_service.get_user(session, token.username)
+async def get_current_user(user_service: UserServiceDep, token: "TokenDep") -> User:
+    user = await user_service.get_user(token.username)
     if not user:
         raise UnauthorizedError(ErrorCode.INVALID_ACCESS_TOKEN)
 

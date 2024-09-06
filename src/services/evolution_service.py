@@ -6,13 +6,15 @@ from src.pokemons.evolution import EvolutionRule, evolution_rules
 from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
+from src.repositories.pokemon_repository import PokemonRepository
 from src.services.pokedex_service import PokedexService
 
 
 class EvolutionService:
 
-    def __init__(self, *, pokedex_service: PokedexService) -> None:
+    def __init__(self, *, pokedex_service: PokedexService, pokemon_repository: PokemonRepository) -> None:
         self._pokedex_service = pokedex_service
+        self._pokemon_repository = pokemon_repository
 
     def get_evolution_rule_for_pokemon(
         self, pokemon: Pokemon, owner: User, time: Time, item: ItemType | None
@@ -31,15 +33,15 @@ class EvolutionService:
 
         return None
 
-    def evolve_pokemon(self, pokemon: Pokemon, owner: User, rule: EvolutionRule):
+    async def evolve_pokemon(self, pokemon: Pokemon, owner: User, rule: EvolutionRule):
         if pokemon.type == PokemonType.Nincada:
-            shedinja = Pokemon.create_random(PokemonType.Shedinja)
-            owner.pokemons.append(shedinja)
-            self._pokedex_service.update_pokedex_for_user(owner, [PokemonType.Shedinja])
+            shedinja = Pokemon.create_random(PokemonType.Shedinja, owner)
+            await self._pokemon_repository.save(shedinja)
+            await self._pokedex_service.update_pokedex_for_user(owner, [PokemonType.Shedinja])
 
         pokemon.type = rule.to
 
         if pokemon.form not in rule.to.available_forms:
             pokemon.form = None
 
-        self._pokedex_service.update_pokedex_for_user(owner, [rule.to])
+        await self._pokedex_service.update_pokedex_for_user(owner, [rule.to])

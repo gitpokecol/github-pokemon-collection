@@ -1,4 +1,3 @@
-import random
 from typing import Sequence
 
 from src.exceptions.common import NotFoundError
@@ -8,28 +7,27 @@ from src.models.pokemon import Pokemon
 from src.models.user import User
 from src.pokemons.evolution import evolution_line_cnts
 from src.pokemons.pokemon_type import PokemonType
-from src.pokemons.time import Time
+from src.repositories.pokemon_repository import PokemonRepository
 from src.schemas.responses.pokemons import PokemonsResponse
-from src.services.evolution_service import EvolutionService
 from src.services.pokedex_service import PokedexService
 from src.setting import settings
 from src.utils import weighted_sample
 
 
 class PokemonService:
-    def __init__(self, *, evolution_service: EvolutionService, pokedex_service: PokedexService) -> None:
+    def __init__(self, *, pokemon_repository: PokemonRepository, pokedex_service: PokedexService) -> None:
         self._evolution_line_counts: dict[PokemonType, int] = {}
-        self._evolution_service = evolution_service
+        self._pokemon_repository = pokemon_repository
         self._pokedex_service = pokedex_service
 
-    def give_pokemons_for_user(self, user: User, previous_commit_point: int, current_commit_point: int):
+    async def give_pokemons_for_user(self, user: User, previous_commit_point: int, current_commit_point: int):
         new_count = self._calculate_new_pokemon_count(previous_commit_point, current_commit_point)
         canditates = list(self._get_new_pokemon_candidates(user.pokedex_items))
         new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, new_count)
-        self._pokedex_service.update_pokedex_for_user(user, new_pokemon_types)
+        await self._pokedex_service.update_pokedex_for_user(user, new_pokemon_types)
 
-        new_pokemons = [Pokemon.create_random(pokemon_type) for pokemon_type in new_pokemon_types]
-        user.pokemons.extend(new_pokemons)
+        new_pokemons = [Pokemon.create_random(pokemon_type, user) for pokemon_type in new_pokemon_types]
+        await self._pokemon_repository.save(*new_pokemons)
 
     def _calculate_new_pokemon_count(self, updated_commit_point: int, current_commit_point: int) -> int:
         given_pokemon_count = updated_commit_point // settings.POKEMON_PER_COMMIT_POINT
@@ -55,21 +53,6 @@ class PokemonService:
     def _pick_pokemon_types_by_base_stat(self, candidates: Sequence[PokemonType], count: int):
         weights = [1 / type.base_stat for type in candidates]
         return weighted_sample(candidates, weights, count)
-
-    def level_up_pokemons_for_user(
-        self, user: User, previous_commit_point: int, current_commit_point: int, time: Time
-    ):
-        add_level = self._calculate_add_level(previous_commit_point, current_commit_point)
-        for pokemon in random.choices(user.pokemons, k=add_level):
-            pokemon.level_up()
-            rule = self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, None)
-            if rule:
-                self._evolution_service.evolve_pokemon(pokemon, user, rule)
-
-    def _calculate_add_level(self, updated_commit_point: int, current_commit_point: int) -> int:
-        given_pokemon_count = updated_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
-        target_pokemon_count = current_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
-        return target_pokemon_count - given_pokemon_count
 
     def get_pokemons_by_user(self, user: User) -> PokemonsResponse:
         return PokemonsResponse.of(user.pokemons)

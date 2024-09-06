@@ -8,6 +8,7 @@ from src.models.user import User
 from src.renders.profile_renderer import ProfileRenderer
 from src.schemas.backgrounds import Background
 from src.schemas.pokemons import Facing
+from src.services.levelup_service import LevelUpService
 from src.services.pokemon_service import PokemonService
 from src.services.time_service import TimeService
 from src.services.user_service import UserService
@@ -20,6 +21,7 @@ class PokemonFacade:
         *,
         user_service: UserService,
         pokemon_service: PokemonService,
+        levelup_service: LevelUpService,
         github_api: GithubAPI,
         time_service: TimeService,
         renderer: ProfileRenderer,
@@ -27,6 +29,7 @@ class PokemonFacade:
     ) -> None:
         self._user_service = user_service
         self._pokemon_service = pokemon_service
+        self._levelup_service = levelup_service
         self._github_api = github_api
         self._time_service = time_service
         self._renderer = renderer
@@ -43,7 +46,7 @@ class PokemonFacade:
         background: Background,
         viewer_ip_address: str | None
     ) -> str:
-        user = await self._user_service.get_user(session=session, username=username)
+        user = await self._user_service.get_user(username=username)
 
         if user:
             if (
@@ -59,10 +62,9 @@ class PokemonFacade:
                 )
         else:
             commit_points = await self._get_commit_points(username)
-            user = self._user_service.create_new_user(session=session, username=username, commit_points=commit_points)
+            user = await self._user_service.create_new_user(username=username, commit_points=commit_points)
 
             await self._update_pokemons(user, viewer_ip_address, 0, user.total_commit_point)
-            await session.commit()
 
         return await self._renderer.render(
             pokemons=user.pokemons,
@@ -95,5 +97,7 @@ class PokemonFacade:
         self, user: User, ip_address: str | None, previous_commit_point: int, current_commit_point: int
     ):
         time = await self._time_service.get_time_for_client(ip_address)
-        self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
-        self._pokemon_service.level_up_pokemons_for_user(user, previous_commit_point, user.total_commit_point, time)
+        await self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
+        await self._levelup_service.level_up_pokemons_for_user(
+            user, previous_commit_point, user.total_commit_point, time
+        )

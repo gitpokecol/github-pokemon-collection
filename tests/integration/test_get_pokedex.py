@@ -4,13 +4,15 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.models.user import User
 from src.pokemons.pokemon_type import PokemonType
+from tests.utils.pokedex import create_pokedex_item
 
 
 async def test_get_pokedex__valid_request__responses_pokedex(
     client: AsyncClient, session: AsyncSession, user: User, use_token
 ):
     # given
-    user.update_pokedex([PokemonType.Abomasnow, PokemonType.Cacnea])
+    pokedex_items = [create_pokedex_item(type=PokemonType.Abomasnow), create_pokedex_item(type=PokemonType.Cacnea)]
+    user.pokedex_items.extend(pokedex_items)
     await session.commit()
 
     # when

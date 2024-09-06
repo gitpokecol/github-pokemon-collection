@@ -8,25 +8,9 @@ from src.models.daily_item_abtain import DailyItemAbtain
 from src.pokemons.item_type import ItemType
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
-from src.services.evolution_service import EvolutionService
 from src.services.item_service import SUBSTITUTE_ITEM_TYPE, ItemService
 from tests.utils.item import create_daily_item
 from tests.utils.user import create_user
-
-
-@pytest.fixture()
-def mock_evolution_service() -> EvolutionService | AsyncMock:
-    return AsyncMock(spec=EvolutionService)
-
-
-@pytest.fixture()
-def mock_daily_item_repository() -> DailyItemRepository | AsyncMock:
-    return AsyncMock(spec=DailyItemRepository)
-
-
-@pytest.fixture()
-def mock_daily_item_abtain_repository() -> DailyItemAbtainRepository | AsyncMock:
-    return AsyncMock(spec=DailyItemAbtainRepository)
 
 
 @pytest.fixture

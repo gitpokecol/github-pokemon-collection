@@ -59,4 +59,4 @@ async def use_item(
 ) -> UseItemResponse:
     time = await time_service.get_time_for_client(client_ip_address)
     pokemon = pokemon_service.find_pokemon_in_owner(pokemon_id, current_user)
-    return item_service.use_item_to_pokemon(pokemon, ItemType(item_type), current_user, time)
+    return await item_service.use_item_to_pokemon(pokemon, ItemType(item_type), current_user, time)

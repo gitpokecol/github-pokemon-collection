@@ -41,7 +41,7 @@ class ItemService:
         await self._validate_not_to_give_daily_item_to_user(user, daily_item)
 
         daily_item_abtain = DailyItemAbtain(user=user, daily_item=daily_item)
-        self._daily_item_abtain_repo.save(daily_item_abtain)
+        await self._daily_item_abtain_repo.save(daily_item_abtain)
 
         if get_substitute:
             user.add_item(SUBSTITUTE_ITEM_TYPE)
@@ -59,7 +59,7 @@ class ItemService:
 
         if daily_item is None:
             daily_item = self._create_daily_item()
-            self._daily_item_repo.save(daily_item)
+            await self._daily_item_repo.save(daily_item)
 
         return daily_item
 
@@ -72,7 +72,9 @@ class ItemService:
     def get_bag_items(self, user: User) -> BagItemsResponse:
         return BagItemsResponse.of(user.existed_bag_items)
 
-    def use_item_to_pokemon(self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time) -> UseItemResponse:
+    async def use_item_to_pokemon(
+        self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time
+    ) -> UseItemResponse:
         self._validate_user_has_item(item_type, user)
 
         if item_type.effect is None:
@@ -81,19 +83,21 @@ class ItemService:
         item_type.effect.apply(pokemon)
 
         if isinstance(item_type.effect, (EvolutionItemEffect, RareCandyEffect)):
-            is_used = self._use_evolution_item_to_pokemon(pokemon, item_type, user, time)
+            is_used = await self._use_evolution_item_to_pokemon(pokemon, item_type, user, time)
             if not is_used:
                 return UseItemResponse(is_used=False)
 
         user.remove_item(item_type)
         return UseItemResponse(is_used=True)
 
-    def _use_evolution_item_to_pokemon(self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time) -> bool:
+    async def _use_evolution_item_to_pokemon(
+        self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time
+    ) -> bool:
         rule = self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, item_type)
         if rule is None:
             return False
 
-        self._evolution_service.evolve_pokemon(pokemon, user, rule)
+        await self._evolution_service.evolve_pokemon(pokemon, user, rule)
         return True
 
     def _validate_user_has_item(self, item_type: ItemType, user: User):

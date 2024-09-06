@@ -1,7 +1,12 @@
+import typing
+
 from sqlalchemy import UniqueConstraint
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, Relationship, SQLModel
 
 from src.models.base import DatedAtMixin
+
+if typing.TYPE_CHECKING:
+    from src.models.user import User
 
 
 class CommitPoint(SQLModel, DatedAtMixin, table=True):
@@ -11,4 +16,6 @@ class CommitPoint(SQLModel, DatedAtMixin, table=True):
     id: int | None = Field(default=None, primary_key=True)
     commit_point: int
     year: int
-    user_id: int = Field(default=None, foreign_key="user.id")
+
+    user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    user: "User" = Relationship(back_populates="commit_points")

@@ -4,7 +4,7 @@ from fastapi import BackgroundTasks, Depends
 
 from src.dependencies.external import GithubAPIDep
 from src.dependencies.renders import ProfileRendererDep
-from src.dependencies.services import PokemonServiceDep, TimeServiceDep, UserServiceDep
+from src.dependencies.services import LevelupServiceDep, PokemonServiceDep, TimeServiceDep, UserServiceDep
 from src.services.pokemon_facade import PokemonFacade
 
 
@@ -14,11 +14,13 @@ async def get_pokemon_facade(
     github_api: GithubAPIDep,
     time_service: TimeServiceDep,
     renderer: ProfileRendererDep,
+    levelup_service: LevelupServiceDep,
     background_tasks: BackgroundTasks,
 ) -> PokemonFacade:
     return PokemonFacade(
         user_service=user_service,
         pokemon_service=pokemon_service,
+        levelup_service=levelup_service,
         time_service=time_service,
         github_api=github_api,
         renderer=renderer,
