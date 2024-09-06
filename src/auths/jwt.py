@@ -15,7 +15,7 @@ class JwtPayload(BaseModel):
 
 def encode_token(username: str) -> str:
     payload = JwtPayload(username=username, exp=datetime.now(tz=timezone.utc) + timedelta(hours=3))
-    encoded = jwt.encode(payload.model_dump(), settings.JWT_SECRET)
+    encoded = jwt.encode(payload.model_dump(), settings.JWT_SECRET, "HS256")
     return f"Bearer {encoded}"
 
 
@@ -24,6 +24,6 @@ def verify_token(token: str) -> JwtPayload:
         raise UnauthorizedError(ErrorCode.INVALID_ACCESS_TOKEN)
 
     try:
-        return JwtPayload.model_validate(jwt.decode(token[7:], settings.JWT_SECRET))
+        return JwtPayload.model_validate(jwt.decode(token[7:], settings.JWT_SECRET, algorithms=["HS256"]))
     except (jwt.InvalidTokenError, ValidationError):
         raise UnauthorizedError(ErrorCode.INVALID_ACCESS_TOKEN)

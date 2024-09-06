@@ -27,8 +27,8 @@ async def callback_github_oauth(
 ):
     github_token, state = access_token_state
 
-    if "error" in github_token:
-        raise UnauthorizedError(ErrorCode.GITHUB_API_SERVICE_UNAVAILABLE)
+    if "error" in github_token or "access_token" not in github_token:
+        raise UnauthorizedError(ErrorCode.INVALUD_GITHUB_AUTHORIZATION)
 
     username = await client.get_username(github_token["access_token"])
 

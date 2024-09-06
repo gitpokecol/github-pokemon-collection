@@ -1,14 +1,14 @@
 from enum import Enum
 
 
-class ErrorCode(Enum):
+class ErrorCode(str, Enum):
     detail: str
 
     # 400
     ALREADY_ABTAINED_DAILY_ITEM = "You already abtained the daily item."
 
     # 401
-    INVALID_GITHUB_OAUTH_TOKEN = "Github oauth token is invalid"
+    INVALUD_GITHUB_AUTHORIZATION = "Github authorization is invalid"
     INVALID_ACCESS_TOKEN = "Access token is invalid"
     ACCESS_TOKEN_REQUIRED = "Access token is required"
 
@@ -25,6 +25,9 @@ class ErrorCode(Enum):
     # 503
     GITHUB_API_SERVICE_UNAVAILABLE = "Github api is unavailable."
 
-    def __init__(self, detail: str) -> None:
-        self._value_ = self.name
-        self.detail = detail
+    def __new__(cls, detail: str) -> "ErrorCode":
+        instance = str.__new__(cls, detail)
+        instance._value_ = detail
+        instance.detail = detail
+
+        return instance
