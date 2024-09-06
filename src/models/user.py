@@ -58,16 +58,6 @@ class User(UserBase, table=True):
     def set_commit_point(self, year: int, commit_point: int):
         self._set_commit_point(year, commit_point)
 
-    def update_pokedex(self, pokemon_types: Sequence[PokemonType]):
-        pokedex_items = {item.type: item for item in self.pokedex_items}
-
-        for pokemon_type in pokemon_types:
-            if pokemon_type in pokedex_items:
-                pokedex_items[pokemon_type].obtain_count += 1
-            else:
-                pokedex_items[pokemon_type] = PokedexItem(type=pokemon_type, obtain_count=1)
-                self.pokedex_items.append(pokedex_items[pokemon_type])
-
     def _set_commit_point(self, year: int, commit_point: int):
         model = self._get_commit_point(year)
         if model is None:
