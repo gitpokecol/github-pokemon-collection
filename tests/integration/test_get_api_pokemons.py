@@ -27,6 +27,7 @@ async def test_get_pokemons__valid_request__response_pokemons(
     assert res.json() == {
         "pokemons": [
             {
+                "id": pikachu.id,
                 "pokemon_type": pikachu.type,
                 "level": pikachu.level,
                 "gender": pikachu.gender,
@@ -34,6 +35,7 @@ async def test_get_pokemons__valid_request__response_pokemons(
                 "form": pikachu.form,
             },
             {
+                "id": arceus.id,
                 "pokemon_type": arceus.type,
                 "level": arceus.level,
                 "gender": arceus.gender,

@@ -4,6 +4,7 @@ from src.models.pokemon import Pokemon
 
 
 class PokemonReponse(BaseModel):
+    id: int
     level: int
     is_shiny: bool
     pokemon_type: int
@@ -13,7 +14,10 @@ class PokemonReponse(BaseModel):
     @classmethod
     def of(cls, pokemon: Pokemon) -> "PokemonReponse":
         pokemon_type = pokemon.type
+        assert pokemon.id is not None
+
         return PokemonReponse(
+            id=pokemon.id,
             pokemon_type=pokemon_type,
             is_shiny=pokemon.is_shiny,
             gender=pokemon.gender,
