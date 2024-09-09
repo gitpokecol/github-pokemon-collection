@@ -2,6 +2,7 @@ from typing import Protocol
 
 from src.models.pokemon import Pokemon
 from src.pokemons.form import ArceusForm
+from src.pokemons.pokemon_type import PokemonType
 
 
 class ItemEffect(Protocol):
@@ -14,7 +15,8 @@ class PlateEffect(ItemEffect):
         self._form = form
 
     def apply(self, pokemon: Pokemon):
-        pokemon.form = self._form
+        if pokemon.type == PokemonType.Arceus:
+            pokemon.form = self._form
 
 
 class RareCandyEffect(ItemEffect):
