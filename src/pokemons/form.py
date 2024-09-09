@@ -62,7 +62,7 @@ class GiratinaForm(Form):
     ORIGIN = "origin"
 
 
-class ShayminFrom(Form):
+class ShayminForm(Form):
     LAND = "land"
     SKY = "sky"
 

@@ -1,7 +1,7 @@
 from enum import Enum
 
 from src.pokemons.form import (ArceusForm, BurmyWormadamForm, Form,
-                               GiratinaForm, RotomForm, ShayminFrom,
+                               GiratinaForm, RotomForm, ShayminForm,
                                ShellosGastrodonForm, UnownForm)
 from src.pokemons.gender import Gender
 
@@ -504,7 +504,7 @@ class PokemonType(int, Enum):
     Phione = (489, "Phione", 480, (Gender.FEMALE, Gender.MALE))
     Manaphy = (490, "Manaphy", 600, (Gender.GENDERLESS,))
     Darkrai = (491, "Darkrai", 600, (Gender.GENDERLESS,))
-    Shaymin = (492, "Shaymin", 600, (Gender.FEMALE, Gender.MALE), tuple(ShayminFrom))
+    Shaymin = (492, "Shaymin", 600, (Gender.FEMALE, Gender.MALE), tuple(ShayminForm))
     Arceus = (493, "Arceus", 720, (Gender.GENDERLESS,), tuple(ArceusForm))
 
     def __new__(
