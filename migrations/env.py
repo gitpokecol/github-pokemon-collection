@@ -5,6 +5,8 @@ from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlmodel import SQLModel
 
+import src.models.daily_item  # noqa: F401
+import src.models.daily_item_abtain  # noqa: F401
 import src.models.user  # noqa: F401
 from src.setting import settings
 
