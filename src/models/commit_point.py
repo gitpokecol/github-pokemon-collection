@@ -17,5 +17,5 @@ class CommitPoint(SQLModel, DatedAtMixin, table=True):
     commit_point: int
     year: int
 
-    user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    user_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE", index=True)
     user: "User" = Relationship(back_populates="commit_points")

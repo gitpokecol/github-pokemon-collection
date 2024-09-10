@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 from src.external.github_api import GithubAPI
 from src.models.user import User
 from src.pokemons.time import Time
+from src.repositories.user_repository import UserRepository
 from src.services.levelup_service import LevelUpService
 from src.services.pokemon_service import PokemonService
 from src.setting import settings
@@ -15,10 +16,12 @@ class CommitPointRewardService:
         github_api: GithubAPI,
         pokemon_service: PokemonService,
         levelup_service: LevelUpService,
+        user_repository: UserRepository,
     ) -> None:
         self._github_api = github_api
         self._pokemon_service = pokemon_service
         self._levelup_service = levelup_service
+        self._user_repo = user_repository
 
     def can_update_commit_point(self, user: User) -> bool:
         return (
@@ -36,6 +39,8 @@ class CommitPointRewardService:
             this_year = datetime.now(timezone.utc).year
             commit_point = await self._get_commit_point(user.username, this_year)
             user.set_commit_point(this_year, commit_point)
+
+        await self._user_repo.save(user)
 
         await self._reward_for_user(user, time, previous_commit_point, user.total_commit_point)
 

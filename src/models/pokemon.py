@@ -26,7 +26,7 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     gender: Gender = Field(sa_type=String)
     form: Form | None = Field(sa_type=String)
 
-    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE", index=True)
     owner: "User" = Relationship(back_populates="pokemons")
 
     def level_up(self):

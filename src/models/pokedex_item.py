@@ -18,5 +18,5 @@ class PokedexItem(SQLModel, DatedAtMixin, table=True):
     type: PokemonType = Field(sa_type=Integer)
     obtain_count: int = Field(ge=0)
 
-    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE", index=True)
     owner: "User" = Relationship(back_populates="pokedex_items")

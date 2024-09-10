@@ -11,7 +11,7 @@ class IpAPI:
         self.client = AsyncClient(base_url=IP_API_BASE_URL)
 
     async def get_timezone_by_ip_address(self, ip_address: str) -> None | IpApiResponse:
-        res = await self.client.get(f"/json/{ip_address}??fields=status,timezone")
+        res = await self.client.get(f"/json/{ip_address}?fields=status,timezone")
 
         if res.status_code >= 400:
             return None

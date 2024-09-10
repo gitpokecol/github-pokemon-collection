@@ -64,11 +64,9 @@ async def get_levelup_service(evolution_service: "EvolutionServiceDep") -> Level
 
 
 async def get_profile_service(
-    commit_point_reward_serivce: "CommitPointRewardServiceDep",
     renderer: ProfileRendererDep,
 ) -> ProfileService:
     return ProfileService(
-        commit_point_reward_service=commit_point_reward_serivce,
         renderer=renderer,
     )
 
@@ -77,9 +75,13 @@ async def get_commit_point_reward_service(
     github_api: GithubAPIDep,
     pokemon_service: "PokemonServiceDep",
     levelup_service: "LevelupServiceDep",
+    user_repository: UserRepositoryDep,
 ) -> CommitPointRewardService:
     return CommitPointRewardService(
-        github_api=github_api, pokemon_service=pokemon_service, levelup_service=levelup_service
+        github_api=github_api,
+        pokemon_service=pokemon_service,
+        levelup_service=levelup_service,
+        user_repository=user_repository,
     )
 
 

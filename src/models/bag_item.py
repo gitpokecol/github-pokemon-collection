@@ -18,5 +18,5 @@ class BagItem(SQLModel, DatedAtMixin, table=True):
     item_type: ItemType = Field(sa_type=Integer)
     count: int = Field(ge=0)
 
-    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE")
+    owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE", index=True)
     owner: "User" = Relationship(back_populates="bag_items")

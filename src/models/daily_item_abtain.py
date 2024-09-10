@@ -11,8 +11,8 @@ class DailyItemAbtain(SQLModel, DatedAtMixin, table=True):
     __table_args__ = (UniqueConstraint("user_id", "daily_item_id"),)
 
     id: int | None = Field(default=None, primary_key=True)
-    daily_item_id: int = Field(default=None, foreign_key="daily_item.id")
+    daily_item_id: int = Field(default=None, foreign_key="daily_item.id", index=True)
     daily_item: DailyItem = Relationship(sa_relationship_kwargs={"lazy": "joined"})
 
-    user_id: int = Field(default=None, foreign_key="user.id")
+    user_id: int = Field(default=None, foreign_key="user.id", index=True)
     user: User = Relationship(sa_relationship_kwargs={"lazy": "joined"})
