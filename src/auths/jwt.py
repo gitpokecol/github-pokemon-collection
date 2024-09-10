@@ -5,16 +5,22 @@ from pydantic import BaseModel, ValidationError
 
 from src.exceptions.common import UnauthorizedError
 from src.exceptions.error_codes import ErrorCode
+from src.models.user import User
 from src.setting import settings
 
 
 class JwtPayload(BaseModel):
+    user_id: int
     username: str
     exp: datetime
 
 
-def encode_token(username: str) -> str:
-    payload = JwtPayload(username=username, exp=datetime.now(tz=timezone.utc) + timedelta(hours=3))
+def encode_token(user: User) -> str:
+    assert user.id is not None
+
+    payload = JwtPayload(
+        user_id=user.id, username=user.username, exp=datetime.now(tz=timezone.utc) + timedelta(hours=3)
+    )
     encoded = jwt.encode(payload.model_dump(), settings.JWT_SECRET, "HS256")
     return f"Bearer {encoded}"
 

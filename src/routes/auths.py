@@ -32,9 +32,9 @@ async def callback_github_oauth(
         raise UnauthorizedError(ErrorCode.INVALUD_GITHUB_AUTHORIZATION)
 
     username = await client.get_username(github_token["access_token"])
-    await user_service.get_or_create_user(username)
+    user = await user_service.get_or_create_user(username)
 
-    access_token = encode_token(username)
+    access_token = encode_token(user)
     return AuthCallbackResponse(access_token=access_token)
 
 
