@@ -13,10 +13,13 @@ async def test_get_pokemons__valid_request__response_pokemons(
     client: AsyncClient, session: AsyncSession, user: User, use_token
 ):
     # given
-    pikachu = create_pokemon(pokemon_type=PokemonType.Pikachu, level=32, gender=Gender.FEMALE, is_shiny=True)
-    arceus = create_pokemon(pokemon_type=PokemonType.Arceus, level=42, gender=Gender.GENDERLESS, form=ArceusForm.DARK)
-    user.pokemons.append(pikachu)
-    user.pokemons.append(arceus)
+    pikachu = create_pokemon(
+        pokemon_type=PokemonType.Pikachu, level=32, gender=Gender.FEMALE, is_shiny=True, owner=user
+    )
+    arceus = create_pokemon(
+        pokemon_type=PokemonType.Arceus, level=42, gender=Gender.GENDERLESS, form=ArceusForm.DARK, owner=user
+    )
+    session.add_all([pikachu, arceus])
     await session.commit()
 
     # when

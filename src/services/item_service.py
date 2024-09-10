@@ -99,7 +99,7 @@ class ItemService:
     async def _use_evolution_item_to_pokemon(
         self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time
     ) -> bool:
-        rule = self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, item_type)
+        rule = await self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, item_type)
         if rule is None:
             return False
 

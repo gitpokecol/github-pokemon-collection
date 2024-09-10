@@ -14,9 +14,9 @@ async def test_post_use_item__valid_request__responses_ok(
 ):
     # given
     sun_stone = ItemType.SUN_STONE
-    pokemon = create_pokemon(pokemon_type=PokemonType.Sunkern)
+    pokemon = create_pokemon(pokemon_type=PokemonType.Sunkern, owner=user)
     user.bag_items.append(BagItem(item_type=sun_stone, count=1))
-    user.pokemons.append(pokemon)
+    session.add(pokemon)
     await session.commit()
     await session.refresh(pokemon)
 

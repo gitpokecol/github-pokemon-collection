@@ -59,6 +59,6 @@ async def user(session: AsyncSession):
 @pytest.fixture
 async def use_token(user: User):
     async def override():
-        return JwtPayload(username=user.username, exp=datetime.now())
+        return JwtPayload(user_id=1, username=user.username, exp=datetime.now())
 
     app.dependency_overrides[get_token] = override

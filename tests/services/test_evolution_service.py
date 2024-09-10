@@ -21,9 +21,9 @@ def evolution_service(
 
 async def test_evolve_pokemon__remove_form_after_evolution(evolution_service: EvolutionService):
     # given
-    burmy = create_pokemon(pokemon_type=PokemonType.Burmy, form=BurmyWormadamForm.SANDY, level=1)
+    user = create_user()
+    burmy = create_pokemon(pokemon_type=PokemonType.Burmy, form=BurmyWormadamForm.SANDY, level=1, owner=user)
     rule = EvolutionRule(to=PokemonType.Mothim, required_level=1)
-    user = create_user(pokemons=[burmy])
 
     # when
     await evolution_service.evolve_pokemon(burmy, user, rule)

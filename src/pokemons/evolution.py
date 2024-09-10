@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field
 
 from src.models.pokemon import Pokemon
-from src.models.user import User
 from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
@@ -14,7 +13,7 @@ class EvolutionRule(BaseModel):
     required_time: None | Time = Field(default=None)
     required_friendship: int = Field(default=0)
 
-    def can_evolve(self, pokemon: Pokemon, owner: User, item: None | ItemType, time: Time) -> bool:
+    def can_evolve(self, pokemon: Pokemon, item: None | ItemType, time: Time) -> bool:
         if self.required_level > pokemon.level:
             return False
 
@@ -29,11 +28,6 @@ class EvolutionRule(BaseModel):
 
         if pokemon.gender not in self.to.available_genders:
             return False
-
-        if pokemon.type == PokemonType.Mantyke:
-            found = any(had.type in (PokemonType.Remoraid, PokemonType.Octillery) for had in owner.pokemons)
-            if not found:
-                return False
 
         return True
 

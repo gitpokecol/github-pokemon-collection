@@ -42,7 +42,6 @@ async def get_pokemons_svg(
     time_service: TimeServiceDep,
     commit_point_reward_service: CommitPointRewardServiceDep,
     client_ip_address: ClientIpAddressDep,
-    background_tasks: BackgroundTasks,
     username: str = Depends(get_username),
     facing: Facing = Query(Facing.LEFT, alias="face"),
     width: int = Query(settings.SVG_WIDTH, ge=settings.SVG_MIN_WIDTH),
@@ -51,8 +50,7 @@ async def get_pokemons_svg(
 ):
     user = await user_service.get_or_create_user(username)
     if commit_point_reward_service.can_update_commit_point(user):
-        background_tasks.add_task(
-            update_commit_point_and_reward_task,
+        await update_commit_point_and_reward_task(
             commit_point_reward_service=commit_point_reward_service,
             time_service=time_service,
             client_ip_address=client_ip_address,

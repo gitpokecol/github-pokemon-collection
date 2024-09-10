@@ -6,7 +6,6 @@ from src.pokemons.item_type import ItemType
 from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 from tests.utils.pokemon import create_pokemon
-from tests.utils.user import create_user
 
 rule_required_level = evolution_rules[PokemonType.Bulbasaur]
 
@@ -42,10 +41,9 @@ def test_can_evolve__inputs_required_level_item_time_friendship__return_true(
     item = required_item
 
     pokemon = create_pokemon(pokemon_type=PokemonType.Bulbasaur, level=level, friendship=friendship)
-    owner = create_user()
 
     # when
-    result = rule.can_evolve(pokemon, owner, item, time)
+    result = rule.can_evolve(pokemon, item, time)
 
     # then
     assert result is True
@@ -79,10 +77,9 @@ def test_can_evolve__inputs_not_met_level_item_time_friendship__return_false(
     )
 
     pokemon = create_pokemon(pokemon_type=PokemonType.Bulbasaur, level=level, friendship=friendship)
-    owner = create_user()
 
     # when
-    result = rule.can_evolve(pokemon, owner, item, time)
+    result = rule.can_evolve(pokemon, item, time)
 
     # then
     assert result is False
@@ -96,45 +93,10 @@ def test_can_evolve__input_not_met_gender___return_false():
     only_male_rule = EvolutionRule(to=PokemonType.Mothim, required_level=level)
     female_pokemon = create_pokemon(pokemon_type=PokemonType.Burmy, level=level, gender=Gender.FEMALE)
     male_pokemon = create_pokemon(pokemon_type=PokemonType.Burmy, level=level, gender=Gender.MALE)
-    owner = create_user()
 
     # when
-    result1 = only_female_rule.can_evolve(male_pokemon, owner, None, Time.DAY)
-    result2 = only_male_rule.can_evolve(female_pokemon, owner, None, Time.DAY)
+    result1 = only_female_rule.can_evolve(male_pokemon, None, Time.DAY)
+    result2 = only_male_rule.can_evolve(female_pokemon, None, Time.DAY)
 
     # then
     assert (result1, result2) == (False, False)
-
-
-def test_can_evolve__input_mantyke_but_owner_not_have_required_pokemon___return_false():
-    # given
-    level = 10
-
-    rule = EvolutionRule(to=PokemonType.Mantine, required_level=level)
-    mantyke_pokemon = create_pokemon(pokemon_type=PokemonType.Mantyke, level=level)
-    owner = create_user()
-
-    # when
-    result = rule.can_evolve(mantyke_pokemon, owner, None, Time.DAY)
-
-    # then
-    assert result is False
-
-
-def test_can_evolve__input_mantyke_and_owner_have_required_pokemon___return_true():
-    # given
-    level = 10
-
-    rule = EvolutionRule(to=PokemonType.Mantine, required_level=level)
-    mantyke_pokemon = create_pokemon(pokemon_type=PokemonType.Mantyke, level=level)
-    remoraid_pokemon = create_pokemon(pokemon_type=PokemonType.Remoraid, level=level)
-    octillery_pokemon = create_pokemon(pokemon_type=PokemonType.Octillery, level=level)
-    remoraid_owner = create_user(pokemons=[remoraid_pokemon])
-    octillery_owner = create_user(pokemons=[octillery_pokemon])
-
-    # when
-    result1 = rule.can_evolve(mantyke_pokemon, remoraid_owner, None, Time.DAY)
-    result2 = rule.can_evolve(mantyke_pokemon, octillery_owner, None, Time.DAY)
-
-    # then
-    assert all([result1, result2]) is True

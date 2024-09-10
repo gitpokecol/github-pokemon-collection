@@ -18,11 +18,13 @@ def item_service(
     mock_evolution_service: AsyncMock,
     mock_daily_item_repository: AsyncMock,
     mock_daily_item_abtain_repository: AsyncMock,
+    mock_bag_item_repository: AsyncMock,
 ) -> ItemService:
     return ItemService(
         evolution_service=mock_evolution_service,
         daily_item_repository=mock_daily_item_repository,
         daily_item_abtain_repository=mock_daily_item_abtain_repository,
+        bag_item_repository=mock_bag_item_repository,
     )
 
 

@@ -14,6 +14,6 @@ class LevelUpService:
     async def level_up_pokemons(self, user: User, pokemons: Sequence[Pokemon], add_level: int, time: Time):
         for pokemon in random.choices(pokemons, k=add_level):
             pokemon.level_up()
-            rule = self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, None)
+            rule = await self._evolution_service.get_evolution_rule_for_pokemon(pokemon, user, time, None)
             if rule:
                 await self._evolution_service.evolve_pokemon(pokemon, user, rule)

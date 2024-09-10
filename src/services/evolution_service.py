@@ -16,7 +16,7 @@ class EvolutionService:
         self._pokedex_service = pokedex_service
         self._pokemon_repository = pokemon_repository
 
-    def get_evolution_rule_for_pokemon(
+    async def get_evolution_rule_for_pokemon(
         self, pokemon: Pokemon, owner: User, time: Time, item: ItemType | None
     ) -> EvolutionRule | None:
         if pokemon.type not in evolution_rules:
@@ -27,8 +27,14 @@ class EvolutionService:
         if pokemon.type in (PokemonType.Wurmple, PokemonType.Tyrogue):
             return random.choice(rules)
 
+        if pokemon.type == PokemonType.Mantyke:
+            if not await self._pokemon_repository.exist_by_types_and_owner(
+                owner, (PokemonType.Remoraid, PokemonType.Octillery)
+            ):
+                return None
+
         for rule in rules:
-            if rule.can_evolve(pokemon, owner, item, time):
+            if rule.can_evolve(pokemon, item, time):
                 return rule
 
         return None
@@ -45,3 +51,6 @@ class EvolutionService:
             pokemon.form = None
 
         await self._pokedex_service.update_pokedex_for_user(owner, [rule.to])
+
+    async def get_pokemons(self, user: User):
+        return await self._pokemon_repository.find_by_owner(user)

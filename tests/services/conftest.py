@@ -2,6 +2,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
+from src.repositories.bag_item_repository import BagItemRepository
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
 from src.repositories.pokedex_item_repository import PokedexItemRepository
@@ -44,3 +45,8 @@ def mock_user_repository() -> UserRepository | AsyncMock:
 @pytest.fixture()
 def mock_pokedex_item_repository() -> PokedexItemRepository | AsyncMock:
     return AsyncMock(spec=PokedexItemRepository)
+
+
+@pytest.fixture()
+def mock_bag_item_repository() -> BagItemRepository | AsyncMock:
+    return AsyncMock(spec=BagItemRepository)
