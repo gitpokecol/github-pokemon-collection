@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from src.dependencies.db import SessionDep
+from src.repositories.bag_item_repository import BagItemRepository
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
 from src.repositories.pokedex_item_repository import PokedexItemRepository
@@ -30,8 +31,13 @@ async def get_user_repository(session: SessionDep) -> UserRepository:
     return UserRepository(session)
 
 
+async def get_bag_item_repository(session: SessionDep) -> BagItemRepository:
+    return BagItemRepository(session)
+
+
 DailyItemRepositoryDep = Annotated[DailyItemRepository, Depends(get_daily_item_repository)]
 DailyItemAbtainRepositoryDep = Annotated[DailyItemAbtainRepository, Depends(get_daily_item_abtain_repository)]
 PokedexItemRepositoryDep = Annotated[PokedexItemRepository, Depends(get_pokedex_item_repository)]
 PokemonRepositoryDep = Annotated[PokemonRepository, Depends(get_pokedex_item_repository)]
 UserRepositoryDep = Annotated[UserRepository, Depends(get_user_repository)]
+BagItemRepositoryDep = Annotated[BagItemRepository, Depends(get_bag_item_repository)]

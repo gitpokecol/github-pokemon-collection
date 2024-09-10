@@ -9,6 +9,7 @@ from src.models.user import User
 from src.pokemons.item_effect import EvolutionItemEffect, RareCandyEffect
 from src.pokemons.item_type import ItemType
 from src.pokemons.time import Time
+from src.repositories.bag_item_repository import BagItemRepository
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
 from src.repositories.daily_item_repository import DailyItemRepository
 from src.schemas.responses.items import BagItemsResponse, DailyItemResponse, UseItemResponse
@@ -24,11 +25,13 @@ class ItemService:
         *,
         evolution_service: EvolutionService,
         daily_item_repository: DailyItemRepository,
-        daily_item_abtain_repository: DailyItemAbtainRepository
+        daily_item_abtain_repository: DailyItemAbtainRepository,
+        bag_item_repository: BagItemRepository,
     ) -> None:
         self._evolution_service = evolution_service
         self._daily_item_repo = daily_item_repository
         self._daily_item_abtain_repo = daily_item_abtain_repository
+        self._bag_item_repo = bag_item_repository
 
     async def get_daily_item(self, user: User) -> DailyItemResponse:
         daily_item = await self._get_daily_item()
@@ -69,8 +72,9 @@ class ItemService:
 
         return daily_item
 
-    def get_bag_items(self, user: User) -> BagItemsResponse:
-        return BagItemsResponse.of(user.existed_bag_items)
+    async def get_bag_items(self, username: str) -> BagItemsResponse:
+        bag_items = await self._bag_item_repo.find_containing_item_by_owner_name(username)
+        return BagItemsResponse.of(bag_items)
 
     async def use_item_to_pokemon(
         self, pokemon: Pokemon, item_type: ItemType, user: User, time: Time

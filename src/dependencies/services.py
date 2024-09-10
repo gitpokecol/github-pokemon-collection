@@ -5,6 +5,7 @@ from fastapi import Depends
 from src.dependencies.external import GithubAPIDep, IpAPIDep
 from src.dependencies.renders import ProfileRendererDep
 from src.dependencies.repositories import (
+    BagItemRepositoryDep,
     DailyItemAbtainRepositoryDep,
     DailyItemRepositoryDep,
     PokedexItemRepositoryDep,
@@ -37,11 +38,13 @@ async def get_item_service(
     evolution_service: "EvolutionServiceDep",
     daily_item_repository: DailyItemRepositoryDep,
     daily_item_abtain_repository: DailyItemAbtainRepositoryDep,
+    bag_item_repository: BagItemRepositoryDep,
 ) -> ItemService:
     return ItemService(
         evolution_service=evolution_service,
         daily_item_repository=daily_item_repository,
         daily_item_abtain_repository=daily_item_abtain_repository,
+        bag_item_repository=bag_item_repository,
     )
 
 

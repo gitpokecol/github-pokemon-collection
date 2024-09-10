@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from pydantic import BaseModel
 
 from src.models.bag_item import BagItem
@@ -22,7 +24,7 @@ class BagItemsResponse(BaseModel):
     items: list[Item]
 
     @classmethod
-    def of(cls, bag_items: list[BagItem]) -> "BagItemsResponse":
+    def of(cls, bag_items: Sequence[BagItem]) -> "BagItemsResponse":
         items = [Item(item_type=bag_item.item_type, count=bag_item.count) for bag_item in bag_items]
         return BagItemsResponse(items=items)
 
