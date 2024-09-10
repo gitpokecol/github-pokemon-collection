@@ -82,10 +82,12 @@ class ItemService:
 
         item_type.effect.apply(pokemon)
 
-        if isinstance(item_type.effect, (EvolutionItemEffect, RareCandyEffect)):
+        if isinstance(item_type.effect, EvolutionItemEffect):
             is_used = await self._use_evolution_item_to_pokemon(pokemon, item_type, user, time)
             if not is_used:
                 return UseItemResponse(is_used=False)
+        if isinstance(item_type.effect, RareCandyEffect):
+            await self._use_evolution_item_to_pokemon(pokemon, item_type, user, time)
 
         user.remove_item(item_type)
         return UseItemResponse(is_used=True)

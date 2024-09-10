@@ -1,0 +1,52 @@
+from datetime import datetime, timezone
+
+from src.external.github_api import GithubAPI
+from src.models.user import User
+from src.pokemons.time import Time
+from src.services.levelup_service import LevelUpService
+from src.services.pokemon_service import PokemonService
+from src.setting import settings
+
+
+class CommitPointRewardService:
+    def __init__(
+        self,
+        *,
+        github_api: GithubAPI,
+        pokemon_service: PokemonService,
+        levelup_service: LevelUpService,
+    ) -> None:
+        self._github_api = github_api
+        self._pokemon_service = pokemon_service
+        self._levelup_service = levelup_service
+
+    def can_update_commit_point(self, user: User) -> bool:
+        return (
+            len(user.commit_points) == 0
+            or datetime.now(timezone.utc) - user.latest_commit_points_updated_at.replace(tzinfo=timezone.utc)
+            >= settings.COMMIT_POINT_UPDATE_PERIOD
+        )
+
+    async def update_commit_point_and_reward(self, user: User, time: Time):
+        previous_commit_point = user.total_commit_point
+
+        if len(user.commit_points) == 0:
+            user.set_commit_points(await self._get_commit_points(user.username))
+        else:
+            this_year = datetime.now(timezone.utc).year
+            commit_point = await self._get_commit_point(user.username, this_year)
+            user.set_commit_point(this_year, commit_point)
+
+        await self._reward_for_user(user, time, previous_commit_point, user.total_commit_point)
+
+    async def _reward_for_user(self, user: User, time: Time, previous_commit_point: int, current_commit_point: int):
+        await self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
+        await self._levelup_service.level_up_pokemons_for_user(
+            user, previous_commit_point, user.total_commit_point, time
+        )
+
+    async def _get_commit_points(self, username: str) -> dict[int, int]:
+        return await self._github_api.get_user_total_contributions(username=username)
+
+    async def _get_commit_point(self, username: str, year: int) -> int:
+        return await self._github_api.get_user_contributions_by_year(username=username, year=year)

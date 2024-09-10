@@ -11,15 +11,14 @@ def user_service(mock_user_repository: UserRepository | AsyncMock) -> UserServic
     return UserService(user_repository=mock_user_repository)
 
 
-async def test_create_new_user__inputs_upper_lower_mixed_username__returns_lowercase_username_user(
-    user_service: UserService,
+async def test_get_or_create_user__inputs_upper_lower_mixed_username__returns_lowercase_username_user(
+    user_service: UserService, mock_user_repository: UserRepository | AsyncMock
 ):
     # given
     username = "User NaMe"
-    commit_points = dict()
+    mock_user_repository.find_by_username.return_value = None
 
     # when
-    created = await user_service.create_new_user(username=username, commit_points=commit_points)
-
+    created = await user_service.get_or_create_user(username=username)
     # then
     assert created.username == "user name"

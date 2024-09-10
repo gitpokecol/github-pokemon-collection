@@ -17,32 +17,38 @@ class PokemonSprites:
     async def prepare(self):
         coros: list[Coroutine] = []
 
-        for pokemon_type in PokemonType:
+        for pokemon_type in list(PokemonType):
             for facing in Facing:
                 for is_shiny in (False, True):
                     for gender in pokemon_type.available_genders:
                         for frame in (1, 2):
                             if not pokemon_type.available_forms:
-                                coros.append(self.get_sprite(pokemon_type, facing, is_shiny, gender, frame, None))
+                                coros.append(
+                                    self.get_sprite(pokemon_type.national_no, facing, is_shiny, gender, frame, None)
+                                )
                             else:
                                 for form in pokemon_type.available_forms:
-                                    coros.append(self.get_sprite(pokemon_type, facing, is_shiny, gender, frame, form))
+                                    coros.append(
+                                        self.get_sprite(
+                                            pokemon_type.national_no, facing, is_shiny, gender, frame, form
+                                        )
+                                    )
 
         await asyncio.gather(*coros)
 
     async def get_sprite(
         self,
-        pokemon_type: PokemonType,
+        national_no: int,
         facing: Facing,
         is_shiny: bool,
         gender: Gender,
         frame: Literal[1, 2],
         form: None | Form,
     ):
-        if pokemon_type.national_no not in GENDER_DIFFERENCE_POKEMON_NUMS:
-            cache_key = (pokemon_type, facing, is_shiny, None, frame, form)
+        if national_no not in GENDER_DIFFERENCE_POKEMON_NUMS:
+            cache_key = (national_no, facing, is_shiny, None, frame, form)
         else:
-            cache_key = (pokemon_type, facing, is_shiny, gender, frame, form)
+            cache_key = (national_no, facing, is_shiny, gender, frame, form)
 
         if cache_key not in self._cache_pokemon_sprite:
             self._cache_pokemon_sprite[cache_key] = await load_as_base64(self._get_sprite_path(*cache_key))

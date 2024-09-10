@@ -3,9 +3,13 @@ from fastapi.routing import APIRouter
 
 from src.dependencies.auths import CurrentUserDep
 from src.dependencies.commons import ClientIpAddressDep
-from src.dependencies.db import SessionDep
-from src.dependencies.facades import PokemonFacadeDep
-from src.dependencies.services import ItemServiceDep, PokemonServiceDep, TimeServiceDep
+from src.dependencies.services import (
+    ItemServiceDep,
+    PokemonServiceDep,
+    ProfileServiceDep,
+    TimeServiceDep,
+    UserServiceDep,
+)
 from src.dependencies.users import get_username
 from src.pokemons.item_type import ItemType
 from src.schemas.backgrounds import Background
@@ -19,8 +23,9 @@ router = APIRouter()
 
 @router.get("/pokemons/{username}")
 async def get_pokemons_svg(
-    session: SessionDep,
-    pokemons_facade: PokemonFacadeDep,
+    profile_service: ProfileServiceDep,
+    user_service: UserServiceDep,
+    time_service: TimeServiceDep,
     client_ip_address: ClientIpAddressDep,
     username: str = Depends(get_username),
     facing: Facing = Query(Facing.LEFT, alias="face"),
@@ -28,16 +33,18 @@ async def get_pokemons_svg(
     height: int = Query(settings.SVG_HEIGHT, ge=settings.SVG_MIN_HEIGHT),
     background: Background = Query(Background.NONE),
 ):
+    time = await time_service.get_time_for_client(client_ip_address)
+    user = await user_service.get_or_create_user(username)
+    profile = await profile_service.render_profile(
+        user=user,
+        facing=facing,
+        width=width,
+        height=height,
+        background=background,
+        time=time,
+    )
     return Response(
-        content=await pokemons_facade.render_pokemons(
-            session=session,
-            username=username,
-            facing=facing,
-            width=width,
-            height=height,
-            background=background,
-            viewer_ip_address=client_ip_address,
-        ),
+        content=profile,
         headers={"content-type": "image/svg+xml", "Cache-Control": "max-age=3600"},
     )
 

@@ -45,11 +45,6 @@ class PokemonService:
 
         return candiates
 
-    def pick_new_pokemon_types_for_user(self, user: User, previous_commit_point: int, current_commit_point: int):
-        new_count = self._calculate_new_pokemon_count(previous_commit_point, current_commit_point)
-        canditates = list(self._get_new_pokemon_candidates(user.pokedex_items))
-        return self._pick_pokemon_types_by_base_stat(canditates, new_count)
-
     def _pick_pokemon_types_by_base_stat(self, candidates: Sequence[PokemonType], count: int):
         weights = [1 / type.base_stat for type in candidates]
         return weighted_sample(candidates, weights, count)
