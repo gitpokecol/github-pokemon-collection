@@ -1,7 +1,7 @@
 from fastapi import BackgroundTasks, Depends, Query, Response
 from fastapi.routing import APIRouter
 
-from src.dependencies.auths import CurrentUserDep
+from src.dependencies.auths import CurrentUserDep, TokenDep
 from src.dependencies.commons import ClientIpAddressDep
 from src.dependencies.services import (
     CommitPointRewardServiceDep,
@@ -75,22 +75,22 @@ async def get_pokemons_svg(
 @router.get("/api/pokemons")
 async def get_pokemons(
     pokemon_service: PokemonServiceDep,
-    current_user: CurrentUserDep,
+    token: TokenDep,
     time_service: TimeServiceDep,
     commit_point_reward_service: CommitPointRewardServiceDep,
     client_ip_address: ClientIpAddressDep,
     background_tasks: BackgroundTasks,
 ) -> PokemonsResponse:
-    if commit_point_reward_service.can_update_commit_point(current_user):
-        background_tasks.add_task(
-            update_commit_point_and_reward_task,
-            commit_point_reward_service=commit_point_reward_service,
-            time_service=time_service,
-            client_ip_address=client_ip_address,
-            user=current_user,
-        )
+    # if commit_point_reward_service.can_update_commit_point(current_user):
+    #     background_tasks.add_task(
+    #         update_commit_point_and_reward_task,
+    #         commit_point_reward_service=commit_point_reward_service,
+    #         time_service=time_service,
+    #         client_ip_address=client_ip_address,
+    #         user=current_user,
+    #     )
 
-    return pokemon_service.get_pokemons_by_user(current_user)
+    return await pokemon_service.get_pokemons(token.user_id)
 
 
 @router.post("/api/pokemon/{pokemon_id}/use-item")

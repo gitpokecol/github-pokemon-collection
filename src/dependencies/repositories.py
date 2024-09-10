@@ -38,6 +38,6 @@ async def get_bag_item_repository(session: SessionDep) -> BagItemRepository:
 DailyItemRepositoryDep = Annotated[DailyItemRepository, Depends(get_daily_item_repository)]
 DailyItemAbtainRepositoryDep = Annotated[DailyItemAbtainRepository, Depends(get_daily_item_abtain_repository)]
 PokedexItemRepositoryDep = Annotated[PokedexItemRepository, Depends(get_pokedex_item_repository)]
-PokemonRepositoryDep = Annotated[PokemonRepository, Depends(get_pokedex_item_repository)]
+PokemonRepositoryDep = Annotated[PokemonRepository, Depends(get_pokemon_repository)]
 UserRepositoryDep = Annotated[UserRepository, Depends(get_user_repository)]
 BagItemRepositoryDep = Annotated[BagItemRepository, Depends(get_bag_item_repository)]

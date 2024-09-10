@@ -49,8 +49,9 @@ class PokemonService:
         weights = [1 / type.base_stat for type in candidates]
         return weighted_sample(candidates, weights, count)
 
-    def get_pokemons_by_user(self, user: User) -> PokemonsResponse:
-        sorted_pokemons = sorted(user.pokemons, key=lambda p: p.created_at)
+    async def get_pokemons(self, owner_id: int) -> PokemonsResponse:
+        pokemons = await self._pokemon_repository.find_by_owner_id(owner_id)
+        sorted_pokemons = sorted(pokemons, key=lambda p: p.created_at)
         return PokemonsResponse.of(sorted_pokemons)
 
     def find_pokemon_in_owner(self, pokemon_id: int, owner: User) -> Pokemon:

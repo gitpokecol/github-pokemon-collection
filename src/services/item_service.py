@@ -72,8 +72,8 @@ class ItemService:
 
         return daily_item
 
-    async def get_bag_items(self, username: str) -> BagItemsResponse:
-        bag_items = await self._bag_item_repo.find_containing_item_by_owner_name(username)
+    async def get_bag_items(self, owner_id: int) -> BagItemsResponse:
+        bag_items = await self._bag_item_repo.find_containing_item_by_owner_id(owner_id)
         return BagItemsResponse.of(bag_items)
 
     async def use_item_to_pokemon(
