@@ -1,10 +1,11 @@
-from fastapi import Depends, Response
+from fastapi import Depends
 from fastapi.routing import APIRouter
 from httpx_oauth.integrations.fastapi import OAuth2AuthorizeCallback
 from httpx_oauth.oauth2 import OAuth2Token
 
 from src.auths.jwt import encode_token
 from src.auths.oauth_client import GitHubOAuth2Client
+from src.dependencies.services import UserServiceDep
 from src.exceptions.common import UnauthorizedError
 from src.exceptions.error_codes import ErrorCode
 from src.schemas.responses.auths import AuthCallbackResponse
@@ -20,7 +21,7 @@ router = APIRouter()
 
 @router.get("/api/oauth/callback-github", name="oauth.github.callback")
 async def callback_github_oauth(
-    response: Response,
+    user_service: UserServiceDep,
     access_token_state: tuple[OAuth2Token, str | None] = Depends(
         OAuth2AuthorizeCallback(client, "oauth.github.callback")
     ),
@@ -31,6 +32,7 @@ async def callback_github_oauth(
         raise UnauthorizedError(ErrorCode.INVALUD_GITHUB_AUTHORIZATION)
 
     username = await client.get_username(github_token["access_token"])
+    await user_service.get_or_create_user(username)
 
     access_token = encode_token(username)
     return AuthCallbackResponse(access_token=access_token)
