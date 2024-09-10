@@ -1,0 +1,3 @@
+[submodule "imgs/sprites"]
+	path = imgs/sprites
+	url = https://github.com/gitpokecol/sprites.git

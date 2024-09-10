@@ -65,7 +65,7 @@ class PokemonSprites:
         form: None | Form,
     ) -> str:
         # imgs/pokemons/{id}_{facing}_shiny_{gender}_{form}_{frame}.png
-        path = f"imgs/pokemons/{national_no}_{facing}_"
+        path = f"imgs/sprites/pokemon/{national_no}_{facing}_"
 
         if is_shiny:
             path += "shiny_"

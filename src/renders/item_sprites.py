@@ -1,6 +1,6 @@
 from src.renders.utils import load_as_base64
 
-POKEBALL_IMAGE_PATH = "imgs/ui/pokeball.png"
+POKEBALL_IMAGE_PATH = "imgs/sprites/item/44.png"
 
 
 class ItemSprites:
