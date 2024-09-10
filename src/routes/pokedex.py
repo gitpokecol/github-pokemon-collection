@@ -9,4 +9,4 @@ router = APIRouter()
 
 @router.get("/api/pokedex")
 async def get_pokedex(pokedex_service: PokedexServiceDep, current_user: CurrentUserDep) -> PokedexResponse:
-    return pokedex_service.get_pokedex(current_user)
+    return await pokedex_service.get_pokedex_response(current_user)  # token.user_id)

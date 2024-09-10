@@ -6,10 +6,7 @@ from sqlmodel import Field, Relationship, SQLModel
 from src.models.bag_item import BagItem
 from src.models.base import DatedAtMixin
 from src.models.commit_point import CommitPoint
-from src.models.pokedex_item import PokedexItem
-from src.models.pokemon import Pokemon
 from src.pokemons.item_type import ItemType
-from src.pokemons.pokemon_type import PokemonType
 
 
 class UserBase(SQLModel, DatedAtMixin):
@@ -26,13 +23,7 @@ class User(UserBase, table=True):
 
     id: int | None = Field(default=None, primary_key=True)
     commit_points: list[CommitPoint] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
-    pokemons: list[Pokemon] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
-    pokedex_items: list[PokedexItem] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
     bag_items: list[BagItem] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
-
-    @property
-    def pokemon_types(self) -> list[PokemonType]:
-        return [pokemon.type for pokemon in self.pokemons]
 
     @property
     def total_commit_point(self) -> int:

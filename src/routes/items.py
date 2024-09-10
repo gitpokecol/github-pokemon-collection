@@ -24,4 +24,4 @@ async def abtain_item(
 
 @router.get("/api/item/bag-items")
 async def get_bag_items(item_service: ItemServiceDep, token: TokenDep) -> BagItemsResponse:
-    return await item_service.get_bag_items(token.user_id)
+    return await item_service.get_bag_items_response(token.user_id)

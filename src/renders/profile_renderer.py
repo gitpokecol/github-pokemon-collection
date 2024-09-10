@@ -1,5 +1,5 @@
 import random
-from typing import AsyncGenerator, NamedTuple
+from typing import AsyncGenerator, NamedTuple, Sequence
 
 from src.models.pokemon import Pokemon
 from src.renders.backgrounds import BackgroundImages
@@ -27,7 +27,7 @@ class ProfileRenderer:
     async def render(
         self,
         *,
-        pokemons: list[Pokemon],
+        pokemons: Sequence[Pokemon],
         commit_point: int,
         username: str,
         facing: Facing,
@@ -53,7 +53,7 @@ class ProfileRenderer:
         )
 
     async def _render_pokemons(
-        self, pokemons: list[Pokemon], facing: Facing, height: int
+        self, pokemons: Sequence[Pokemon], facing: Facing, height: int
     ) -> AsyncGenerator[str, None]:
 
         rendering_pokemons = [
@@ -73,7 +73,7 @@ class ProfileRenderer:
             )
 
     async def _rendering_pokmemons(
-        self, pokemons: list[Pokemon], facing: Facing, height: int
+        self, pokemons: Sequence[Pokemon], facing: Facing, height: int
     ) -> AsyncGenerator["_RenderingPokemon", None]:
         for pokemon in pokemons:
             duration = random.uniform(10, 15)

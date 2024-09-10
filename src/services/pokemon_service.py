@@ -10,7 +10,6 @@ from src.pokemons.pokemon_type import PokemonType
 from src.repositories.pokemon_repository import PokemonRepository
 from src.schemas.responses.pokemons import PokemonsResponse
 from src.services.pokedex_service import PokedexService
-from src.setting import settings
 from src.utils import weighted_sample
 
 
@@ -20,19 +19,14 @@ class PokemonService:
         self._pokemon_repository = pokemon_repository
         self._pokedex_service = pokedex_service
 
-    async def give_pokemons_for_user(self, user: User, previous_commit_point: int, current_commit_point: int):
-        new_count = self._calculate_new_pokemon_count(previous_commit_point, current_commit_point)
-        canditates = list(self._get_new_pokemon_candidates(user.pokedex_items))
+    async def give_pokemons_for_user(self, user: User, new_count: int):
+        pokedex_items = await self._pokedex_service.get_pokedex_items(user)
+        canditates = list(self._get_new_pokemon_candidates(pokedex_items))
         new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, new_count)
         await self._pokedex_service.update_pokedex_for_user(user, new_pokemon_types)
 
         new_pokemons = [Pokemon.create_random(pokemon_type, user) for pokemon_type in new_pokemon_types]
         await self._pokemon_repository.save(*new_pokemons)
-
-    def _calculate_new_pokemon_count(self, updated_commit_point: int, current_commit_point: int) -> int:
-        given_pokemon_count = updated_commit_point // settings.POKEMON_PER_COMMIT_POINT
-        target_pokemon_count = current_commit_point // settings.POKEMON_PER_COMMIT_POINT
-        return target_pokemon_count - given_pokemon_count
 
     def _get_new_pokemon_candidates(self, pokedex_items: Sequence[PokedexItem]) -> set[PokemonType]:
         candiates = set(evolution_line_cnts.keys())
@@ -49,14 +43,18 @@ class PokemonService:
         weights = [1 / type.base_stat for type in candidates]
         return weighted_sample(candidates, weights, count)
 
-    async def get_pokemons(self, owner_id: int) -> PokemonsResponse:
-        pokemons = await self._pokemon_repository.find_by_owner_id(owner_id)
+    async def get_pokemons_response(self, owner: User) -> PokemonsResponse:
+        pokemons = await self.get_pokemons(owner)
         sorted_pokemons = sorted(pokemons, key=lambda p: p.created_at)
         return PokemonsResponse.of(sorted_pokemons)
 
-    def find_pokemon_in_owner(self, pokemon_id: int, owner: User) -> Pokemon:
-        for pokemon in owner.pokemons:
-            if pokemon.id == pokemon_id:
-                return pokemon
+    async def get_pokemon_by_id(self, pokemon_id: int) -> Pokemon:
+        pokemon = await self._pokemon_repository.find_by_id(pokemon_id)
 
-        raise NotFoundError(ErrorCode.POKEMON_NOT_FOUND)
+        if not pokemon:
+            raise NotFoundError(ErrorCode.POKEMON_NOT_FOUND)
+
+        return pokemon
+
+    async def get_pokemons(self, owner: User) -> Sequence[Pokemon]:
+        return await self._pokemon_repository.find_by_owner(owner)

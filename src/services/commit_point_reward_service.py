@@ -45,13 +45,25 @@ class CommitPointRewardService:
         await self._reward_for_user(user, time, previous_commit_point, user.total_commit_point)
 
     async def _reward_for_user(self, user: User, time: Time, previous_commit_point: int, current_commit_point: int):
-        await self._pokemon_service.give_pokemons_for_user(user, previous_commit_point, user.total_commit_point)
-        await self._levelup_service.level_up_pokemons_for_user(
-            user, previous_commit_point, user.total_commit_point, time
-        )
+        new_pokemon_count = self._calculate_new_pokemon_count(previous_commit_point, current_commit_point)
+        await self._pokemon_service.give_pokemons_for_user(user, new_pokemon_count)
+
+        pokemons = await self._pokemon_service.get_pokemons(user)
+        add_level = self._calculate_add_level(previous_commit_point, current_commit_point)
+        await self._levelup_service.level_up_pokemons(user, pokemons, add_level, time)
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:
         return await self._github_api.get_user_total_contributions(username=username)
 
     async def _get_commit_point(self, username: str, year: int) -> int:
         return await self._github_api.get_user_contributions_by_year(username=username, year=year)
+
+    def _calculate_new_pokemon_count(self, updated_commit_point: int, current_commit_point: int) -> int:
+        given_pokemon_count = updated_commit_point // settings.POKEMON_PER_COMMIT_POINT
+        target_pokemon_count = current_commit_point // settings.POKEMON_PER_COMMIT_POINT
+        return target_pokemon_count - given_pokemon_count
+
+    def _calculate_add_level(self, updated_commit_point: int, current_commit_point: int) -> int:
+        given_pokemon_count = updated_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
+        target_pokemon_count = current_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
+        return target_pokemon_count - given_pokemon_count

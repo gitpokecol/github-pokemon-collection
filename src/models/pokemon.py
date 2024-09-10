@@ -27,7 +27,7 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     form: Form | None = Field(sa_type=String)
 
     owner_id: int = Field(default=None, foreign_key="user.id", ondelete="CASCADE", index=True)
-    owner: "User" = Relationship(back_populates="pokemons")
+    owner: "User" = Relationship(sa_relationship_kwargs={"lazy": "joined"})
 
     def level_up(self):
         self.level = min(self.level + 1, 100)

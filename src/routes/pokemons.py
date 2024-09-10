@@ -1,7 +1,7 @@
 from fastapi import BackgroundTasks, Depends, Query, Response
 from fastapi.routing import APIRouter
 
-from src.dependencies.auths import CurrentUserDep, TokenDep
+from src.dependencies.auths import CurrentUserDep
 from src.dependencies.commons import ClientIpAddressDep
 from src.dependencies.services import (
     CommitPointRewardServiceDep,
@@ -75,22 +75,22 @@ async def get_pokemons_svg(
 @router.get("/api/pokemons")
 async def get_pokemons(
     pokemon_service: PokemonServiceDep,
-    token: TokenDep,
+    current_user: CurrentUserDep,
     time_service: TimeServiceDep,
     commit_point_reward_service: CommitPointRewardServiceDep,
     client_ip_address: ClientIpAddressDep,
     background_tasks: BackgroundTasks,
 ) -> PokemonsResponse:
-    # if commit_point_reward_service.can_update_commit_point(current_user):
-    #     background_tasks.add_task(
-    #         update_commit_point_and_reward_task,
-    #         commit_point_reward_service=commit_point_reward_service,
-    #         time_service=time_service,
-    #         client_ip_address=client_ip_address,
-    #         user=current_user,
-    #     )
+    if commit_point_reward_service.can_update_commit_point(current_user):
+        background_tasks.add_task(
+            update_commit_point_and_reward_task,
+            commit_point_reward_service=commit_point_reward_service,
+            time_service=time_service,
+            client_ip_address=client_ip_address,
+            user=current_user,
+        )
 
-    return await pokemon_service.get_pokemons(token.user_id)
+    return await pokemon_service.get_pokemons_response(current_user)
 
 
 @router.post("/api/pokemon/{pokemon_id}/use-item")
@@ -104,5 +104,5 @@ async def use_item(
     item_type: int = Query(alias="item-type"),
 ) -> UseItemResponse:
     time = await time_service.get_time_for_client(client_ip_address)
-    pokemon = pokemon_service.find_pokemon_in_owner(pokemon_id, current_user)
+    pokemon = await pokemon_service.get_pokemon_by_id(pokemon_id)
     return await item_service.use_item_to_pokemon(pokemon, ItemType(item_type), current_user, time)

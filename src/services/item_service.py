@@ -72,7 +72,7 @@ class ItemService:
 
         return daily_item
 
-    async def get_bag_items(self, owner_id: int) -> BagItemsResponse:
+    async def get_bag_items_response(self, owner_id: int) -> BagItemsResponse:
         bag_items = await self._bag_item_repo.find_containing_item_by_owner_id(owner_id)
         return BagItemsResponse.of(bag_items)
 
@@ -108,4 +108,8 @@ class ItemService:
 
     def _validate_user_has_item(self, item_type: ItemType, user: User):
         if not any([bag_item.item_type == item_type for bag_item in user.existed_bag_items]):
+            raise ForbiddenError(ErrorCode.NOT_ENOUGH_ITEM)
+
+    def _validate_user_has_pokemon(self, pokemon: Pokemon, user: User):
+        if pokemon.owner != user:
             raise ForbiddenError(ErrorCode.NOT_ENOUGH_ITEM)

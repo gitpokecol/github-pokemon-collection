@@ -66,12 +66,8 @@ async def get_levelup_service(evolution_service: "EvolutionServiceDep") -> Level
     return LevelUpService(evolution_service=evolution_service)
 
 
-async def get_profile_service(
-    renderer: ProfileRendererDep,
-) -> ProfileService:
-    return ProfileService(
-        renderer=renderer,
-    )
+async def get_profile_service(renderer: ProfileRendererDep, pokemon_service: "PokemonServiceDep") -> ProfileService:
+    return ProfileService(renderer=renderer, pokemon_service=pokemon_service)
 
 
 async def get_commit_point_reward_service(
