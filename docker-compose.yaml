@@ -10,6 +10,10 @@ services:
             - DATABASE_URL=${APP_DATABASE_URL}
             - GITHUB_API_TOKEN=${APP_GITHUB_API_TOKEN}
             - ENVIRONMENT=${APP_ENVIRONMENT}
+            - GITHUB_OAUTH_CLIENT_ID=${APP_GITHUB_OAUTH_CLIENT_ID}
+            - GITHUB_OAUTH_CLIENT_SECRET=${APP_GITHUB_OAUTH_CLIENT_SECRET}
+            - GITHUB_OAUTH_CALLBACK_URL=${APP_GITHUB_OAUTH_CALLBACK_URL}
+            - JWT_SECRET=${APP_JWT_SECRET}
         ports:
             - 80:80
         restart: "on-failure"
