@@ -23,7 +23,7 @@ router = APIRouter()
 async def callback_github_oauth(
     user_service: UserServiceDep,
     access_token_state: tuple[OAuth2Token, str | None] = Depends(
-        OAuth2AuthorizeCallback(client, "oauth.github.callback")
+        OAuth2AuthorizeCallback(client, redirect_url=settings.GITHUB_OAUTH_CALLBACK_URL)
     ),
 ):
     github_token, state = access_token_state
