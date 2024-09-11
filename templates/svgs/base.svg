@@ -64,7 +64,7 @@
     </g>
     <g class="bottom">
         <g transform="translate(20, 0)">
-            <text x="25" y="0">({{n_pokemons}}/151)</text>
+            <text x="25" y="0">({{n_pokemons}})</text>
             <image x="-7" y="-22" width="30" height="30" xlink:href="{{poke_ball_url}}"/>
         </g>
         <g id="cp">
