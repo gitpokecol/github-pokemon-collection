@@ -42,5 +42,5 @@ async def callback_github_oauth(
 async def authorize_github_oauth():
     return await client.get_authorization_url(
         settings.GITHUB_OAUTH_CALLBACK_URL,
-        scope=["read:user"],
+        scope=[],
     )
