@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from src.dependencies.renders import background_images, item_sprites, pokemon_sprites
@@ -32,3 +33,12 @@ app.include_router(pokedex_router)
 install_exception_handlers(app)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CROSS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

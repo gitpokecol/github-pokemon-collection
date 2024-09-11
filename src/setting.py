@@ -41,6 +41,9 @@ class Setting(BaseSettings):
     SHINY_POKEMON_RATE: float = 0.1
     COMMIT_POINT_UPDATE_PERIOD: timedelta = timedelta(hours=1)
 
+    # cors
+    CROSS_ORIGINS: list[str]
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
