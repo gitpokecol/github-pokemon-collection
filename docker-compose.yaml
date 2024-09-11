@@ -14,6 +14,7 @@ services:
             - GITHUB_OAUTH_CLIENT_SECRET=${APP_GITHUB_OAUTH_CLIENT_SECRET}
             - GITHUB_OAUTH_CALLBACK_URL=${APP_GITHUB_OAUTH_CALLBACK_URL}
             - JWT_SECRET=${APP_JWT_SECRET}
+            - CROSS_ORIGINS=${APP_CROSS_ORIGINS}
         ports:
             - 80:80
         restart: "on-failure"
