@@ -6,8 +6,9 @@ from src.models.daily_item import DailyItem
 from src.models.daily_item_abtain import DailyItemAbtain
 from src.models.pokemon import Pokemon
 from src.models.user import User
-from src.pokemons.item_effect import EvolutionItemEffect, RareCandyEffect
+from src.pokemons.item_effect import EvolutionItemEffect, PlateEffect, RareCandyEffect
 from src.pokemons.item_type import ItemType
+from src.pokemons.pokemon_type import PokemonType
 from src.pokemons.time import Time
 from src.repositories.bag_item_repository import BagItemRepository
 from src.repositories.daily_item_abtain_repository import DailyItemAbtainRepository
@@ -82,6 +83,8 @@ class ItemService:
         self._validate_user_has_item(item_type, user)
 
         if item_type.effect is None:
+            return UseItemResponse(is_used=False)
+        if isinstance(item_type.effect, PlateEffect) and pokemon.type != PokemonType.Arceus:
             return UseItemResponse(is_used=False)
 
         item_type.effect.apply(pokemon)
