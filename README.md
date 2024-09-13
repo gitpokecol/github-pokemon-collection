@@ -44,5 +44,5 @@ Rewards are given as follows:
 
 ## Image Source
 
-The sprites are from [www.pokencyclopedia.info](www.pokencyclopedia.info).
+The sprites are from [www.pokencyclopedia.info](www.pokencyclopedia.info) and [pokerouge](https://github.com/pagefaultgames/pokerogue).  
 As [The License](/LICENSE.md) states, all Pokémon images are the property of Nintendo.
