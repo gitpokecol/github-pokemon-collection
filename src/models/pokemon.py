@@ -32,6 +32,9 @@ class Pokemon(SQLModel, DatedAtMixin, table=True):
     def level_up(self):
         self.level = min(self.level + 1, 100)
 
+    def friendship_up(self):
+        self.friendship = min(self.friendship + 1, 255)
+
     @classmethod
     def create_random(cls, pokemon_type: PokemonType, owner: "User") -> "Pokemon":
         is_shiny = settings.SHINY_POKEMON_RATE > random.random()

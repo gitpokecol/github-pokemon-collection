@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
+from typing import Sequence
 
 from src.external.github_api import GithubAPI
+from src.models.pokemon import Pokemon
 from src.models.user import User
 from src.pokemons.time import Time
 from src.repositories.user_repository import UserRepository
@@ -50,6 +52,7 @@ class CommitPointRewardService:
 
         pokemons = await self._pokemon_service.get_pokemons(user)
         add_level = self._calculate_add_level(previous_commit_point, current_commit_point)
+        self._update_friendship_of_pokemons(pokemons)
         await self._levelup_service.level_up_pokemons(user, pokemons, add_level, time)
 
     async def _get_commit_points(self, username: str) -> dict[int, int]:
@@ -67,3 +70,7 @@ class CommitPointRewardService:
         given_pokemon_count = updated_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
         target_pokemon_count = current_commit_point // settings.LEVEL_UP_PER_COMMIT_POINT
         return target_pokemon_count - given_pokemon_count
+
+    def _update_friendship_of_pokemons(self, pokemons: Sequence[Pokemon]):
+        for pokemon in pokemons:
+            pokemon.friendship_up()
