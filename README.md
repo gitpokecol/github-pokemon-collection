@@ -4,7 +4,7 @@
     <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
   </picture>
-  <p align="center">Collect all Pokémon through GitHub contributions!</p>
+  <p align="center">Collect all Pokémon through GitHub contributions!<br/><a href="app.gitpokecol.org">app.gitpokecol.org</a> </p>
 </div>
 <div align="center">
     <a href="/README.md">english</a> · <a href="/docs/README_kr.md">한국어</a>
@@ -12,14 +12,14 @@
 
 ## Your Pokémon Collection
 
-Go [preivew](https://gitpokecol.org/static/preview.html) make your collection!
+Go [web site](https://app.gitpokecol.org) to make your collection!
 
 Or copy and paste this into your markdown or html.  
 Replace `{username}` with your GitHub username.
 
 ```
-<a href="https://github.com/2jun0/github-pokemon-collection">
-  <img src="https://gitpokecol.org/pokemons/{username}?face=left" alt="{username}'s GitHub Pokemon Collection"/>
+<a href="https://app.gitpokecol.org">
+  <img src="https://gitpokecol.org/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
 </a>
 ```
 
@@ -63,11 +63,11 @@ The default background is `none`.
 https://gitpokecol.org/pokemons/{username}?background={ abyss | badlands | beach | cave | desert | normal | plain | none }
 ```
 
-| abyss                                                                                 | badlands                                                                                  | beach                                                                               | cave                                                                              |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| ![Abyss Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=abyss)   | ![Badlands Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=badlands) | ![Beach Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=beach) | ![Cave Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=cave) |
-| desert                                                                                | normal                                                                                    | plain                                                                               | none                                                                              |
-| ![Desert Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=desert) | ![Normal Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=normal)     | ![Plain Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=plain) | ![None Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=none) |
+| abyss                                                                                                            | badlands                                                                                                             | beach                                                                                                          | cave                                                                                                         |
+| ---------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| <img alt="Abyss Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=abyss" width="100"/>   | <img alt="Badlands Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=badlands" width="100"/> | <img alt="Beach Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=beach" width="100"/> | <img alt="Cave Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=cave" width="100"/> |
+| desert                                                                                                           | normal                                                                                                               | plain                                                                                                          | none                                                                                                         |
+| <img alt="Desert Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=desert" width="100"/> | <img alt="Normal Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=normal" width="100"/>     | <img alt="Plain Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=plain" width="100"/> | <img alt="None Pokemon Collection" src="https://gitpokecol.org/pokemons/2jun0?background=none" width="100"/> |
 
 <details>
   <summary>Show html tags</summary>
