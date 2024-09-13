@@ -18,6 +18,16 @@
     .hidden {
       display: none;
     }
+    .warning {
+      display: block;
+      margin: auto 0;
+      padding: 50px;
+      width: 900px;
+      max-width: 100%;
+      border: 2px solid #a0b6ff;
+      border-radius: 10px;
+      background: #d9e1ff;
+    }
   </style>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -55,10 +65,15 @@
     <title>Github Pokemon Collection Preview</title>
   </head>
   <body>
+    <div class="warning">
+      Discover the updated and exciting new page!
+      <br />
+      <a href="https://app.gitpokecol.org">https://app.gitpokecol.org</a>
+    </div>
     <h2>Github Pokemon Collection Preivew</h2>
     <form>
       <div>
-        Moving:
+        Facing:
         <input type="radio" id="left" name="moving" value="left" checked />
         <label for="left">Left</label>
         <input type="radio" id="right" name="moving" value="right" />
