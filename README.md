@@ -4,7 +4,7 @@
     <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
   </picture>
-  <p align="center">Collect all Pokémon through GitHub contributions!<br/><a href="app.gitpokecol.org">app.gitpokecol.org</a> </p>
+  <p align="center">Collect all Pokémon through GitHub contributions!<br/><a href="https://app.gitpokecol.org">app.gitpokecol.org</a> </p>
 </div>
 <div align="center">
     <a href="/README.md">english</a> · <a href="/docs/README_kr.md">한국어</a>
