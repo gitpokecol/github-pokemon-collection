@@ -14,6 +14,10 @@
 
 Decorate your GitHub profile with Pokémon collection!
 
+<a href="https://app.gitpokecol.org">
+    <img src="https://gitpokecol.org/pokemons/2jun0?background=plain" alt="2jun0's GitHub Pokemon Collection"/>
+</a>
+
 Go to the [website](https://app.gitpokecol.org) to create your collection! You can adjust your Pokémon's moving direction, background, size in the profile.
 
 Or copy and paste this into your markdown or html.  
