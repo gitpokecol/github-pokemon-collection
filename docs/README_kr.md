@@ -4,7 +4,7 @@
     <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
   </picture>
-    <p align="center">GitHub 기여를 통해 모든 포켓몬을 모아보세요!</p>
+    <p align="center">GitHub 기여를 통해 모든 포켓몬을 모아보세요!<br/><a href="https://app.gitpokecol.org">app.gitpokecol.org</a> </p>
 </div>
 <div align="center">
     <a href="/README.md">english</a> · <a href="/docs/README_kr.md">한국어</a>
@@ -12,130 +12,39 @@
 
 ## 포켓몬 컬렉션
 
-[프리뷰](https://gitpokecol.org/static/preview.html)에서 쉽게 만들 수 있어요!
+깃허브 프로필을 나만의 포켓몬 컬렉션으로 꾸며보세요!
+
+<a href="https://app.gitpokecol.org">
+    <img src="https://gitpokecol.org/pokemons/2jun0?background=plain" alt="2jun0's GitHub Pokemon Collection"/>
+</a>
+
+[웹 사이트](https://app.gitpokecol.org)에서 나만의 컬렉션을 만들 수 있어요!  
+프로필 항목에서 포켓몬의 이동 방향이나 배경, 크기를 조절할 수 있습니다.
 
 또는 아래의 원하는 컬렉션을 마크다운 혹은 html에 복사하여 붙여넣으세요.  
 `{username}`칸은 여러분의 GitHub 유저명으로 바꿔주세요.
 
-```
-<a href="https://github.com/2jun0/github-pokemon-collection">
-  <img src="https://gitpokecol.org/pokemons/{username}?face=left" alt="{username}'s GitHub Pokemon Collection"/>
+```html
+<a href="https://app.gitpokecol.org">
+  <img
+    src="https://gitpokecol.org/pokemons/{username}"
+    alt="{username}'s GitHub Pokemon Collection"
+  />
 </a>
 ```
 
-## 커스터마이징
+## 일일 아이템
 
-개성있는 컬렉션을 만들어 보세요!
-
-### 왼쪽 혹은 오른쪽으로 움직이기
-
-기본 값은 `left` 입니다.
-
-```
-https://gitpokecol.org/pokemons/{username}?face={left | right}
-```
-
-| 왼쪽 방향                                                                   | 오른쪽 방향                                                                   |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ![Left Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=left) | ![Right Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?face=right) |
-
-<details>
-  <summary>html 태그 보기</summary>
-  <div>
-
-    # Moving left
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?face=left" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Moving right
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?face=right" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-
-  </div>
-</details>
-
-### 배경
-
-기본 배경 값은 `none` 입니다.
-
-```
-https://gitpokecol.org/pokemons/{username}?background={ abyss | badlands | beach | cave | desert | normal | plain | none }
-```
-
-| abyss                                                                                 | badlands                                                                                  | beach                                                                               | cave                                                                              |
-| ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| ![Abyss Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=abyss)   | ![Badlands Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=badlands) | ![Beach Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=beach) | ![Cave Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=cave) |
-| desert                                                                                | normal                                                                                    | plain                                                                               | none                                                                              |
-| ![Desert Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=desert) | ![Normal Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=normal)     | ![Plain Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=plain) | ![None Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?background=none) |
-
-<details>
-  <summary>html 태그 보기</summary>
-  <div>
-
-    # Background abyss
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=abyss" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background badlands
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=badlands" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background beach
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=beach" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background cave
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=cave" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background desert
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=desert" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background normal
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=normal" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background plain
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=plain" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-    # Background none
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?background=none" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-
-  </div>
-</details>
-
-### 너비와 높이
-
-기본 너비는 `300` 이고 너비는 `250` 보다 크거나 같아야 합니다.  
-기본 높이는 `250` 이고 높이는 `200` 보다 크거나 같아야 합니다.
-
-```
-https://gitpokecol.org/pokemons/{username}?width={width}&height={height}
-```
-
-![Big Pokemon Collection](https://gitpokecol.org/pokemons/2jun0?width=500&height=300)
-
-<details>
-  <summary>html 태그 보기</summary>
-  <div>
-
-    <a href="https://github.com/2jun0/github-pokemon-collection">
-      <img src="https://gitpokecol.org/pokemons/{username}?width=500&height=300" alt="{username}'s GitHub Pokemon Collection"/>
-    </a>
-
-  </div>
-</details>
+[웹 사이트](https://app.gitpokecol.org)를 방문해서 일일 아이템을 받으세요!  
+![water stone](/docs/water_stone.png)진화의 돌, ![rare candy](/docs/rare_candy.png)이상한 사탕, ![blank_plate](/docs/blank_plate.png)석판 등의 아이템이 준비되어 있습니다.
 
 ## 커밋 포인트 (CP)
 
 커밋 포인트는 "cp"로 표시되며 여러분의 총 GitHub 기여 수를 나타냅니다.  
-100번 커밋할 때마다 랜덤하게 포켓몬 한 마리를 받게 됩니다.  
-포켓몬은 근-본 1세대 중 하나이며 총 151마리입니다.
+다음과 같이 리워드가 지급됩니다👇
+
+- 50 CP 당 중복되지 않는 포켓몬 1마리가 지급됩니다.
+- 2 CP 당 랜덤으로 포켓몬 1마리의 레벨을 1 증가시킵니다.
 
 ## 이미지 출처
 
