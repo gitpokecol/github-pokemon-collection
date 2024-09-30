@@ -1,17 +1,1 @@
-<svg>
-    <style>
-        #pokemon-{{num}} {
-            --pokemon-move-duration: {{duration}}s;
-            --pokemon-x-offsets: {{offset}}px;
-            --pokemon-y-offsets: {{offset}}px;
-            --pokemon-move-delay: {{delay}}s;
-        }
-    </style>
-
-    <g class="pokemon left" id="pokemon-{{num}}">
-        <g class="left">
-            <image class="frame-2" width="32" height="32" xlink:href="{{frame_1}}"/>
-            <image class="frame-1" width="32" height="32" xlink:href="{{frame_2}}"/>
-        </g>
-    </g>
-</svg>
+<svg><style>#p{{num}} {--du: {{duration}}s;--y: {{offset}}px;--de: {{delay}}s;}</style><g class="pokemon left-face" id="p{{num}}"><g class="left"><image class="f2" width="32" height="32" xlink:href="{{frame_1}}"/><image class="f1" width="32" height="32" xlink:href="{{frame_2}}"/></g></g></svg>
