@@ -8,6 +8,8 @@ T = TypeVar("T")
 
 
 def weighted_sample(population: Sequence[T], weights: Sequence[float], k: int = 1) -> list[T]:
+    assert len(population) >= k
+
     accum = list(accumulate(weights))
     total = accum[-1]
     sampl = {}

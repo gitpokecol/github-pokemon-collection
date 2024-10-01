@@ -22,7 +22,7 @@ class PokemonService:
     async def give_pokemons_for_user(self, user: User, new_count: int):
         pokedex_items = await self._pokedex_service.get_pokedex_items(user)
         canditates = list(self._get_new_pokemon_candidates(pokedex_items))
-        new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, new_count)
+        new_pokemon_types = self._pick_pokemon_types_by_base_stat(canditates, min(len(canditates), new_count))
         await self._pokedex_service.update_pokedex_for_user(user, new_pokemon_types)
 
         new_pokemons = [Pokemon.create_random(pokemon_type, user) for pokemon_type in new_pokemon_types]
