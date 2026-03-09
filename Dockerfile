@@ -12,4 +12,4 @@ COPY static /app/static
 RUN pip install -r requirements.txt
 
 # 실행
-CMD [ "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD sh -c "alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port 80"
