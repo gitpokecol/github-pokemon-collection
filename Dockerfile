@@ -7,6 +7,8 @@ COPY templates /app/templates
 COPY imgs /app/imgs
 COPY requirements.txt /app/requirements.txt
 COPY static /app/static
+COPY alembic.ini /app/alembic.ini
+COPY migrations /app/migrations
 
 # 앱 의존성
 RUN pip install -r requirements.txt
