@@ -24,6 +24,7 @@ class User(UserBase, table=True):
     id: int | None = Field(default=None, primary_key=True)
     commit_points: list[CommitPoint] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
     bag_items: list[BagItem] = Relationship(sa_relationship_kwargs={"lazy": "joined"}, cascade_delete=True)
+    last_seen_at: datetime = Field(default_factory=datetime.utcnow)    
 
     @property
     def total_commit_point(self) -> int:

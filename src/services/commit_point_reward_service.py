@@ -25,13 +25,6 @@ class CommitPointRewardService:
         self._levelup_service = levelup_service
         self._user_repo = user_repository
 
-    def can_update_commit_point(self, user: User) -> bool:
-        return (
-            len(user.commit_points) == 0
-            or datetime.now(timezone.utc) - user.latest_commit_points_updated_at.replace(tzinfo=timezone.utc)
-            >= settings.COMMIT_POINT_UPDATE_PERIOD
-        )
-
     async def update_commit_point_and_reward(self, user: User, time: Time):
         previous_commit_point = user.total_commit_point
 

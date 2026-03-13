@@ -23,18 +23,6 @@ from src.setting import settings
 
 router = APIRouter()
 
-
-async def update_commit_point_and_reward_task(
-    *,
-    commit_point_reward_service: CommitPointRewardServiceDep,
-    time_service: TimeService,
-    client_ip_address: str | None,
-    user: User
-):
-    time = await time_service.get_time_for_client(client_ip_address)
-    await commit_point_reward_service.update_commit_point_and_reward(user, time)
-
-
 @router.get("/pokemons/{username}")
 async def get_pokemons_svg(
     profile_service: ProfileServiceDep,
@@ -42,22 +30,19 @@ async def get_pokemons_svg(
     time_service: TimeServiceDep,
     commit_point_reward_service: CommitPointRewardServiceDep,
     client_ip_address: ClientIpAddressDep,
-    background_tasks: BackgroundTasks,
     username: str = Depends(get_username),
     facing: Facing = Query(Facing.LEFT, alias="face"),
     width: int = Query(settings.SVG_WIDTH, ge=settings.SVG_MIN_WIDTH),
     height: int = Query(settings.SVG_HEIGHT, ge=settings.SVG_MIN_HEIGHT),
     background: Background = Query(Background.NONE),
 ):
-    user = await user_service.get_or_create_user(username)
-    if commit_point_reward_service.can_update_commit_point(user):
-        background_tasks.add_task(
-            update_commit_point_and_reward_task,
-            commit_point_reward_service=commit_point_reward_service,
-            time_service=time_service,
-            client_ip_address=client_ip_address,
-            user=user,
-        )
+    user = await user_service.get_user(username)
+    if user is None:
+        user = await user_service.create_user(username)
+        time = await time_service.get_time_for_client(client_ip_address)
+        await commit_point_reward_service.update_commit_point_and_reward(user, time)
+
+    await user_service.update_user_seen_time(user)
 
     profile = await profile_service.render_profile(
         user=user,
@@ -80,20 +65,7 @@ async def get_pokemons_svg(
 async def get_pokemons(
     pokemon_service: PokemonServiceDep,
     current_user: CurrentUserDep,
-    time_service: TimeServiceDep,
-    commit_point_reward_service: CommitPointRewardServiceDep,
-    client_ip_address: ClientIpAddressDep,
-    background_tasks: BackgroundTasks,
 ) -> PokemonsResponse:
-    if commit_point_reward_service.can_update_commit_point(current_user):
-        background_tasks.add_task(
-            update_commit_point_and_reward_task,
-            commit_point_reward_service=commit_point_reward_service,
-            time_service=time_service,
-            client_ip_address=client_ip_address,
-            user=current_user,
-        )
-
     return await pokemon_service.get_pokemons_response(current_user)
 
 
@@ -110,3 +82,4 @@ async def use_item(
     time = await time_service.get_time_for_client(client_ip_address)
     pokemon = await pokemon_service.get_pokemon_by_id(pokemon_id)
     return await item_service.use_item_to_pokemon(pokemon, ItemType(item_type), current_user, time)
+
