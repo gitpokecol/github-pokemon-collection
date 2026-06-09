@@ -4,7 +4,7 @@
     <source media="(prefers-color-scheme: light)" srcset="/docs/logo.png">
     <img alt="logo" src="/docs/logo.png"/>
   </picture>
-  <p align="center">Collect all Pokémon through GitHub contributions!<br/><a href="https://app.gitpokecol.org">app.gitpokecol.org</a> </p>
+  <p align="center">Collect all Pokémon through GitHub contributions!<br/><a href="https://gitpokecol.2jun0.com">gitpokecol.2jun0.com</a> </p>
 </div>
 <div align="center">
     <a href="/README.md">english</a> · <a href="/docs/README_kr.md">한국어</a>
@@ -14,24 +14,24 @@
 
 Decorate your GitHub profile with Pokémon collection!
 
-<a href="https://app.gitpokecol.org">
-    <img src="https://gitpokecol.org/pokemons/2jun0?background=plain" alt="2jun0's GitHub Pokemon Collection"/>
+<a href="https://gitpokecol.2jun0.com">
+    <img src="https://apigitpokecol.2jun0.com/pokemons/2jun0?background=plain" alt="2jun0's GitHub Pokemon Collection"/>
 </a>
 
-Go to the [website](https://app.gitpokecol.org) to create your collection! You can adjust your Pokémon's moving direction, background, size in the profile.
+Go to the [website](https://gitpokecol.2jun0.com) to create your collection! You can adjust your Pokémon's moving direction, background, size in the profile.
 
 Or copy and paste this into your markdown or html.  
 Replace `{username}` with your GitHub username.
 
 ```
-<a href="https://app.gitpokecol.org">
-  <img src="https://gitpokecol.org/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
+<a href="https://gitpokecol.2jun0.com">
+  <img src="https://apigitpokecol.2jun0.com/pokemons/{username}" alt="{username}'s GitHub Pokemon Collection"/>
 </a>
 ```
 
 ## Daily Item
 
-Visit the [website](https://app.gitpokecol.org) to claim a daily item!  
+Visit the [website](https://gitpokecol.2jun0.com) to claim a daily item!  
 You can get an ![water stone](./docs/water_stone.png)Evolution Stone , ![rare candy](./docs/rare_candy.png)Rare Candy, ![blank_plate](./docs/blank_plate.png)Plate Item and more as a daily reward!
 
 ## Commit Points (CP)
