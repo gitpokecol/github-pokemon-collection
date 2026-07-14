@@ -49,11 +49,19 @@ def main():
     base_path = pathlib.Path("./imgs/sprites/pokemon")
     colors = {}
 
-    for sprite_path in base_path.iterdir():
+    for sprite_path in sorted(base_path.iterdir()):
         if not ("front" in sprite_path.name and sprite_path.name.endswith("1.png")):
             continue
 
+        if "shiny" in sprite_path.name:
+            continue
+
         id = int(sprite_path.name.split("_")[0])
+
+        exact = base_path / f"{id}_front_1.png"
+        if exact.exists() and sprite_path.name != exact.name:
+            continue
+
         if id in colors:
             continue
 
